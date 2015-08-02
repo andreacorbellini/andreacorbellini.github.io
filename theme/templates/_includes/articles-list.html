@@ -1,0 +1,16 @@
+{% autoescape true %}
+  <div class="articles-list">
+    {% for article in articles_page.object_list %}
+      <article class="article-summary row">
+        <header class="col-sm-3">
+          {% include "_includes/article-details.html" %}
+        </header>
+        <div class="summary col-sm-9">
+          <h2><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
+          <blockquote class="body">{{ article.summary|safe }}</blockquote>
+          <p><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}" class="block">Continue reading <span class="fa fa-arrow-circle-right"></span></a></p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% endautoescape %}

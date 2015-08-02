@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tag|e }} - {{ super() }}{% endblock %}
+
+{% block content %}
+  {% autoescape true %}
+    <section>
+      <header>
+        <h1><a href="{{ SITEURL }}/{{ tag.url }}" rel="bookmark" title="{{ tag }}">{{ tag }}</a></h1>
+        <div class="details"><span>{{ articles|count }} article{{ 's' if articles|count != 1 else ''}} with this tag</span></div>
+      </header>
+      {% include "_includes/articles-list.html" %}
+    </section>
+    {% if articles_paginator.num_pages > 1 %}
+      <footer class="container-fluid">{% include "_includes/pagination.html" %}</footer>
+    {% endif %}
+  {% endautoescape %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="canonical" href="{{ SITEURL|e }}">
+{% endblock %}
+
+{% block content %}
+  {% autoescape true %}
+    {% for article in articles_page.object_list %}
+      <article>
+        <header>
+          <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
+          {% include "_includes/article-details.html" %}
+        </header>
+        <div class="body">
+          {{ article.summary|safe }}
+          <p><a href="{{ SITEURL }}/{{ article.url }}" title="{{ article.title }}" class="block">Continue reading <span class="fa fa-arrow-right"></span></a></p>
+        </div>
+      </article>
+    {% endfor %}
+    {% if articles_paginator.num_pages > 1 %}
+      <footer class="container-fluid">{% include "_includes/pagination.html" %}</footer>
+    {% endif %}
+  {% endautoescape %}
+{% endblock %}

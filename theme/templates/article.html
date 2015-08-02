@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {% autoescape true %}
+    {{ super() }}
+    {% for keyword in article.keywords %}
+      <meta name="keywords" content="{{ keyword }}">
+    {% endfor %}
+    {% for description in article.description %}
+      <meta name="description" content="{{ description }}">
+    {% endfor %}
+    {% for tag in article.tags %}
+      <meta name="tags" content="{{ tag }}">
+    {% endfor %}
+    <link rel="canonical" href="{{ SITEURL }}/{{ article.url }}">
+  {% endautoescape %}
+{% endblock %}
+
+{% block title %}{{ article.title|e }} - {{ super() }}{% endblock %}
+
+{% block content %}
+  {% autoescape true %}
+    <article>
+      <header>
+        <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
+        {% include "_includes/article-details.html" %}
+      </header>
+      <div class="body">{{ article.content|safe }}</div>
+      <footer class="container-fluid">
+        {% if article.tags %}
+          <div>
+            <p><span class="fa fa-tags"></span> Tags:</p>
+            <ul class="list-inline">
+              {% for tag in article.tags %}
+                <li><a href="{{ SITEURL }}/{{ tag.url }}" rel="tag" class="tag block" title="{{ tag }}">{{ tag }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        <div>
+          <p><span class="fa fa-share-square"></span> Share:</p>
+          <ul class="list-inline">
+            <li class="social"><a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ SITEURL }}/{{ article.url }}" data-text="{{ article.title }}" data-via="andreacorbe">Tweet</a></li>
+            <li class="social"><div class="fb-share-button" data-href="{{ SITEURL }}/{{ article.url }}" data-layout="button_count"></div></li>
+            <li class="social"><div class="g-plus" data-action="share" data-href="{{ SITEURL }}/{{ article.url }}" data-annotation="bubble"></div></li>
+            <li class="social"><script type="IN/Share" data-url="{{ SITEURL }}/{{ article.url }}" data-counter="right"></script></li>
+          </ul>
+        </div>
+      </footer>
+    </article>
+    {% if DISQUS_SITENAME %}
+      <section>
+        <div class="comments">
+          <div id="disqus_thread"></div>
+          <noscript>Comments are powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+        </div>
+      </section>
+    {% endif %}
+  {% endautoescape %}
+{% endblock %}
+
+{% block footer %}
+  {{ super() }}
+  {# Disqus #}
+  {% if DISQUS_SITENAME %}
+    <script>
+      var disqus_shortname = {{ DISQUS_SITENAME|tojson }};
+      var disqus_identifier = {{ article.slug|tojson }};
+      var disqus_title = {{ article.title|tojson }};
+      var disqus_url = {{ (SITEURL + '/' + article.url)|tojson }};
+      (function() {
+          var s = document.createElement('script');
+          s.async = true;
+          s.defer = true;
+          s.type = 'text/javascript';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
+      })();
+    </script>
+  {% endif %}
+  {# Twitter #}
+  <script>
+    !function(d,s,id){
+        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+        if(!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id;
+            js.async = true;
+            js.defer = true;
+            js.src = p + '://platform.twitter.com/widgets.js';
+            fjs.parentNode.insertBefore(js,fjs);
+        }
+    }(document, 'script', 'twitter-wjs');
+  </script>
+  {# Facebook #}
+  <script>
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.async = true;
+        js.defer = true;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+  {# Google+ #}
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  {# Linkedin #}
+  <script src="//platform.linkedin.com/in.js" async defer>lang: en_US</script>
+{% endblock %}

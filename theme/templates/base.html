@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="{{ DEFAULT_LANG|e }}">
+  <head>
+    {% block head %}{% include "_includes/head.html" %}{% endblock %}
+    <title>{% block title %}{{ SITENAME|e }}{% endblock %}</title>
+  </head>
+  <body>
+    <header id="header">{% block nav %}{% include "_includes/nav.html" %}{% endblock %}</header>
+    {% block main %}
+      <div class="container">
+        <div class="row">
+          <main id="content" class="left col-md-9">{% block content %}{% endblock %}</main>
+          <div id="sidebar" class="right col-md-3">{% block sidebar %}{% include "_includes/sidebar.html" %}{% endblock %}</div>
+        </div>
+      </div>
+    {% endblock %}
+    <footer id="footer">{% block footer %}{% include "_includes/footer.html" %}{% endblock %}</footer>
+  </body>
+</html>

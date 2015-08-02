@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="canonical" href="{{ SITEURL|e }}/{{ page.url|e }}">
+{% endblock %}
+
+{% block title %}{{ page.title|e }} - {{ super() }}{% endblock %}
+
+{% block content %}
+  {% autoescape true %}
+    <article>
+      <header>
+        <h1><a href="{{ SITEURL }}/{{ page.url }}" rel="bookmark" title="{{ page.title }}">{{ page.title }}</a></h1>
+        <div class="details">
+          <span><span class="fa fa-calendar-o"></span><time datetime="{{ page.date.isoformat() }}">{{ page.locale_date }}</time></span>
+        </div>
+      </header>
+      <div class="body">{{ page.content|safe }}</div>
+    </article>
+  {% endautoescape %}
+{% endblock %}

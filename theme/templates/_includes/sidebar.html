@@ -1,0 +1,36 @@
+{% autoescape true %}
+  <aside class="widget">
+    <form action="{{ SITEURL }}/{{ SEARCH_URL }}">
+      <div class="input-group input-group-lg">
+        <input type="text" name="q" class="form-control" placeholder="Search">
+      <span class="input-group-btn">
+        <button type="submit" id="tipue_search_button" class="btn btn-default fa fa-search"></button>
+      </span>
+      </div>
+    </form>
+  </aside>
+  <aside class="widget">
+    <h1>Recent posts</h1>
+    <ul class="list">
+      {% for article in articles[:DEFAULT_PAGINATION] %}
+        <li><a href="{{ SITEURL }}/{{ article.url }}" title="{{ article.locale_date }}">{{ article.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+  <aside class="widget">
+    <h1>Tags</h1>
+    <ul class="list-inline">
+      {% set tags_by_usage = [] %}
+      {% for tag, articles in tags %}
+        {% do tags_by_usage.append((articles|count, tag)) %}
+      {% endfor %}
+      {% for articles_count, tag in tags_by_usage|sort(reverse=True)|batch(20)|first %}
+        <li><a href="{{ SITEURL }}/{{ tag.url }}" class="tag block" title="{{ articles_count }} article{{ 's' if articles|count != 1 else '' }} about {{ tag }}">{{ tag }}</a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+  <aside class="widget">
+    <h1>License</h1>
+    <p>The content of this blog is released under the terms of the <a href="http://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a>.</p>
+  </aside>
+{% endautoescape %}

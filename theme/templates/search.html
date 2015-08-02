@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" src="{{ SITEURL }}/theme/tipuesearch_set.js"></script>
+  <script type="text/javascript" src="{{ SITEURL }}/theme/tipuesearch.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#tipue_search_input').tipuesearch({
+              'show': 10,
+              'mode': 'json',
+              'contentLocation': '{{ SITEURL }}/tipuesearch_content.json'
+          });
+      });
+  </script>
+  <style>
+    #tipue_search_form {
+      padding-bottom: 30px;
+    }
+
+    .tipue_search_content_title {
+      font-size: 21px;
+      padding-top: 29px;
+      padding-bottom: 5px;
+    }
+
+    .tipue_search_content_url a {
+      color: #309060;
+      font-size: 14px;
+      padding-bottom: 8px;
+    }
+
+    .h01 {
+      font-weight: bold;
+    }
+  </style>
+{% endblock %}
+
+{% block title %}Search - {{ super() }}{% endblock %}
+
+{% block content %}
+  <form action="{{ SITEURL }}/{{ SEARCH_URL }}" id="tipue_search_form">
+    <div class="input-group input-group-lg">
+      <input type="text" id="tipue_search_input" name="q" class="form-control" placeholder="Search">
+      <span class="input-group-btn">
+        <button type="submit" id="tipue_search_button" class="btn btn-default fa fa-search"></button>
+      </span>
+    </div>
+  </form>
+  <article>
+    <div class="tipue_search_spinner"><div class="tipue_search_rect1"></div><div class="tipue_search_rect2"></div><div class="rect3"></div></div>
+    <div id="tipue_search_content"></div>
+  </article>
+{% endblock %}

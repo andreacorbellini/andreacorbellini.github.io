@@ -1,0 +1,7 @@
+<div class="details">
+  <span><span class="fa fa-calendar-o"></span><time datetime="{{ article.date.isoformat() }}">{{ article.locale_date }}</time></span>
+  {% if article.category %}
+    <span><span class="fa fa-folder-open-o"></span><a href="{{ SITEURL }}/{{ article.category.url }}" rel="tag" title="Category: {{ article.category }}">{{ article.category }}</a></span>
+  {% endif %}
+  <span><span class="fa fa-comments-o"></span><a href="{{ SITEURL }}/{{ article.url }}#disqus_thread" title="Comments" data-disqus-identifier="{{ article.slug }}">Comments</a></span>
+</div>
