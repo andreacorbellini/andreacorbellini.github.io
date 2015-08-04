@@ -166,12 +166,17 @@ a, a:hover {
   padding-bottom: 5px;
 }
 
-#content > article .body li, #content > article .body li p {
+#content > article .body li {
   padding-bottom: 6px;
 }
 
+#content > article .body li p {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 #content > article .body p, #content > article .body li {
-  line-height: 26px;
+  line-height: 32px;
 }
 
 #content > article .body figure {

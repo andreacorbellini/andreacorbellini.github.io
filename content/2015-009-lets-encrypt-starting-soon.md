@@ -22,7 +22,7 @@ Their intermediate certificates, which [were generated a few days ago](https://l
 
 In case you are curious: the root certificate is a 4096-bit RSA key, the two intermediate certificates are both 2048-bit RSA keys. But they are also [planning to generate ECDSA keys later this year](https://letsencrypt.org/certificates/) as well.
 
-Technical aspects aside, this will be a great opportunity for the entire web. As I have [already written]({filename}/2015-004-lets-encrypt.md), I always dreamed of an encrypted web, and I truly believe that Let's Encrypt -- or at least its approach to the problem -- is the way to go.
+Technical aspects aside, this will be a great opportunity for the entire web. As I have [already written]({filename}/2015-004-lets-encrypt.md), I always dreamed of an encrypted web, and I truly believe that Let's Encrypt — or at least its approach to the problem — is the way to go.
 
 So, will you get a Let's Encrypt certificate when the time comes? I will do. Not for this blog (I can't put a certificate without paying), but for other websites I manage.
 
