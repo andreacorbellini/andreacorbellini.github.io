@@ -91,6 +91,11 @@ DEFAULT_PAGINATION = 8
 
 SUMMARY_MAX_LENGTH = 64
 
+PAGINATION_PATTERNS = (
+    (1, '{base_name}/', '{base_name}/index.html'),
+    (2, '{base_name}/{number}/', '{base_name}/{number}/index.html'),
+)
+
 
 # Feeds.
 FEED_ALL_ATOM = None
