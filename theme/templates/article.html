@@ -27,25 +27,12 @@
       </header>
       <div class="body">{{ article.content|safe }}</div>
       <footer class="container-fluid">
-        {% if article.tags %}
-          <div>
-            <p><span class="fa fa-tags"></span> Tags:</p>
-            <ul class="list-inline">
-              {% for tag in article.tags %}
-                <li><a href="{{ SITEURL }}/{{ tag.url }}" rel="tag" class="tag block" title="{{ tag }}">{{ tag }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-        <div>
-          <p><span class="fa fa-share-square"></span> Share:</p>
-          <ul class="list-inline">
-            <li class="social"><a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ SITEURL }}/{{ article.url }}" data-text="{{ article.title }}" data-via="andreacorbe">Tweet</a></li>
-            <li class="social"><div class="fb-share-button" data-href="{{ SITEURL }}/{{ article.url }}" data-layout="button_count"></div></li>
-            <li class="social"><div class="g-plus" data-action="share" data-href="{{ SITEURL }}/{{ article.url }}" data-annotation="bubble"></div></li>
-            <li class="social"><script type="IN/Share" data-url="{{ SITEURL }}/{{ article.url }}" data-counter="right"></script></li>
-          </ul>
-        </div>
+        <ul class="list-inline">
+          <li class="social"><a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ SITEURL }}/{{ article.url }}" data-text="{{ article.title }}" data-via="andreacorbe">Tweet</a></li>
+          <li class="social"><div class="fb-share-button" data-href="{{ SITEURL }}/{{ article.url }}" data-layout="button_count"></div></li>
+          <li class="social"><div class="g-plus" data-action="share" data-href="{{ SITEURL }}/{{ article.url }}" data-annotation="bubble"></div></li>
+          <li class="social"><script type="IN/Share" data-url="{{ SITEURL }}/{{ article.url }}" data-counter="right"></script></li>
+        </ul>
       </footer>
     </article>
     {% if DISQUS_SITENAME %}

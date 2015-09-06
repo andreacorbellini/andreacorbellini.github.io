@@ -10,6 +10,10 @@ from pelicanconf import *
 SITEURL = 'http://andrea.corbellini.name'
 
 
+# Static files.
+MINIFY_CSS = True
+
+
 # Comments.
 DISQUS_SITENAME = 'andreacorbellini'
 

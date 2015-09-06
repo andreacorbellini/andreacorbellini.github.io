@@ -34,17 +34,25 @@
   {% if SHORTCUT_ICON %}
     <link rel="shortcut icon" href="{{ SHORTCUT_ICON }}" type="image/x-icon">
   {% endif %}
-  <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-  <link href="//fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <link href="{{ SITEURL }}/theme/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+  {% if MINIFY_CSS %}
+    {% assets filters="cssmin", output="css/style.min.css", "css/bootstrap.css", "css/pygments.css", "css/style.css" %}
+      <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+    {% endassets %}
+  {% else %}
+    <link rel="stylesheet" href="{{ SITEURL }}/theme/css/bootstrap.css">
+    <link rel="stylesheet" href="{{ SITEURL }}/theme/css/pygments.css">
+    <link rel="stylesheet" href="{{ SITEURL }}/theme/css/style.css">
+  {% endif %}
   <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
       tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
       elements: ['content']
     });
   </script>
-  <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" async defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
 {% endautoescape %}

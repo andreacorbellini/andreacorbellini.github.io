@@ -1,22 +1,19 @@
 {% autoescape true %}
-  <div class="row">
-    <span class="page-number col-sm-1">Pages:</span>
-    <div class="col-sm-11">
-      <ol class="list-inline">
-        {% if articles_previous_page %}
-          <li><a href="{{ SITEURL }}/{{ articles_previous_page.url }}" rel="prev" class="page-number fa fa-chevron-left" title="Previous page"></a></li>
-        {% endif %}
-        {% for page_num in articles_paginator.page_range %}
-          {% if page_num == articles_page.number %}
-            <li><strong class="page-number">{{ page_num }}</strong></li>
-          {% else %}
-            <li><a href="{{ SITEURL }}/{{ articles_paginator.page(page_num).url }}" class="page-number block" title="Page {{ page_num }}">{{ page_num }}</a></li>
-          {% endif %}
-        {% endfor %}
-        {% if articles_next_page %}
-          <li><a href="{{ SITEURL }}/{{ articles_next_page.url }}" rel="next" class="page-number fa fa-chevron-right" title="Next page"></a></li>
-        {% endif %}
-      </ol>
-    </div>
-  </div>
+  <nav>
+    <ul class="pagination">
+      {% if articles_previous_page %}
+        <li><a href="{{ SITEURL }}/{{ articles_previous_page.url }}" rel="prev" title="Previous Page"><span class="fa fa-chevron-left"></span></a></li>
+      {% else %}
+        <li class="disabled"><span class="fa fa-chevron-left"></span></li>
+      {% endif %}
+      {% for page_num in articles_paginator.page_range %}
+        <li {% if page_num == articles_page.number %}class="active"{% endif %}><a href="{{ SITEURL }}/{{ articles_paginator.page(page_num).url }}" title="Page {{ page_num }}">{{ page_num }}</a></li>
+      {% endfor %}
+      {% if articles_next_page %}
+        <li><a href="{{ SITEURL }}/{{ articles_next_page.url }}" rel="next" title="Next Page"><span class="fa fa-chevron-right"></span></a></li>
+      {% else %}
+        <li class="disabled"><span class="fa fa-chevron-right"></span></li>
+      {% endif %}
+    </ul>
+  </nav>
 {% endautoescape %}

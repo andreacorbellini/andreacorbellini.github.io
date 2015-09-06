@@ -62,6 +62,7 @@ PLUGIN_PATHS = [
 ]
 
 PLUGINS = [
+    'assets',
     'redirects',
     'tipue_search',
     'ubuntuplanet',
@@ -86,6 +87,10 @@ DIRECT_TEMPLATES = [
 ]
 
 
+# Static files.
+MINIFY_CSS = False
+
+
 # Pagination and summary.
 DEFAULT_PAGINATION = 8
 
@@ -93,7 +98,7 @@ SUMMARY_MAX_LENGTH = 64
 
 PAGINATION_PATTERNS = (
     (1, '{base_name}/', '{base_name}/index.html'),
-    (2, '{base_name}/{number}/', '{base_name}/{number}/index.html'),
+    (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
 )
 
 

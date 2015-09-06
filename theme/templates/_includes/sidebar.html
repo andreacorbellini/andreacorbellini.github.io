@@ -3,15 +3,15 @@
     <form action="{{ SITEURL }}/{{ SEARCH_URL }}">
       <div class="input-group input-group-lg">
         <input type="text" name="q" class="form-control" placeholder="Search">
-      <span class="input-group-btn">
-        <button type="submit" id="tipue_search_button" class="btn btn-default fa fa-search"></button>
-      </span>
+        <span class="input-group-btn">
+          <button type="submit" id="tipue_search_button" class="btn btn-default"><span class="fa fa-search"></span></button>
+        </span>
       </div>
     </form>
   </aside>
   <aside class="widget">
     <h1>Recent posts</h1>
-    <ul class="list">
+    <ul class="articles">
       {% for article in articles[:DEFAULT_PAGINATION] %}
         <li><a href="{{ SITEURL }}/{{ article.url }}" title="{{ article.locale_date }}">{{ article.title }}</a></li>
       {% endfor %}
@@ -19,13 +19,13 @@
   </aside>
   <aside class="widget">
     <h1>Tags</h1>
-    <ul class="list-inline">
+    <ul class="tags list-inline">
       {% set tags_by_usage = [] %}
       {% for tag, articles in tags %}
         {% do tags_by_usage.append((articles|count, tag)) %}
       {% endfor %}
       {% for articles_count, tag in tags_by_usage|sort(reverse=True)|batch(20)|first %}
-        <li><a href="{{ SITEURL }}/{{ tag.url }}" class="tag block" title="{{ articles_count }} article{{ 's' if articles|count != 1 else '' }} about {{ tag }}">{{ tag }}</a></li>
+        <li><a href="{{ SITEURL }}/{{ tag.url }}" class="btn btn-primary btn-sm" title="{{ articles_count }} article{{ 's' if articles|count != 1 else '' }} about {{ tag }}">{{ tag }}</a></li>
       {% endfor %}
     </ul>
   </aside>

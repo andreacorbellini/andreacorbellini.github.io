@@ -7,12 +7,12 @@
     <article>
       <header>
         <h1><a href="{{ SITEURL }}/{{ category.url }}" rel="bookmark" title="{{ category }}">{{ category }}</a></h1>
-        <div class="details"><span>{{ articles|count }} article{{ 's' if articles|count != 1 else ''}} in this category</span></div>
+        <div class="details small"><span>{{ articles|count }} article{{ 's' if articles|count != 1 else ''}} in this category</span></div>
       </header>
       {% include "_includes/articles-list.html" %}
     </article>
     {% if articles_paginator.num_pages > 1 %}
-      <footer class="container-fluid">{% include "_includes/pagination.html" %}</footer>
+      <footer>{% include "_includes/pagination.html" %}</footer>
     {% endif %}
   {% endautoescape %}
 {% endblock %}
