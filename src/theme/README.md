@@ -10,10 +10,6 @@ Exceptions include:
 
   This is a photo made by Andrea Corbellini, released under the terms of the [Creative Commons BY 4.0 International](http://creativecommons.org/licenses/by/4.0/).
 
-* `static/js/jquery.gifplayer.min.js` and `static/css/gifplayer.css`
-
-  This is the [gifplayer](https://github.com/rubentd/gifplayer) plugin for jQuery, released under the terms of the [MIT License](https://opensource.org/licenses/MIT). `gifplayer.css` has been sightly modified.
-
 * `static/js/tipuesearch.min.js`
 
   This is the [Tipue Search](http://www.tipue.com/search/) plugin for jQuery, released under the terms of the [MIT License](https://opensource.org/licenses/MIT).
