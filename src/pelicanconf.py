@@ -51,7 +51,6 @@ PATH = 'content'
 THEME = 'theme'
 
 STATIC_PATHS = [
-    'CNAME',
     'images',
 ]
 

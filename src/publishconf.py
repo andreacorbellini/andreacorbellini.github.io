@@ -1,13 +1,15 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(__file__))
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, PROJECT_PATH)
 
 from pelicanconf import *
 
 
 # General.
 SITEURL = 'http://andrea.corbellini.name'
+OUTPUT_PATH = os.path.dirname(PROJECT_PATH)
 
 
 # Static files.
