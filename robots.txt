@@ -1,3 +1,3 @@
 user-agent: *
-disallow: CNAME
-disallow: src/
+disallow: /CNAME
+disallow: /src/
