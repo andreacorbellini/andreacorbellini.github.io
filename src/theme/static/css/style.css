@@ -34,14 +34,22 @@ a, a:hover {
   color: #ffffff;
   background: none;
   padding: 0;
-  margin-right: 15px;
   border: 0;
   outline: none;
-  width: 50px;
   height: 60px;
   float: right;
   font-size: 24px;
   text-align: right;
+}
+
+.navbar-brand {
+  padding-right: 0;
+}
+
+@media (max-width: 290px) {
+  .navbar-brand {
+    display: none;
+  }
 }
 
 .main-footer {
