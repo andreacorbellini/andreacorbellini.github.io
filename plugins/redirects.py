@@ -17,7 +17,7 @@ content="0;url='{{ SITEURL|e }}/{{ redirect_url|e }}'">
   <body>
     <p>This page has moved to \
 <a href="{{ SITEURL|e }}/{{ redirect_url|e }}">\
-{{ SITEURL|e }}/{{ redirect_url|e }}</a>.</p>
+{{ SITEURL|e }}/{{ redirect_url|e }}</a></p>
     <script>window.url = '{{ SITEURL|e }}/{{ redirect_url|e }}';</script>
   </body>
 </html>"""
