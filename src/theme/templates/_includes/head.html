@@ -34,8 +34,6 @@
   {% if SHORTCUT_ICON %}
     <link rel="shortcut icon" href="{{ SHORTCUT_ICON }}" type="image/x-icon">
   {% endif %}
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
   {% if MINIFY_CSS %}
     {% assets filters="cssmin", output="css/style.min.css", "css/bootstrap.css", "css/pygments.css", "css/style.css" %}
       <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
@@ -45,14 +43,4 @@
     <link rel="stylesheet" href="{{ SITEURL }}/theme/css/pygments.css">
     <link rel="stylesheet" href="{{ SITEURL }}/theme/css/style.css">
   {% endif %}
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
-      elements: ['content']
-    });
-  </script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
 {% endautoescape %}
