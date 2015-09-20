@@ -42,35 +42,6 @@
         <div class="row">
           <main id="content" class="left col-md-9">      <article>
         <header>
-          <h1><a href="http://andrea.corbellini.name/2015/09/30/python-units-an-exercise-of-api-design/" rel="bookmark" title="Python Units: an exercise of API design">Python Units: an exercise of API design</a></h1>
-<div class="details small">
-  <span><span class="fa fa-calendar-o"></span><time datetime="2015-09-30T00:00:00+00:00">Wed 30 September 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2015/09/30/python-units-an-exercise-of-api-design/#disqus_thread" title="Comments" data-disqus-identifier="python-units-an-exercise-of-api-design">Comments</a></span>
-  <span>
-    <span class="fa fa-tags"></span>
-    <ul class="tags list-inline">
-        <li><a href="http://andrea.corbellini.name/tag/python/" rel="tag" class="" title="python">python</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/units/" rel="tag" class="" title="units">units</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/api/" rel="tag" class="" title="api">api</a></li>
-    </ul>
-  </span>
-</div>        </header>
-        <div class="body">
-          <p>Today I have released <a href="XXX">Python Units</a>, a library for dealing with
-measurement units in Python. It allows annotating numbers with measurement
-units and allows simple conversion.</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">units</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">speed</span> <span class="o">=</span> <span class="n">foot</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">/</span> <span class="n">second</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">speed</span>
-<span class="o">&lt;</span><span class="n">Value</span><span class="p">:</span> <span class="p">(</span><span class="n">foot</span> <span class="o">/</span> <span class="n">second</span><span class="p">)(</span><span class="mi">30</span><span class="p">)</span><span class="o">&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">kilo</span> <span class="o">*</span> <span class="n">meter</span> <span class="o">/</span> <span class="n">hour</span><span class="p">)(</span><span class="n">speed</span><span class="p">)</span>
-<span class="o">&lt;</span><span class="n">Value</span><span class="p">:</span> <span class="p">(</span><span class="n">meter</span> <span class="o">*</span> <span class="n">kilo</span> <span class="o">/</span> <span class="n">hour</span><span class="p">)(</span><span class="mf">32.9184</span><span class="p">)</span><span class="o">&gt;</span>
-</pre></div>
-          <p><a href="http://andrea.corbellini.name/2015/09/30/python-units-an-exercise-of-api-design/" title="Python Units: an exercise of API design" class="btn btn-default btn-block">Continue Reading <span class="fa fa-arrow-circle-right"></span></a></p>
-        </div>
-      </article>
-      <article>
-        <header>
           <h1><a href="http://andrea.corbellini.name/2015/08/02/hello-pelican/" rel="bookmark" title="Hello Pelican!">Hello Pelican!</a></h1>
 <div class="details small">
   <span><span class="fa fa-calendar-o"></span><time datetime="2015-08-02T18:55:00+00:00">Sun 02 August 2015</time></span>
@@ -238,6 +209,28 @@ units and allows simple conversion.</p>
           <p><a href="http://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/" title="Let&#39;s Encrypt: the road towards a better web?" class="btn btn-default btn-block">Continue Reading <span class="fa fa-arrow-circle-right"></span></a></p>
         </div>
       </article>
+      <article>
+        <header>
+          <h1><a href="http://andrea.corbellini.name/2015/03/25/running-ubuntu-snappy-inside-docker/" rel="bookmark" title="Running Ubuntu Snappy inside Docker">Running Ubuntu Snappy inside Docker</a></h1>
+<div class="details small">
+  <span><span class="fa fa-calendar-o"></span><time datetime="2015-03-25T20:46:00+00:00">Wed 25 March 2015</time></span>
+  <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2015/03/25/running-ubuntu-snappy-inside-docker/#disqus_thread" title="Comments" data-disqus-identifier="running-ubuntu-snappy-inside-docker">Comments</a></span>
+  <span>
+    <span class="fa fa-tags"></span>
+    <ul class="tags list-inline">
+        <li><a href="http://andrea.corbellini.name/tag/docker/" rel="tag" class="" title="docker">docker</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/snappy/" rel="tag" class="" title="snappy">snappy</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/ubuntu/" rel="tag" class="" title="ubuntu">ubuntu</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/ubuntu-core/" rel="tag" class="" title="ubuntu core">ubuntu core</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/xkcd/" rel="tag" class="" title="xkcd">xkcd</a></li>
+    </ul>
+  </span>
+</div>        </header>
+        <div class="body">
+          <p>Many of you may have already heard of <a href="https://developer.ubuntu.com/en/snappy/">Ubuntu Core</a>. For those who haven't, it's a minimal Ubuntu version, running only a few essential services and ships with a new package manager (snappy) that provides <em>transactional</em> updates. Ubuntu Core provides a lightweight base operating system which is fast to deploy and easy to maintain up to date. It also uses a nice <a href="https://wiki.ubuntu.com/SecurityTeam/Specifications/SnappyConfinement">security model ...</a></p>
+          <p><a href="http://andrea.corbellini.name/2015/03/25/running-ubuntu-snappy-inside-docker/" title="Running Ubuntu Snappy inside Docker" class="btn btn-default btn-block">Continue Reading <span class="fa fa-arrow-circle-right"></span></a></p>
+        </div>
+      </article>
       <footer>  <nav>
     <ul class="pagination">
         <li class="disabled"><span class="fa fa-chevron-left"></span></li>
@@ -261,7 +254,6 @@ units and allows simple conversion.</p>
   <aside class="widget">
     <h1>Recent posts</h1>
     <ul class="articles">
-        <li><a href="http://andrea.corbellini.name/2015/09/30/python-units-an-exercise-of-api-design/" title="Wed 30 September 2015">Python Units: an exercise of API design</a></li>
         <li><a href="http://andrea.corbellini.name/2015/08/02/hello-pelican/" title="Sun 02 August 2015">Hello Pelican!</a></li>
         <li><a href="http://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/" title="Tue 16 June 2015">Let&#39;s Encrypt is going to start soon</a></li>
         <li><a href="http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/" title="Mon 08 June 2015">Elliptic Curve Cryptography: breaking security and a comparison with RSA</a></li>
@@ -269,6 +261,7 @@ units and allows simple conversion.</p>
         <li><a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/" title="Sat 23 May 2015">Elliptic Curve Cryptography: finite fields and discrete logarithms</a></li>
         <li><a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" title="Sun 17 May 2015">Elliptic Curve Cryptography: a gentle introduction</a></li>
         <li><a href="http://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/" title="Sun 12 April 2015">Let&#39;s Encrypt: the road towards a better web?</a></li>
+        <li><a href="http://andrea.corbellini.name/2015/03/25/running-ubuntu-snappy-inside-docker/" title="Wed 25 March 2015">Running Ubuntu Snappy inside Docker</a></li>
     </ul>
   </aside>
   <aside class="widget">
@@ -290,10 +283,10 @@ units and allows simple conversion.</p>
         <li><a href="http://andrea.corbellini.name/tag/blog/" class="btn btn-primary btn-sm" title="2 articles about blog">blog</a></li>
         <li><a href="http://andrea.corbellini.name/tag/xkcd/" class="btn btn-primary btn-sm" title="1 articles about xkcd">xkcd</a></li>
         <li><a href="http://andrea.corbellini.name/tag/wordpress/" class="btn btn-primary btn-sm" title="1 articles about wordpress">wordpress</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/units/" class="btn btn-primary btn-sm" title="1 articles about units">units</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ubuntu-core/" class="btn btn-primary btn-sm" title="1 articles about ubuntu core">ubuntu core</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ubuntu/" class="btn btn-primary btn-sm" title="1 articles about ubuntu">ubuntu</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ssh/" class="btn btn-primary btn-sm" title="1 articles about ssh">ssh</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/snappy/" class="btn btn-primary btn-sm" title="1 articles about snappy">snappy</a></li>
     </ul>
   </aside>
   <aside class="widget">
