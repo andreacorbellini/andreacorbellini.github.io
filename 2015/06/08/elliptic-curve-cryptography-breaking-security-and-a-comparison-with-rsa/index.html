@@ -5,19 +5,7 @@
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
     <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?48510f94">
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
-      elements: ['content']
-    });
-  </script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
 
       <meta name="tags" content="dh">
       <meta name="tags" content="dsa">
@@ -97,7 +85,7 @@ $$\begin{array}{rl}
 </ol>
 <p>As you can see, initially we calculate the points $bP$ with little (i.e. <strong>"baby"</strong>) increments for the coefficient $b$ ($1P$, $2P$, $3P$, ...). Then, in the second part of the algorithm, we calculate the points $amP$ with huge (i.e. <strong>"giant"</strong>) increments for $am$ ($1mP$, $2mP$, $3mP$, ..., where $m$ is a huge number).</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/baby-step-giant-step.png" class="gif" alt="Baby-step, giant-step" width="310" height="346">
+  <img src="http://andrea.corbellini.name/images/baby-step-giant-step.gif" alt="Baby-step, giant-step" width="310" height="346">
   <figcaption>The baby-step, giant-step algorithm: initially we calculate few points via small steps and store them in a hash table. Then we perform the giant steps and compare the new points with the points in the hash table. Once a match is found, calculating the discrete logarithm is a matter of rearranging terms.</figcaption>
 </figure>
 
@@ -150,7 +138,7 @@ $$\begin{array}{rl}
 <p>In order to detect our cycle, we could try all the possible values for $a$ and $b$ using a <a href="http://en.wikipedia.org/wiki/Pairing_function">pairing function</a>, but given that there are $n^2$ such pairs, our algorithm would be $O(n^2)$, much worse than a brute-force attack.</p>
 <p>But there exist a faster method: the <strong>tortoise and hare algorithm</strong> (also known as Floyd's cycle-finding algorithm). The picture below shows the principle of operation of the tortoise and hare method, which is at the core of Pollard's rho.</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/tortoise-hare.png" class="gif" alt="Tortoise and Hare" width="650" height="101">
+  <img src="http://andrea.corbellini.name/images/tortoise-hare.gif" alt="Tortoise and Hare" width="650" height="101">
   <figcaption>We have the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the points $P = (3, 6)$ and $Q = (80, 87)$. The points belong to a cyclic subgroup of order 5.<br>We walk a sequence of pairs at different speeds until we find two different pairs $(a, b)$ and $(A, B)$ that produce the same point. In this case, we have found the pairs $(3, 3)$ and $(2, 0)$ that allow us to calculate the logarithm as $x = (3 - 2)(0 - 3)^{-1} \bmod{5} = 3$. And in fact we correctly have $Q = 3P$.</figcaption>
 </figure>
 
@@ -328,26 +316,6 @@ Took 0m 21s (138 steps on average)
   <p>Copyright &copy; 2015 Andrea Corbellini</p>
   <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="https://jquery.com/" title="jQuery">jQuery</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', "UA-59812311-1", 'auto');
-    ga('send', 'pageview');
-  </script>
-  <script>
-    var disqus_shortname = "andreacorbellini";
-    (function() {
-        var s = document.createElement('script');
-        s.async = true;
-        s.defer = true;
-        s.type = 'text/javascript';
-        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
-    })();
-  </script>
-
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa";
@@ -390,5 +358,51 @@ Took 0m 21s (138 steps on average)
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="//platform.linkedin.com/in.js" async defer>lang: en_US</script>
 </footer>
+<script>
+  var cb = function() {
+    var h = document.getElementsByTagName('head')[0];
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = '//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700';
+    h.parentNode.insertBefore(l, h);
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css';
+    h.parentNode.insertBefore(l, h);
+  };
+  var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+      webkitRequestAnimationFrame || msRequestAnimationFrame;
+  if (raf) raf(cb);
+  else window.addEventListener('load', cb);
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+    elements: ['content']
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', "UA-59812311-1", 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script>
+    var disqus_shortname = "andreacorbellini";
+    (function() {
+      var s = document.createElement('script');
+      s.async = true;
+      s.defer = true;
+      s.type = 'text/javascript';
+      s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
+    })();
+  </script>
   </body>
 </html>

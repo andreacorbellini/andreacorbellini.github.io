@@ -57,7 +57,7 @@ $$\begin{array}{rl}
 &lt;/ol&gt;
 &lt;p&gt;As you can see, initially we calculate the points $bP$ with little (i.e. &lt;strong&gt;"baby"&lt;/strong&gt;) increments for the coefficient $b$ ($1P$, $2P$, $3P$, ...). Then, in the second part of the algorithm, we calculate the points $amP$ with huge (i.e. &lt;strong&gt;"giant"&lt;/strong&gt;) increments for $am$ ($1mP$, $2mP$, $3mP$, ..., where $m$ is a huge number).&lt;/p&gt;
 &lt;figure&gt;
-  &lt;img src="http://andrea.corbellini.name/images/baby-step-giant-step.png" class="gif" alt="Baby-step, giant-step" width="310" height="346"&gt;
+  &lt;img src="http://andrea.corbellini.name/images/baby-step-giant-step.gif" alt="Baby-step, giant-step" width="310" height="346"&gt;
   &lt;figcaption&gt;The baby-step, giant-step algorithm: initially we calculate few points via small steps and store them in a hash table. Then we perform the giant steps and compare the new points with the points in the hash table. Once a match is found, calculating the discrete logarithm is a matter of rearranging terms.&lt;/figcaption&gt;
 &lt;/figure&gt;
 
@@ -110,7 +110,7 @@ $$\begin{array}{rl}
 &lt;p&gt;In order to detect our cycle, we could try all the possible values for $a$ and $b$ using a &lt;a href="http://en.wikipedia.org/wiki/Pairing_function"&gt;pairing function&lt;/a&gt;, but given that there are $n^2$ such pairs, our algorithm would be $O(n^2)$, much worse than a brute-force attack.&lt;/p&gt;
 &lt;p&gt;But there exist a faster method: the &lt;strong&gt;tortoise and hare algorithm&lt;/strong&gt; (also known as Floyd's cycle-finding algorithm). The picture below shows the principle of operation of the tortoise and hare method, which is at the core of Pollard's rho.&lt;/p&gt;
 &lt;figure&gt;
-  &lt;img src="http://andrea.corbellini.name/images/tortoise-hare.png" class="gif" alt="Tortoise and Hare" width="650" height="101"&gt;
+  &lt;img src="http://andrea.corbellini.name/images/tortoise-hare.gif" alt="Tortoise and Hare" width="650" height="101"&gt;
   &lt;figcaption&gt;We have the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the points $P = (3, 6)$ and $Q = (80, 87)$. The points belong to a cyclic subgroup of order 5.&lt;br&gt;We walk a sequence of pairs at different speeds until we find two different pairs $(a, b)$ and $(A, B)$ that produce the same point. In this case, we have found the pairs $(3, 3)$ and $(2, 0)$ that allow us to calculate the logarithm as $x = (3 - 2)(0 - 3)^{-1} \bmod{5} = 3$. And in fact we correctly have $Q = 3P$.&lt;/figcaption&gt;
 &lt;/figure&gt;
 
@@ -683,13 +683,13 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 &lt;li&gt;&lt;strong&gt;What if $P = -Q$?&lt;/strong&gt; In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;What if $P = Q$?&lt;/strong&gt; In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q' \ne P$. What happens if we make $Q'$ approach $P$, getting closer and closer to it?
    &lt;figure&gt;
-     &lt;img src="http://andrea.corbellini.name/images/animation-point-doubling.png" class="gif" width="300" height="300" alt="The result of P + Q as Q is approaching P"&gt;
+     &lt;img src="http://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P"&gt;
      &lt;figcaption&gt;As the two points become closer together, the line passing through them becomes tangent to the curve.&lt;/figcaption&gt;
    &lt;/figure&gt;
    As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;What if $P \ne Q$, but there is no third point $R$?&lt;/strong&gt; We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
    &lt;figure&gt;
-     &lt;img src="http://andrea.corbellini.name/images/animation-tangent-line.png" class="gif" alt="The result of P + Q as Q is approaching P" width="300" height="300"&gt;
+     &lt;img src="http://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300"&gt;
      &lt;figcaption&gt;If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.&lt;/figcaption&gt;
    &lt;/figure&gt;
    Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.&lt;/li&gt;

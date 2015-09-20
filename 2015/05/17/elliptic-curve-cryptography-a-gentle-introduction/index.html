@@ -5,19 +5,7 @@
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
     <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?48510f94">
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
-      elements: ['content']
-    });
-  </script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
 
       <meta name="tags" content="bitcoin">
       <meta name="tags" content="dh">
@@ -149,13 +137,13 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <li><strong>What if $P = -Q$?</strong> In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.</li>
 <li><strong>What if $P = Q$?</strong> In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q' \ne P$. What happens if we make $Q'$ approach $P$, getting closer and closer to it?
    <figure>
-     <img src="http://andrea.corbellini.name/images/animation-point-doubling.png" class="gif" width="300" height="300" alt="The result of P + Q as Q is approaching P">
+     <img src="http://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P">
      <figcaption>As the two points become closer together, the line passing through them becomes tangent to the curve.</figcaption>
    </figure>
    As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.</li>
 <li><strong>What if $P \ne Q$, but there is no third point $R$?</strong> We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
    <figure>
-     <img src="http://andrea.corbellini.name/images/animation-tangent-line.png" class="gif" alt="The result of P + Q as Q is approaching P" width="300" height="300">
+     <img src="http://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300">
      <figcaption>If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.</figcaption>
    </figure>
    Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.</li>
@@ -338,26 +326,6 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
   <p>Copyright &copy; 2015 Andrea Corbellini</p>
   <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="https://jquery.com/" title="jQuery">jQuery</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', "UA-59812311-1", 'auto');
-    ga('send', 'pageview');
-  </script>
-  <script>
-    var disqus_shortname = "andreacorbellini";
-    (function() {
-        var s = document.createElement('script');
-        s.async = true;
-        s.defer = true;
-        s.type = 'text/javascript';
-        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
-    })();
-  </script>
-
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "elliptic-curve-cryptography-a-gentle-introduction";
@@ -400,5 +368,51 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="//platform.linkedin.com/in.js" async defer>lang: en_US</script>
 </footer>
+<script>
+  var cb = function() {
+    var h = document.getElementsByTagName('head')[0];
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = '//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700';
+    h.parentNode.insertBefore(l, h);
+    var l = document.createElement('link');
+    l.rel = 'stylesheet';
+    l.href = '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css';
+    h.parentNode.insertBefore(l, h);
+  };
+  var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+      webkitRequestAnimationFrame || msRequestAnimationFrame;
+  if (raf) raf(cb);
+  else window.addEventListener('load', cb);
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+    elements: ['content']
+  });
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', "UA-59812311-1", 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script>
+    var disqus_shortname = "andreacorbellini";
+    (function() {
+      var s = document.createElement('script');
+      s.async = true;
+      s.defer = true;
+      s.type = 'text/javascript';
+      s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
+    })();
+  </script>
   </body>
 </html>
