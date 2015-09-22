@@ -114,6 +114,7 @@ a, a:hover {
 #content pre {
   overflow: auto;
   word-wrap: normal;
+  line-height: 1.3;
 }
 
 #content img {
