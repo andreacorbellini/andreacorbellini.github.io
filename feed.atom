@@ -55,7 +55,7 @@ $$\begin{array}{rl}
 &lt;p&gt;The baby-step giant-step is a "meet in the middle" algorithm. Contrary to the brute-force attack (which forces us to calculate all the points $xP$ for every $x$ until we find $Q$), we will calculate "few" values for $bP$ and "few" values for $Q - amP$ until we find a correspondence. The algorithm works as follows:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Calculate $m = \left\lceil{\sqrt{n}}\right\rceil$&lt;/li&gt;
-&lt;li&gt;For every $b$ in ${0, \dots, m}$, calculate $b$ and store the results in a hash table.&lt;/li&gt;
+&lt;li&gt;For every $b$ in ${0, \dots, m}$, calculate $bP$ and store the results in a hash table.&lt;/li&gt;
 &lt;li&gt;For every $a$ in ${0, \dots, m}$:&lt;ol&gt;
 &lt;li&gt;calculate $amP$;&lt;/li&gt;
 &lt;li&gt;calculate $Q - amP$;&lt;/li&gt;
