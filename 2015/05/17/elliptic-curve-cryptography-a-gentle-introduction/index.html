@@ -171,7 +171,7 @@ $$\begin{array}{rcl}
     &amp; = &amp; y_Q + m(x_R - x_Q) = 4 + 1 \cdot (-3 - 3) = -2
 \end{array}$$</p>
 <p>Yes, this is correct!</p>
-<p>Note that these equations works even if <strong>one of $P$ or $Q$ is a tangency point</strong>. Let's try with $P = (-1, 4)$ and $Q = (1, 2)$.
+<p>Note that these equations work even if <strong>one of $P$ or $Q$ is a tangency point</strong>. Let's try with $P = (-1, 4)$ and $Q = (1, 2)$.
 $$\begin{array}{rcl}
     m &amp; = &amp; \frac{y_P - y_Q}{x_P - x_Q} = \frac{4 - 2}{-1 - 1} = -1 \\
     x_R &amp; = &amp; m^2 - x_P - x_Q = (-1)^2 - (-1) - 1 = 1 \\
@@ -182,7 +182,7 @@ $$\begin{array}{rcl}
 $$m = \frac{3 x_P^2 + a}{2 y_P}$$</p>
 <p>Note that, as we would expect, this expression for $m$ is the first derivative of:
 $$y_P = \pm \sqrt{x_P^3 + ax_P + b}$$</p>
-<p>To prove the validity of this result it is enough to check that $R$ belongs to the curve and that the line passing through $P$ and $R$ has only two intersections with the curve. But again, we don't prove this fact, but instead try with an example: $P = Q = (1, 2)$.
+<p>To prove the validity of this result it is enough to check that $R$ belongs to the curve and that the line passing through $P$ and $R$ has only two intersections with the curve. But again, we don't prove this fact, and instead try with an example: $P = Q = (1, 2)$.
 $$\begin{array}{rcl}
     m &amp; = &amp; \frac{3x_P^2 + a}{2 y_P} = \frac{3 \cdot 1^2 - 7}{2 \cdot 2} = -1 \\
     x_R &amp; = &amp; m^2 - x_P - x_Q = (-1)^2 - 1 - 1 = -1 \\
@@ -195,8 +195,11 @@ $$\begin{array}{rcl}
 $$nP = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
 <p>where $n$ is a natural number. I've written a <strong><a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/reals-mul.html">visual tool</a> for scalar multiplication</strong> too, if you want to play with that.</p>
 <p>Written in that form, it may seem that computing $nP$ requires $n$ additions. If $n$ has $k$ binary digits, then our algorithm would be $O(2^k)$, which is not really good. But there exist faster algorithms.</p>
-<p>One of them is the <span id="double-and-add"><strong>double and add</strong></span> algorithm. Its principle of operation can be better explained with an example. Take $n = 151$. Its binary representation is $10010111_2$. This binary representation can be turned into a sum powers of two:
-$$151 = 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 0 \cdot 2^3 + 1 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0$$</p>
+<p>One of them is the <span id="double-and-add"><strong>double and add</strong></span> algorithm. Its principle of operation can be better explained with an example. Take $n = 151$. Its binary representation is $10010111_2$. This binary representation can be turned into a sum of powers of two:
+$$\begin{array}{rcl}
+    151 &amp; = &amp; 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 0 \cdot 2^3 + 1 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0 \\
+    &amp; = &amp; 2^7 + 2^4 + 2^2 + 2^1 + 2^0
+\end{array}$$</p>
 <p>(We have taken each binary digit of $n$ and multiplied it by a power of two.)</p>
 <p>In view of this, we can write:
 $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
@@ -214,7 +217,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 <li>...</li>
 </ul>
 <p>In the end, we can compute $151 \cdot P$ performing just seven doublings and four additions.</p>
-<p>If this is not clear enough, here's a Python snippet that implements the algorithm:</p>
+<p>If this is not clear enough, here's a Python script that implements the algorithm:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">bits</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates the binary digits of n, starting</span>
