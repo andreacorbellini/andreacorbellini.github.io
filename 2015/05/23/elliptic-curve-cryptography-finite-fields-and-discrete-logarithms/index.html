@@ -73,7 +73,7 @@
 <p>We will soon define elliptic curves over $\mathbb{F}_p$, but before doing so we need a clear idea of what $x / y$ means in $\mathbb{F}_p$. Simply put: $x / y = x \cdot y^{-1}$, or, in plain words, $x$ over $y$ is equal to $x$ times the multiplicative inverse of $y$. This fact is not surprising, but gives us a basic method to perform division: <strong>find the multiplicative inverse of a number and then perform a single multiplication</strong>.</p>
 <p>Computing the multiplicative inverse can be "easily" done with the <strong><a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended Euclidean algorithm</a></strong>, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.</p>
 <p>We won't enter the details of the extended Euclidean algorithm, as it is off-topic, however here's a working Python implementation:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a three-tuple (gcd, x, y) such that</span>
 <span class="sd">    a * x + b * y == gcd, where gcd is the greatest</span>
@@ -107,10 +107,10 @@
     <span class="k">assert</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span> <span class="o">==</span> <span class="n">gcd</span>
 
     <span class="k">if</span> <span class="n">gcd</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="c"># Either n is 0, or p is not a prime number.</span>
+        <span class="c1"># Either n is 0, or p is not a prime number.</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s">&#39;{} has no multiplicative inverse &#39;</span>
-            <span class="s">&#39;modulo {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+            <span class="s1">&#39;{} has no multiplicative inverse &#39;</span>
+            <span class="s1">&#39;modulo {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">p</span>
 </pre></div>
@@ -244,7 +244,7 @@ $$n(hP) = 0$$</p>
 <li>Compute $G = hP$.</li>
 <li>If $G$ is 0, then go back to step 4. Otherwise we have found a generator of a subgroup with order $n$ and cofactor $h$.</li>
 </ol>
-<p>Note that this algorithm only works if $n$ is a prime. If $n$ weren't prime, then the order of $G$ could be one of the divisors of $n$.</p>
+<p>Note that this algorithm only works if $n$ is a prime. If $n$ wasn't a prime, then the order of $G$ could be one of the divisors of $n$.</p>
 <h2 id="discrete-logarithm">Discrete logarithm</h2>
 <p>As we did when working with continuous elliptic curves, we are now going to discuss the question: <strong>if we know $P$ and $Q$, what is $k$ such that $Q = kP$?</strong></p>
 <p>This problem, which is known as the <strong>discrete logarithm problem</strong> for elliptic curves, is believed to be a "hard" problem, in that there is no known polynomial time algorithm that can run on a classical computer. There are, however, no mathematical proofs for this belief.</p>
@@ -395,10 +395,10 @@ $$n(hP) = 0$$</p>
     elements: ['content']
   });
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -51,12 +51,12 @@
 </figure>
 
 <p>Well, it appears that Randall was right in that there's a help message hidden somewhere. And I just found it in a prime number:</p>
-<div class="highlight"><pre>245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249
+<div class="highlight"><pre><span></span>245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249
 </pre></div>
 
 
 <p>That number corresponds to the ASCII encoding of this message:</p>
-<div class="highlight"><pre>help!! i&#39;m trapped in a universe factory!!!!!!
+<div class="highlight"><pre><span></span>help!! i&#39;m trapped in a universe factory!!!!!!
 </pre></div>
 
 
@@ -67,7 +67,7 @@
 <p>At first I tried looking for all prime numbers corresponding to strings starting with <code>HELP! I'M TRAPPED IN A UNIVERSE FACTORY!</code>, with an arbitrary suffix. I found many of them, but I wasn't satisfied with the result: I wanted something that was purely English/ASCII, without any garbage. Therefore I tried appending hashtags like <code>#help</code> or <code>#universe</code>, but could not find any interesting combination that was also a prime number (apparently, use of Twitter is forbidden inside universe factories).</p>
 <p>So I decided to change approach: I looked for all primes corresponding to <code>HELP</code>, followed by a variable number of exclamation marks, followed by <code>I'M TRAPPED IN A UNIVERSE FACTORY</code>, followed by other exclamation marks. I could not find anything.</p>
 <p>But then I tried with a lower case string, and... I found lots of such primes!</p>
-<div class="highlight"><pre>help i&#39;m trapped in a universe factory!!!!!!!
+<div class="highlight"><pre><span></span>help i&#39;m trapped in a universe factory!!!!!!!
 help! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 help!! i&#39;m trapped in a universe factory!!!!!!
 help!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -233,10 +233,10 @@ help!!!!!!!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!
     elements: ['content']
   });
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

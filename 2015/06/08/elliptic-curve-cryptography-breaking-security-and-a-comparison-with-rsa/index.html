@@ -106,7 +106,7 @@ $$\begin{array}{rl}
 <h3>Playing with baby-step giant-step</h3>
 <p>I made <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py">a Python script</a> that computes discrete logarithms using the baby-step giant-step algorithm. Obviously it only works with curves with small orders: don't try it with <code>secp521r1</code>, unless you want to receive a <code>MemoryError</code>.</p>
 <p>It should produce an output like this:</p>
-<div class="highlight"><pre><span class="n">Curve</span><span class="o">:</span> <span class="n">y</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span><span class="o">^</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="n">mod</span> <span class="mi">10177</span>
+<div class="highlight"><pre><span></span><span class="n">Curve</span><span class="o">:</span> <span class="n">y</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span><span class="o">^</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="n">mod</span> <span class="mi">10177</span>
 <span class="n">Curve</span> <span class="n">order</span><span class="o">:</span> <span class="mi">10331</span>
 <span class="n">p</span> <span class="o">=</span> <span class="o">(</span><span class="mh">0x1</span><span class="o">,</span> <span class="mh">0x1</span><span class="o">)</span>
 <span class="n">q</span> <span class="o">=</span> <span class="o">(</span><span class="mh">0x1a28</span><span class="o">,</span> <span class="mh">0x8fb</span><span class="o">)</span>
@@ -161,7 +161,7 @@ $$17\ \text{months}\ \times \frac{\sqrt{2^{192}}}{\sqrt{2^{109}}} \approx 5 \cdo
 <h2>Pollard's &rho; vs Baby-step giant-step</h2>
 <p>I decided to put the <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py">baby-step giant-step script</a> and the <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/pollardsrho.py">Pollard's rho script</a> together with a <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/bruteforce.py">brute-force script</a> into a <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/comparelogs.py">fourth script</a> to compare their performances.</p>
 <p>This fourth script computes all the logarithms for all the points on the "tiny" curve using different algorithms and reports how much time it did take:</p>
-<div class="highlight"><pre>Curve order: 10331
+<div class="highlight"><pre><span></span>Curve order: 10331
 Using bruteforce
 Computing all logarithms: 100.00% done
 Took 2m 31s (5193 steps on average)
@@ -381,10 +381,10 @@ Took 0m 21s (138 steps on average)
     elements: ['content']
   });
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/MathJax.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.3/config/TeX-AMS_HTML.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -1,3 +1,4 @@
+cssmin
 flask
 markdown
 -e git://github.com/getpelican/pelican.git#egg=pelican
