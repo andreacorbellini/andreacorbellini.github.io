@@ -1,6 +1,10 @@
+import os
 import socket
+import sys
 from flask.json import tojson_filter
 
+
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def get_ip_address():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -11,6 +15,17 @@ def get_ip_address():
         sock.close()
 
 
+def get_venv_path():
+    if os.environ.get('VIRTUAL_ENV'):
+        return os.environ['VIRTUAL_ENV']
+    if sys.executable:
+        # Inside a virtual env, sys.executable should be something
+        # like '<venv_path>/bin/python' and is guaranteed to be an
+        # absolute path.
+        return os.path.dirname(os.path.dirname(sys.executable))
+    raise RuntimeError('VIRTUAL_ENV is unset and sys.executable is empty')
+
+
 # General.
 AUTHOR = 'Andrea Corbellini'
 SITENAME = 'Andrea Corbellini'
@@ -19,6 +34,8 @@ RELATIVE_URLS = False
 
 TIMEZONE = 'UTC'
 DEFAULT_LANG = 'en'
+
+OUTPUT_PATH = '/tmp/blog-output'
 
 
 # URLs and paths.
@@ -47,17 +64,20 @@ ARTICLE_LANG_SAVE_AS = ''
 DRAFT_LANG_SAVE_AS = ''
 PAGE_LANG_SAVE_AS = ''
 
-PATH = 'content'
-THEME = 'theme'
+PATH = os.path.join(PROJECT_PATH, 'content')
+THEME = os.path.join(PROJECT_PATH, 'theme')
 
 STATIC_PATHS = [
-    'images',
+    os.path.join(PATH, 'images'),
 ]
 
 
 # Plugins.
 PLUGIN_PATHS = [
-    'plugins',
+    os.path.join(PROJECT_PATH, 'plugins'),
+    # A copy of git://github.com/getpelican/pelican-plugins.git is expected
+    # to be in env/src/pelican-plugins.
+    os.path.join(get_venv_path(), 'src', 'pelican-plugins'),
 ]
 
 PLUGINS = [

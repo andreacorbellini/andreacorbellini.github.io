@@ -1,0 +1,40 @@
+#!/bin/bash
+# Set up a working environment for building the blog.
+
+set -e
+
+blogdir="$(dirname "$(readlink -f "$0")")"
+envdir="$blogdir/env"
+
+# Create/upgrade the virtual env.
+if [ ! -d "$envdir" ]
+then
+    python3 -m venv "$envdir"
+fi
+
+. "$envdir/bin/activate"
+
+pip install -U pip
+
+# Be verbose from now on.
+set -x
+
+# Install the requirements.
+pip install -Ur "$blogdir/requirements.txt"
+
+# Fetch/update pelican plugins.
+if [ ! -d "$envdir/src/pelican-plugins" ]
+then
+    mkdir -p "$envdir/src"
+    git clone --recurse-submodules \
+        git://github.com/getpelican/pelican-plugins.git \
+        "$envdir/src/pelican-plugins"
+fi
+
+(
+    cd "$envdir/src/pelican-plugins"
+    git pull --recurse-submodules
+)
+
+# Build the blog.
+pelican -s "$blogdir/src/pelicanconf.py"

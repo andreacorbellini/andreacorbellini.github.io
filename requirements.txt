@@ -1,0 +1,9 @@
+flask
+markdown
+-e git://github.com/getpelican/pelican.git#egg=pelican
+
+# For pelican-plugins/assets
+webassets
+
+# For pelican-plugins/tipue_search
+beautifulsoup4
