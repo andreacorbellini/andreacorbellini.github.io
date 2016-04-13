@@ -237,47 +237,7 @@ dpkg: error processing package docker.io (--configure):
 &lt;p&gt;As you can see there are no nodes connected, as we would expect. Everything looks good.&lt;/p&gt;
 &lt;h2 id="step-7"&gt;Step 7: Create the Swarm Agents&lt;/h2&gt;
 &lt;p&gt;Our Swarm manager can't do anything interesting without agent nodes. Creating new LXC containers for the agents is not much different from what we already did with the manager. To set up new agents in an automatic fashion I've created a script, so that you don't need to repeat the steps manually:&lt;/p&gt;
-&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
 
 &lt;span class="nb"&gt;set&lt;/span&gt; -eu
 
@@ -319,7 +279,7 @@ dpkg: error processing package docker.io (--configure):
         swarm join --addr&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_AGENT_IP&lt;/span&gt;&lt;span class="s2"&gt;:2375&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;etcd://&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="s2"&gt;:2379&amp;quot;&lt;/span&gt;
 &lt;span class="k"&gt;done&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
 
 &lt;p&gt;Be sure to change the values for &lt;code&gt;SWARM_MANAGER_IP&lt;/code&gt;, &lt;code&gt;DOWNLOAD_DIST&lt;/code&gt;, &lt;code&gt;DOWNLOAD_RELEASE&lt;/code&gt; and &lt;code&gt;DOWNLOAD_ARCH&lt;/code&gt; to fit your needs.&lt;/p&gt;
 &lt;p&gt;Thanks to this script, creating 10 new agents is as simple as running one command:&lt;/p&gt;

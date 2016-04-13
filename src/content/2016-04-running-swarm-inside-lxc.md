@@ -270,6 +270,7 @@ As you can see there are no nodes connected, as we would expect. Everything look
 
 Our Swarm manager can't do anything interesting without agent nodes. Creating new LXC containers for the agents is not much different from what we already did with the manager. To set up new agents in an automatic fashion I've created a script, so that you don't need to repeat the steps manually:
 
+    :::bash
     #!/bin/bash
 
     set -eu
