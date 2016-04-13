@@ -142,7 +142,8 @@ dpkg: error processing package docker.io (--configure):
 <p>In this case, Docker is using the devicemapper storage driver and is complaining about the lack of loopback devices. If that's the case, check whether OverlayFS is loaded and reinstall Docker.</p>
 <p>Or you might get an error like this:</p>
 <div class="highlight"><pre><span></span><span class="gp">root@swarm-manager:~#</span> docker daemon
-<span class="go">XXX</span>
+<span class="go">...</span>
+<span class="go">FATA[0000] Error starting daemon: AppArmor enabled on system but the docker-default profile could not be loaded.</span>
 </pre></div>
 
 

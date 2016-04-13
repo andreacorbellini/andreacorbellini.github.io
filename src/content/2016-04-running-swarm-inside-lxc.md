@@ -116,7 +116,8 @@ Or you might get an error like this:
 
     :::console
     root@swarm-manager:~# docker daemon
-    XXX
+    ...
+    FATA[0000] Error starting daemon: AppArmor enabled on system but the docker-default profile could not be loaded.
 
 It this other case, Docker is complaining about the fact that it can't talk to AppArmor. Check the configuration for the LXC container.
 
