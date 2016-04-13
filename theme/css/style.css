@@ -233,6 +233,10 @@ a, a:hover {
   font-size: 23px;
 }
 
+.read-more {
+  text-decoration: underline;
+}
+
 .social {
   margin-right: 10px;
 }
