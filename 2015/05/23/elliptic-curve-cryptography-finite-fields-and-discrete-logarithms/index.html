@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
     <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?b82b3fa7">
+      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?cc6373d9">
 
       <meta name="tags" content="ecc">
       <meta name="tags" content="math">
@@ -248,7 +248,7 @@ $$n(hP) = 0$$</p>
 <h2 id="discrete-logarithm">Discrete logarithm</h2>
 <p>As we did when working with continuous elliptic curves, we are now going to discuss the question: <strong>if we know $P$ and $Q$, what is $k$ such that $Q = kP$?</strong></p>
 <p>This problem, which is known as the <strong>discrete logarithm problem</strong> for elliptic curves, is believed to be a "hard" problem, in that there is no known polynomial time algorithm that can run on a classical computer. There are, however, no mathematical proofs for this belief.</p>
-<p>This problem is also analogous to the one used with other cryptosystems such as the Digital Signature Algorithm (DSA), the Diffie-Hellman key exchange (D-H) and the ElGamal algorithm — it's not a coincidence that they have the same name. The difference is that, with those algorithms, we use modulo exponentiation instead of scalar multiplication. Their discrete logarithm problem can be stated as follows: if we know $a$ and $b$, what's $k$ such that $b = a^k \bmod{p}$?</p>
+<p>This problem is also analogous to the discrete logarithm problem used with other cryptosystems such as the Digital Signature Algorithm (DSA), the Diffie-Hellman key exchange (D-H) and the ElGamal algorithm — it's not a coincidence that they have the same name. The difference is that, with those algorithms, we use modulo exponentiation instead of scalar multiplication. Their discrete logarithm problem can be stated as follows: if we know $a$ and $b$, what's $k$ such that $b = a^k \bmod{p}$?</p>
 <p>Both these problems are "discrete" because they involve finite sets (more precisely, cyclic subgroups). And they are "logarithms" because they are analogous to ordinary logarithms.</p>
 <p>What makes ECC interesting is that, as of today, the discrete logarithm problem for elliptic curves seems to be "harder" if compared to other similar problems used in cryptography. This implies that we need fewer bits for the integer $k$ in order to achieve the same level of security as with other cryptosystems, as we will see in details in the fourth and last post of this series.</p>
 <h2>More next week!</h2>
@@ -284,6 +284,7 @@ $$n(hP) = 0$$</p>
   <aside class="widget">
     <h1>Recent posts</h1>
     <ul class="articles">
+        <li><a href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" title="Wed 13 April 2016">Running Docker Swarm inside LXC</a></li>
         <li><a href="http://andrea.corbellini.name/2015/09/22/cookie-law/" title="Tue 22 September 2015">When bureaucracy hits the web: the cookie law</a></li>
         <li><a href="http://andrea.corbellini.name/2015/08/02/hello-pelican/" title="Sun 02 August 2015">Hello Pelican!</a></li>
         <li><a href="http://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/" title="Tue 16 June 2015">Let&#39;s Encrypt is going to start soon</a></li>
@@ -291,7 +292,6 @@ $$n(hP) = 0$$</p>
         <li><a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" title="Sat 30 May 2015">Elliptic Curve Cryptography: ECDH and ECDSA</a></li>
         <li><a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/" title="Sat 23 May 2015">Elliptic Curve Cryptography: finite fields and discrete logarithms</a></li>
         <li><a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" title="Sun 17 May 2015">Elliptic Curve Cryptography: a gentle introduction</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/" title="Sun 12 April 2015">Let&#39;s Encrypt: the road towards a better web?</a></li>
     </ul>
   </aside>
   <aside class="widget">
@@ -304,19 +304,19 @@ $$n(hP) = 0$$</p>
         <li><a href="http://andrea.corbellini.name/tag/math/" class="btn btn-primary btn-sm" title="3 articles about math">math</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ecdsa/" class="btn btn-primary btn-sm" title="3 articles about ecdsa">ecdsa</a></li>
         <li><a href="http://andrea.corbellini.name/tag/dsa/" class="btn btn-primary btn-sm" title="3 articles about dsa">dsa</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/docker/" class="btn btn-primary btn-sm" title="3 articles about docker">docker</a></li>
         <li><a href="http://andrea.corbellini.name/tag/dh/" class="btn btn-primary btn-sm" title="3 articles about dh">dh</a></li>
         <li><a href="http://andrea.corbellini.name/tag/blog/" class="btn btn-primary btn-sm" title="3 articles about blog">blog</a></li>
         <li><a href="http://andrea.corbellini.name/tag/web/" class="btn btn-primary btn-sm" title="2 articles about web">web</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/lxc/" class="btn btn-primary btn-sm" title="2 articles about lxc">lxc</a></li>
         <li><a href="http://andrea.corbellini.name/tag/lets-encrypt/" class="btn btn-primary btn-sm" title="2 articles about let&#39;s encrypt">let&#39;s encrypt</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ecdhe/" class="btn btn-primary btn-sm" title="2 articles about ecdhe">ecdhe</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ecdh/" class="btn btn-primary btn-sm" title="2 articles about ecdh">ecdh</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/docker/" class="btn btn-primary btn-sm" title="2 articles about docker">docker</a></li>
         <li><a href="http://andrea.corbellini.name/tag/xkcd/" class="btn btn-primary btn-sm" title="1 articles about xkcd">xkcd</a></li>
         <li><a href="http://andrea.corbellini.name/tag/wordpress/" class="btn btn-primary btn-sm" title="1 articles about wordpress">wordpress</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ubuntu-core/" class="btn btn-primary btn-sm" title="1 articles about ubuntu core">ubuntu core</a></li>
         <li><a href="http://andrea.corbellini.name/tag/ubuntu/" class="btn btn-primary btn-sm" title="1 articles about ubuntu">ubuntu</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/ssh/" class="btn btn-primary btn-sm" title="1 articles about ssh">ssh</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/snappy/" class="btn btn-primary btn-sm" title="1 articles about snappy">snappy</a></li>
+        <li><a href="http://andrea.corbellini.name/tag/swarm/" class="btn btn-primary btn-sm" title="1 articles about swarm">swarm</a></li>
     </ul>
   </aside>
   <aside class="widget">

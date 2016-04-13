@@ -115,6 +115,16 @@ a, a:hover {
   overflow: auto;
   word-wrap: normal;
   line-height: 1.3;
+  padding: 3px 7px;
+}
+
+#content .highlighttable {
+  display: block;
+  overflow: auto;
+}
+
+#content .highlighttable pre {
+  margin-bottom: 0;
 }
 
 #content img {
