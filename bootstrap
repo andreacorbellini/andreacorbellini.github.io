@@ -5,6 +5,7 @@ set -e
 
 blogdir="$(dirname "$(readlink -f "$0")")"
 envdir="$blogdir/env"
+srcdir="$blogdir/src"
 
 # Create/upgrade the virtual env.
 if [ ! -d "$envdir" ]
@@ -36,5 +37,8 @@ fi
     git pull --recurse-submodules
 )
 
+# Build static files.
+make -C "$srcdir/theme/static" all
+
 # Build the blog.
-pelican -s "$blogdir/src/pelicanconf.py"
+pelican -s "$srcdir/pelicanconf.py"
