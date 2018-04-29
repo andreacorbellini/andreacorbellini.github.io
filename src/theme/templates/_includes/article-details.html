@@ -1,12 +1,4 @@
 <div class="details small">
-  <span><span class="fa fa-calendar-o"></span><time datetime="{{ article.date.isoformat() }}">{{ article.locale_date }}</time></span>
+  <span><span class="fa fa-calendar-o"></span><time datetime="{{ article.date.isoformat() }}">{{ article.date.strftime('%B %d, %Y') }}</time></span>
   <span><span class="fa fa-comments-o"></span><a href="{{ SITEURL }}/{{ article.url }}#disqus_thread" title="Comments" data-disqus-identifier="{{ article.slug }}">Comments</a></span>
-  <span>
-    <span class="fa fa-tags"></span>
-    <ul class="tags list-inline">
-      {% for tag in article.tags %}
-        <li><a href="{{ SITEURL }}/{{ tag.url }}" rel="tag" class="" title="{{ tag }}">{{ tag }}</a></li>
-      {% endfor %}
-    </ul>
-  </span>
 </div>

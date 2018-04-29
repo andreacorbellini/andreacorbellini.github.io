@@ -7,20 +7,19 @@
 
 {% block content %}
   {% autoescape true %}
-    {% for article in articles_page.object_list %}
-      <article>
-        <header>
-          <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
-          {% include "_includes/article-details.html" %}
-        </header>
-        <div class="body">
-          {{ article.summary|safe }}
-          <p><a href="{{ SITEURL }}/{{ article.url }}" title="{{ article.title }}" class="read-more">Read more...</a></p>
-        </div>
-      </article>
-    {% endfor %}
-    {% if articles_paginator.num_pages > 1 %}
-      <footer>{% include "_includes/pagination.html" %}</footer>
-    {% endif %}
+    <div id="latest">
+      <h1>Latest articles</h1>
+      <ul class="articles">
+        {% for article in articles_page.object_list %}
+          <li>
+            <h3><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h3>
+            {% include "_includes/article-details.html" %}
+          </li>
+        {% endfor %}
+      </ul>
+      {% if articles_paginator.num_pages > 1 %}
+        <footer>{% include "_includes/pagination.html" %}</footer>
+      {% endif %}
+    </div>
   {% endautoescape %}
 {% endblock %}

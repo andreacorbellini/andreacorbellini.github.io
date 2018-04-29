@@ -93,10 +93,12 @@ JINJA_FILTERS = {
     'tojson': tojson_filter,
 }
 
-JINJA_EXTENSIONS = [
-    'jinja2.ext.autoescape',
-    'jinja2.ext.do',
-]
+JINJA_ENVIRONMENT = {
+    'extensions': [
+        'jinja2.ext.autoescape',
+        'jinja2.ext.do',
+    ],
+}
 
 DIRECT_TEMPLATES = [
     'categories',
@@ -111,7 +113,7 @@ MINIFY_CSS = False
 
 
 # Pagination and summary.
-DEFAULT_PAGINATION = 8
+DEFAULT_PAGINATION = 32
 
 SUMMARY_MAX_LENGTH = 64
 

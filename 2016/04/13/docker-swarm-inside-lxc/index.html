@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
     <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?f32dc21c">
+      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?e1a30014">
 
       <meta name="tags" content="docker">
       <meta name="tags" content="swarm">
@@ -32,23 +32,12 @@
   </nav>
 </header>
       <div class="main-container container">
-        <div class="row">
-          <main id="content" class="left col-md-9">    <article>
+        <main id="content">    <article>
       <header>
         <h1><a href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" rel="bookmark" title="Running Docker Swarm inside LXC">Running Docker Swarm inside LXC</a></h1>
 <div class="details small">
-  <span><span class="fa fa-calendar-o"></span><time datetime="2016-04-13T18:00:00+00:00">Wed 13 April 2016</time></span>
+  <span><span class="fa fa-calendar-o"></span><time datetime="2016-04-13T18:00:00+00:00">April 13, 2016</time></span>
   <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/#disqus_thread" title="Comments" data-disqus-identifier="docker-swarm-inside-lxc">Comments</a></span>
-  <span>
-    <span class="fa fa-tags"></span>
-    <ul class="tags list-inline">
-        <li><a href="http://andrea.corbellini.name/tag/docker/" rel="tag" class="" title="docker">docker</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/swarm/" rel="tag" class="" title="swarm">swarm</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/lxc/" rel="tag" class="" title="lxc">lxc</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/containers/" rel="tag" class="" title="containers">containers</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/distributed-computing/" rel="tag" class="" title="distributed-computing">distributed-computing</a></li>
-    </ul>
-  </span>
 </div>      </header>
       <div class="body"><p>I've been using <a href="https://docs.docker.com/swarm/">Docker Swarm</a> inside <a href="https://linuxcontainers.org/lxc/introduction/">LXC</a> containers for a while now, and I thought that I could share my experience with you. Due to their nature, LXC containers are pretty lightweight and require very few resources if compared to virtual machines. This makes LXC ideal for development and simulation purposes. Running Docker Swarm inside LXC requires a few steps that I'm going to show you in this tutorial.</p>
 <p>Before we begin, a quick premise: LXC, Docker and Swarm can be configured in many different ways. Here I'm showing just my preferred setup: LXC with AppArmor disabled, Docker with the OverlayFS storage driver, Swarm with etcd discovery. There exist many other kind of configurations that can work under LXC &mdash; leave a comment if you want to know more.</p>
@@ -196,7 +185,7 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">0 processes are in complain mode.</span>
 <span class="go">0 processes are unconfined but have a profile defined.</span>
 
-<span class="gp">root@host:~#</span> ps -ef <span class="p">|</span> grep 6956
+<span class="gp">root@host:~#</span> ps -ef <span class="p">|</span> grep <span class="m">6956</span>
 <span class="go">root      6956  4982  0 17:17 ?        00:00:00 bash -c while true; do sleep 1; echo -n zZ; done</span>
 <span class="go">root      6973  6956  0 17:17 ?        00:00:00 sleep 1</span>
 <span class="go">root      6982  6808  0 17:17 pts/3    00:00:00 grep --color=auto 6956</span>
@@ -220,17 +209,17 @@ dpkg: error processing package docker.io (--configure):
 
 
 <p><code>10.0.3.154</code> is my IP address. Let's start etcd:</p>
-<div class="highlight"><pre><span></span><span class="gp">root@swarm-manager:~#</span> <span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span>10.0.3.154
+<div class="highlight"><pre><span></span><span class="gp">root@swarm-manager:~#</span> <span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span><span class="m">10</span>.0.3.154
 
-<span class="gp">root@swarm-manager:~#</span> docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>etcd -p 4001:4001 -p 2380:2380 -p 2379:2379 <span class="se">\</span>
-<span class="go">                            quay.io/coreos/etcd -name etcd0 \</span>
-<span class="go">                            -advertise-client-urls http://$SWARM_MANAGER_IP:2379,http://$SWARM_MANAGER_IP:4001 \</span>
-<span class="go">                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \</span>
-<span class="go">                            -initial-advertise-peer-urls http://$SWARM_MANAGER_IP:2380 \</span>
-<span class="go">                            -listen-peer-urls http://0.0.0.0:2380 \</span>
-<span class="go">                            -initial-cluster-token etcd-cluster-1 \</span>
-<span class="go">                            -initial-cluster etcd0=http://$SWARM_MANAGER_IP:2380 \</span>
-<span class="go">                            -initial-cluster-state new</span>
+<span class="gp">root@swarm-manager:~#</span> docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>etcd -p <span class="m">4001</span>:4001 -p <span class="m">2380</span>:2380 -p <span class="m">2379</span>:2379 <span class="se">\</span>
+                            quay.io/coreos/etcd -name etcd0 <span class="se">\</span>
+                            -advertise-client-urls http://<span class="nv">$SWARM_MANAGER_IP</span>:2379,http://<span class="nv">$SWARM_MANAGER_IP</span>:4001 <span class="se">\</span>
+                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 <span class="se">\</span>
+                            -initial-advertise-peer-urls http://<span class="nv">$SWARM_MANAGER_IP</span>:2380 <span class="se">\</span>
+                            -listen-peer-urls http://0.0.0.0:2380 <span class="se">\</span>
+                            -initial-cluster-token etcd-cluster-1 <span class="se">\</span>
+                            -initial-cluster <span class="nv">etcd0</span><span class="o">=</span>http://<span class="nv">$SWARM_MANAGER_IP</span>:2380 <span class="se">\</span>
+                            -initial-cluster-state new
 <span class="go">Unable to find image &#39;quay.io/coreos/etcd:latest&#39; locally</span>
 <span class="go">latest: Pulling from coreos/etcd</span>
 <span class="go">...</span>
@@ -246,8 +235,8 @@ dpkg: error processing package docker.io (--configure):
 <p>Replace <code>10.0.3.154</code> with the IP address of your LXC container.</p>
 <p>Note that I've started etcd with <code>--restart=always</code>, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop <code>--restart=always</code> if that's not what you want.</p>
 <p>Now we can start the Swarm manager:</p>
-<div class="highlight"><pre><span></span><span class="gp">root@swarm-manager:~#</span> docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>swarm -p 3375:3375 <span class="se">\</span>
-<span class="go">                            swarm manage -H 0.0.0.0:3375 etcd://$SWARM_MANAGER_IP:2379</span>
+<div class="highlight"><pre><span></span><span class="gp">root@swarm-manager:~#</span> docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>swarm -p <span class="m">3375</span>:3375 <span class="se">\</span>
+                            swarm manage -H <span class="m">0</span>.0.0.0:3375 etcd://<span class="nv">$SWARM_MANAGER_IP</span>:2379
 <span class="go">Unable to find image &#39;swarm:latest&#39; locally</span>
 <span class="go">latest: Pulling from library/swarm</span>
 <span class="go">...</span>
@@ -292,7 +281,7 @@ dpkg: error processing package docker.io (--configure):
 
 <span class="nb">set</span> -eu
 
-<span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span>10.0.3.154
+<span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span><span class="m">10</span>.0.3.154
 <span class="nv">DOWNLOAD_DIST</span><span class="o">=</span>ubuntu
 <span class="nv">DOWNLOAD_RELEASE</span><span class="o">=</span>xenial
 <span class="nv">DOWNLOAD_ARCH</span><span class="o">=</span>amd64
@@ -334,7 +323,7 @@ dpkg: error processing package docker.io (--configure):
 
 <p>Be sure to change the values for <code>SWARM_MANAGER_IP</code>, <code>DOWNLOAD_DIST</code>, <code>DOWNLOAD_RELEASE</code> and <code>DOWNLOAD_ARCH</code> to fit your needs.</p>
 <p>Thanks to this script, creating 10 new agents is as simple as running one command:</p>
-<div class="highlight"><pre><span></span><span class="gp">root@host:~#</span> ./swarm-agent-create swarm-agent-<span class="o">{</span>0..9<span class="o">}</span>
+<div class="highlight"><pre><span></span><span class="gp">root@host:~#</span> ./swarm-agent-create swarm-agent-<span class="o">{</span><span class="m">0</span>..9<span class="o">}</span>
 </pre></div>
 
 
@@ -529,60 +518,6 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
         </div>
       </section>
 </main>
-          <div class="sidebar right col-md-3">  <aside class="widget">
-    <form action="http://andrea.corbellini.name/search/">
-      <div class="input-group input-group-lg">
-        <input type="text" name="q" class="form-control" placeholder="Search">
-        <span class="input-group-btn">
-          <button type="submit" id="tipue_search_button" class="btn btn-default"><span class="fa fa-search"></span></button>
-        </span>
-      </div>
-    </form>
-  </aside>
-  <aside class="widget">
-    <h1>Recent posts</h1>
-    <ul class="articles">
-        <li><a href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" title="Wed 13 April 2016">Running Docker Swarm inside LXC</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/09/22/cookie-law/" title="Tue 22 September 2015">When bureaucracy hits the web: the cookie law</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/08/02/hello-pelican/" title="Sun 02 August 2015">Hello Pelican!</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/" title="Tue 16 June 2015">Let&#39;s Encrypt is going to start soon</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/" title="Mon 08 June 2015">Elliptic Curve Cryptography: breaking security and a comparison with RSA</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" title="Sat 30 May 2015">Elliptic Curve Cryptography: ECDH and ECDSA</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/" title="Sat 23 May 2015">Elliptic Curve Cryptography: finite fields and discrete logarithms</a></li>
-        <li><a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" title="Sun 17 May 2015">Elliptic Curve Cryptography: a gentle introduction</a></li>
-    </ul>
-  </aside>
-  <aside class="widget">
-    <h1>Tags</h1>
-    <ul class="tags list-inline">
-        <li><a href="http://andrea.corbellini.name/tag/security/" class="btn btn-primary btn-sm" title="7 articles about security">security</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/tls/" class="btn btn-primary btn-sm" title="4 articles about tls">tls</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/ecc/" class="btn btn-primary btn-sm" title="4 articles about ecc">ecc</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/rsa/" class="btn btn-primary btn-sm" title="3 articles about rsa">rsa</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/math/" class="btn btn-primary btn-sm" title="3 articles about math">math</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/ecdsa/" class="btn btn-primary btn-sm" title="3 articles about ecdsa">ecdsa</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/dsa/" class="btn btn-primary btn-sm" title="3 articles about dsa">dsa</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/docker/" class="btn btn-primary btn-sm" title="3 articles about docker">docker</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/dh/" class="btn btn-primary btn-sm" title="3 articles about dh">dh</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/blog/" class="btn btn-primary btn-sm" title="3 articles about blog">blog</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/web/" class="btn btn-primary btn-sm" title="2 articles about web">web</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/lxc/" class="btn btn-primary btn-sm" title="2 articles about lxc">lxc</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/lets-encrypt/" class="btn btn-primary btn-sm" title="2 articles about let&#39;s encrypt">let&#39;s encrypt</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/ecdhe/" class="btn btn-primary btn-sm" title="2 articles about ecdhe">ecdhe</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/ecdh/" class="btn btn-primary btn-sm" title="2 articles about ecdh">ecdh</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/xkcd/" class="btn btn-primary btn-sm" title="1 articles about xkcd">xkcd</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/wordpress/" class="btn btn-primary btn-sm" title="1 articles about wordpress">wordpress</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/ubuntu-core/" class="btn btn-primary btn-sm" title="1 articles about ubuntu core">ubuntu core</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/ubuntu/" class="btn btn-primary btn-sm" title="1 articles about ubuntu">ubuntu</a></li>
-        <li><a href="http://andrea.corbellini.name/tag/swarm/" class="btn btn-primary btn-sm" title="1 articles about swarm">swarm</a></li>
-    </ul>
-  </aside>
-  <aside class="widget">
-    <h1>License</h1>
-    <p>The content of this blog is released under the terms of the <a href="http://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a>.</p>
-  </aside>
-</div>
-        </div>
       </div>
     <footer class="main-footer small">  <div class="container">
   <p>Copyright &copy; 2015 Andrea Corbellini</p>
@@ -649,8 +584,8 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 </script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
-    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
-    elements: ['content']
+    tex2jax: { inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ] },
+    elements: [ 'content' ]
   });
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>

@@ -19,13 +19,18 @@ bootstrap:
 	wget -O $(TMPDIR)/bootstrap.zip \
 		https://github.com/twbs/bootstrap/archive/v$(BOOTSTRAP_VERSION).zip
 	unzip -d $(TMPDIR) $(TMPDIR)/bootstrap.zip
-	mv $(TMPDIR)/bootstrap-$(BOOTSTRAP_VERSION)/less $@
+	mkdir -p $@
+	mv $(TMPDIR)/bootstrap-$(BOOTSTRAP_VERSION)/less/* $@
+	-rm bootstrap/variables.less
 	-rm -rf $(TMPDIR)
+
+bootstrap/variables.less: bootstrap variables.less
+	cp variables.less bootstrap
 
 css/pygments.css:
 	pygmentize -f html -S colorful -a .highlight > $@
 
-css/style.css: css/style.less css/pygments.css bootstrap
+css/style.css: css/style.less css/pygments.css bootstrap bootstrap/variables.less
 	lessc $< > $@-new
 	mv -f $@-new $@
 
