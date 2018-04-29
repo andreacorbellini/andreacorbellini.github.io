@@ -24,8 +24,8 @@ bootstrap:
 	-rm bootstrap/variables.less
 	-rm -rf $(TMPDIR)
 
-bootstrap/variables.less: bootstrap variables.less
-	cp variables.less bootstrap
+bootstrap/variables.less: bootstrap css/variables.less
+	cp css/variables.less bootstrap
 
 css/pygments.css:
 	pygmentize -f html -S colorful -a .highlight > $@
