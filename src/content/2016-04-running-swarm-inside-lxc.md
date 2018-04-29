@@ -1,10 +1,12 @@
-Title: Running Docker Swarm inside LXC
+Title: Running Docker Swarm inside LXC (outdated)
 Date: 2016-04-13 18:00
 Author: andreacorbellini
 Category: information-technology
 Tags: docker, swarm, lxc, containers, distributed-computing
 Slug: docker-swarm-inside-lxc
 Status: published
+
+**UPDATE:** This article was written in 2016 and refers to a version of Docker Swarm that is now known as "legacy Swarm". The newer Docker Swarm won't work in LXC as described in this article.
 
 I've been using [Docker Swarm](https://docs.docker.com/swarm/) inside [LXC](https://linuxcontainers.org/lxc/introduction/) containers for a while now, and I thought that I could share my experience with you. Due to their nature, LXC containers are pretty lightweight and require very few resources if compared to virtual machines. This makes LXC ideal for development and simulation purposes. Running Docker Swarm inside LXC requires a few steps that I'm going to show you in this tutorial.
 

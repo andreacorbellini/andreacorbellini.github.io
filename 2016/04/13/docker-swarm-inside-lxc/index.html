@@ -15,7 +15,7 @@
       <meta name="tags" content="containers">
       <meta name="tags" content="distributed-computing">
     <link rel="canonical" href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/">
-    <title>Running Docker Swarm inside LXC - Andrea Corbellini</title>
+    <title>Running Docker Swarm inside LXC (outdated) - Andrea Corbellini</title>
   </head>
   <body>
     <header class="main-header">  <nav class="navbar navbar-inverse">
@@ -36,12 +36,13 @@
       <div class="main-container container">
         <main id="content">    <article>
       <header>
-        <h1><a href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" rel="bookmark" title="Running Docker Swarm inside LXC">Running Docker Swarm inside LXC</a></h1>
+        <h1><a href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" rel="bookmark" title="Running Docker Swarm inside LXC (outdated)">Running Docker Swarm inside LXC (outdated)</a></h1>
 <div class="details small">
   <span><span class="fa fa-calendar-o"></span><time datetime="2016-04-13T18:00:00+00:00">April 13, 2016</time></span>
   <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/#disqus_thread" title="Comments" data-disqus-identifier="docker-swarm-inside-lxc">Comments</a></span>
 </div>      </header>
-      <div class="body"><p>I've been using <a href="https://docs.docker.com/swarm/">Docker Swarm</a> inside <a href="https://linuxcontainers.org/lxc/introduction/">LXC</a> containers for a while now, and I thought that I could share my experience with you. Due to their nature, LXC containers are pretty lightweight and require very few resources if compared to virtual machines. This makes LXC ideal for development and simulation purposes. Running Docker Swarm inside LXC requires a few steps that I'm going to show you in this tutorial.</p>
+      <div class="body"><p><strong>UPDATE:</strong> This article was written in 2016 and refers to a version of Docker Swarm that is now known as "legacy Swarm". The newer Docker Swarm won't work in LXC as described in this article.</p>
+<p>I've been using <a href="https://docs.docker.com/swarm/">Docker Swarm</a> inside <a href="https://linuxcontainers.org/lxc/introduction/">LXC</a> containers for a while now, and I thought that I could share my experience with you. Due to their nature, LXC containers are pretty lightweight and require very few resources if compared to virtual machines. This makes LXC ideal for development and simulation purposes. Running Docker Swarm inside LXC requires a few steps that I'm going to show you in this tutorial.</p>
 <p>Before we begin, a quick premise: LXC, Docker and Swarm can be configured in many different ways. Here I'm showing just my preferred setup: LXC with AppArmor disabled, Docker with the OverlayFS storage driver, Swarm with etcd discovery. There exist many other kind of configurations that can work under LXC &mdash; leave a comment if you want to know more.</p>
 <p><strong>Overview:</strong></p>
 <ol>
@@ -506,7 +507,7 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 <p>I hope you enjoyed the tutorial. Feel free to leave a comment if you have questions!</p></div>
       <footer class="container-fluid">
         <ul class="list-inline">
-          <li class="social"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-text="Running Docker Swarm inside LXC" data-via="andreacorbe">Tweet</a></li>
+          <li class="social"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-text="Running Docker Swarm inside LXC (outdated)" data-via="andreacorbe">Tweet</a></li>
           <li class="social"><div class="fb-share-button" data-href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-layout="button_count"></div></li>
           <li class="social"><div class="g-plus" data-action="share" data-href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-annotation="bubble"></div></li>
           <li class="social"><script type="IN/Share" data-url="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-counter="right"></script></li>
@@ -528,7 +529,7 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "docker-swarm-inside-lxc";
-      var disqus_title = "Running Docker Swarm inside LXC";
+      var disqus_title = "Running Docker Swarm inside LXC (outdated)";
       var disqus_url = "http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/";
       (function() {
           var s = document.createElement('script');
