@@ -1,6 +1,7 @@
 import os
 import socket
 import sys
+from datetime import date
 from flask.json import tojson_filter
 
 
@@ -129,3 +130,7 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 UBUNTU_FEED_ATOM = None
 UBUNTU_FEED_RSS = None
+
+
+# Variables used in template
+YEAR = date.today().year
