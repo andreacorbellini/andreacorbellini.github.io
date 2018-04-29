@@ -1,0 +1,25 @@
+#!/bin/bash
+# Clear all generated files and re-create them
+
+set -e
+
+blogdir="$(dirname "$(readlink -f "$0")")"
+envdir="$blogdir/env"
+srcdir="$blogdir/src"
+
+. "$envdir/bin/activate"
+
+rm -f "$blogdir/feed.atom"
+rm -f "$blogdir/feed.rss"
+rm -f "$blogdir/ubuntu.rss"
+
+rm -f "$blogdir/index.html"
+rm -rf "$blogdir/"201[0-9]
+rm -rf "$blogdir/about"
+rm -rf "$blogdir/category"
+rm -rf "$blogdir/tag"
+
+rm -rf "$blogdir/theme"
+rm -rf "$blogdir/images"
+
+pelican -s "$srcdir/publishconf.py"
