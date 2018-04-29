@@ -28,3 +28,4 @@ GOOGLE_ANALYTICS = 'UA-59812311-1'
 FEED_ATOM = 'feed.atom'
 FEED_RSS = 'feed.rss'
 FEED_UBUNTU_RSS = 'ubuntu.rss'
+RSS_FEED_SUMMARY_ONLY = False
