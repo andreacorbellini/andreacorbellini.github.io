@@ -5,6 +5,3 @@ markdown
 
 # For pelican-plugins/assets
 webassets
-
-# For pelican-plugins/tipue_search
-beautifulsoup4

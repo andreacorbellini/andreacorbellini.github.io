@@ -10,14 +10,6 @@ Exceptions include:
 
   This is a photo made by Andrea Corbellini, released under the terms of the [Creative Commons BY 4.0 International](http://creativecommons.org/licenses/by/4.0/).
 
-* `static/js/tipuesearch.min.js`
-
-  This is the [Tipue Search](http://www.tipue.com/search/) plugin for jQuery, released under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-* `static/js/tipuesearch_set.js`
-
-  This incorporates some excerpts from the contents of the blog, therefore it is released under the terms of the [Creative Commons BY 4.0 International](http://creativecommons.org/licenses/by/4.0/).
-
 * `static/css/pygments.css`
 
   This file was taken from the [simple theme](https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/) of Pelican, released under the terms of the [GNU Affero GPL v3](http://www.gnu.org/licenses/agpl-3.0.en.html).

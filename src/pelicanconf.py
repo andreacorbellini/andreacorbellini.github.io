@@ -9,8 +9,10 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 def get_ip_address():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        sock.connect(('8.8.8.8', 80))
+        sock.connect(('1.1.1.1', 80))
         return sock.getsockname()[0]
+    except OSError:
+        return '127.0.0.1'
     finally:
         sock.close()
 
@@ -43,13 +45,11 @@ PAGE_URL = '{slug}/'
 ARTICLE_URL = '{date:%Y}/{date:%m}/{date:%d}/{slug}/'
 CATEGORY_URL = 'category/{slug}/'
 TAG_URL = 'tag/{slug}/'
-SEARCH_URL = 'search/'
 
 PAGE_SAVE_AS = PAGE_URL + 'index.html'
 ARTICLE_SAVE_AS = ARTICLE_URL + 'index.html'
 CATEGORY_SAVE_AS = CATEGORY_URL + 'index.html'
 TAG_SAVE_AS = TAG_URL + 'index.html'
-SEARCH_SAVE_AS = SEARCH_URL + 'index.html'
 
 DRAFT_SAVE_AS = ''
 AUTHOR_SAVE_AS = ''
@@ -83,7 +83,6 @@ PLUGIN_PATHS = [
 PLUGINS = [
     'assets',
     'redirects',
-    'tipue_search',
     'ubuntuplanet',
 ]
 
@@ -103,7 +102,6 @@ JINJA_ENVIRONMENT = {
 DIRECT_TEMPLATES = [
     'categories',
     'index',
-    'search',
     'tags',
 ]
 
