@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="http://andrea.corbellini.name/favicon-32x32.png">
     <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?c672a81c">
+      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?4199bd97">
 
       <meta name="tags" content="docker">
       <meta name="tags" content="swarm">
@@ -505,14 +505,6 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 <h2>Conclusion</h2>
 <p>We created a Swarm cluster consisting of one manager and 10 agents, and we kept memory and disk usage low thanks to LXC containers. We also succeeded in confining our Docker containers with AppArmor. Overall, this setup is probably not ideal for use in a production environment, but very useful for simulating clusters on your laptop.</p>
 <p>I hope you enjoyed the tutorial. Feel free to leave a comment if you have questions!</p></div>
-      <footer class="container-fluid">
-        <ul class="list-inline">
-          <li class="social"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-text="Running Docker Swarm inside LXC (outdated)" data-via="andreacorbe">Tweet</a></li>
-          <li class="social"><div class="fb-share-button" data-href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-layout="button_count"></div></li>
-          <li class="social"><div class="g-plus" data-action="share" data-href="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-annotation="bubble"></div></li>
-          <li class="social"><script type="IN/Share" data-url="http://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" data-counter="right"></script></li>
-        </ul>
-      </footer>
     </article>
       <section>
         <div class="comments">
@@ -540,33 +532,6 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
       })();
     </script>
-  <script>
-    !function(d,s,id){
-        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-        if(!d.getElementById(id)) {
-            js = d.createElement(s);
-            js.id = id;
-            js.async = true;
-            js.defer = true;
-            js.src = p + '://platform.twitter.com/widgets.js';
-            fjs.parentNode.insertBefore(js,fjs);
-        }
-    }(document, 'script', 'twitter-wjs');
-  </script>
-  <script>
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s);
-        js.id = id;
-        js.async = true;
-        js.defer = true;
-        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-  </script>
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script src="//platform.linkedin.com/in.js" async defer>lang: en_US</script>
 </footer>
 <script>
   var cb = function() {
