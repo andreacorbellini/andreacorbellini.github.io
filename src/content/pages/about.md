@@ -21,3 +21,5 @@ If you have something cool to share, feel free to get in touch with me:
 <span class="fa fa-twitter"></span> [Twitter](https://twitter.com/andreacorbe) &emsp;
 <span class="fa fa-stack-overflow"></span> [StackOverflow Careers](https://careers.stackoverflow.com/andreacorbellini) &emsp;
 <span class="fa fa-linkedin-square"></span> [LinkedIn](https://linkedin.com/in/andreacorbellini)
+
+Opinions are my own and not the views of my employer.
