@@ -15,7 +15,8 @@ When I'm not coding, I'm usually some feet underwater. The watery picture above
 from the beautiful [Lake Garda](https://en.wikipedia.org/wiki/Lake_Garda),
 where I did hunderds of dives.
 
-If you have something cool to share, feel free to get in touch with me:
+If you have something cool to share, or if you just want to know more about me,
+feel free to get in touch with me:
 
 <span class="fa fa-envelope-o"></span> [Email](mailto:corbellini.andrea@gmail.com) &emsp;
 <span class="fa fa-twitter"></span> [Twitter](https://twitter.com/andreacorbe) &emsp;
