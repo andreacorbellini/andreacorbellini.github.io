@@ -20,10 +20,6 @@ MINIFY_CSS = True
 DISQUS_SITENAME = 'andreacorbellini'
 
 
-# Analytics.
-GOOGLE_ANALYTICS = 'UA-59812311-1'
-
-
 # Feeds.
 FEED_ATOM = 'feed.atom'
 FEED_RSS = 'feed.rss'
