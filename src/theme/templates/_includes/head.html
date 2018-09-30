@@ -37,11 +37,10 @@
     <link rel="shortcut icon" href="{{ SHORTCUT_ICON }}" type="image/x-icon">
   {% endif %}
   {% if MINIFY_CSS %}
-    {% assets filters="cssmin", output="css/style.min.css", "css/bootstrap.css", "css/pygments.css", "css/style.css" %}
+    {% assets filters="cssmin", output="css/style.min.css", "css/style.css", "css/pygments.css" %}
       <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
     {% endassets %}
   {% else %}
-    <link rel="stylesheet" href="{{ SITEURL }}/theme/css/bootstrap.css">
     <link rel="stylesheet" href="{{ SITEURL }}/theme/css/pygments.css">
     <link rel="stylesheet" href="{{ SITEURL }}/theme/css/style.css">
   {% endif %}
