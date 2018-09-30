@@ -4,18 +4,9 @@
     elements: [ 'content' ]
   });
 </script>
+{# The following resources are preloaded in <head> #}
 <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js"></script>
 {% if DISQUS_SITENAME %}
-  <script>
-    var disqus_shortname = {{ DISQUS_SITENAME|tojson }};
-    (function() {
-      var s = document.createElement('script');
-      s.async = true;
-      s.defer = true;
-      s.type = 'text/javascript';
-      s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
-    })();
-  </script>
+  <script src="//{{ DISQUS_SITENAME }}.disqus.com/count.js" async defer></script>
 {% endif %}
