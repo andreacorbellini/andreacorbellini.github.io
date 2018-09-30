@@ -19,6 +19,7 @@ bootstrap:
 	wget -O $(TMPDIR)/bootstrap.zip \
 		https://github.com/twbs/bootstrap/archive/v$(BOOTSTRAP_VERSION).zip
 	unzip -d $(TMPDIR) $(TMPDIR)/bootstrap.zip
+	-rm -rf $@
 	mkdir -p $@
 	mv $(TMPDIR)/bootstrap-$(BOOTSTRAP_VERSION)/less/* $@
 	-rm bootstrap/variables.less
