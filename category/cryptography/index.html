@@ -7,7 +7,13 @@
   <link rel="icon" type="image/png" sizes="32x32" href="http://andrea.corbellini.name/favicon-32x32.png">
     <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?4199bd97">
+      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="preload" href="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" as="script">
+  <link rel="preload" href="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js" as="script">
+    <link rel="preload" href=="//andreacorbellini.disqus.com/count.js" as="script">
+    <link rel="preload" href="//andreacorbellini.disqus.com/embed.js" as="script">
     <title>cryptography - Andrea Corbellini</title>
   </head>
   <body>
@@ -105,45 +111,16 @@
     <footer class="main-footer small"><div class="container">
   <p>Copyright &copy; 2015-2018 Andrea Corbellini</p>
   <p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="https://jquery.com/" title="jQuery">jQuery</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
+  <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div></footer>
-<script>
-  var cb = function() {
-    var h = document.getElementsByTagName('head')[0];
-    var l = document.createElement('link');
-    l.rel = 'stylesheet';
-    l.href = '//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700';
-    h.parentNode.insertBefore(l, h);
-    var l = document.createElement('link');
-    l.rel = 'stylesheet';
-    l.href = '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css';
-    h.parentNode.insertBefore(l, h);
-  };
-  var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-      webkitRequestAnimationFrame || msRequestAnimationFrame;
-  if (raf) raf(cb);
-  else window.addEventListener('load', cb);
-</script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: { inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ] },
     elements: [ 'content' ]
   });
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js"></script>
-  <script>
-    var disqus_shortname = "andreacorbellini";
-    (function() {
-      var s = document.createElement('script');
-      s.async = true;
-      s.defer = true;
-      s.type = 'text/javascript';
-      s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
-    })();
-  </script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" async defer></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js" async defer></script>
+  <script src="//andreacorbellini.disqus.com/count.js" async defer></script>
   </body>
 </html>
