@@ -46,14 +46,7 @@
       var disqus_identifier = {{ article.slug|tojson }};
       var disqus_title = {{ article.title|tojson }};
       var disqus_url = {{ (SITEURL + '/' + article.url)|tojson }};
-      (function() {
-          var s = document.createElement('script');
-          s.async = true;
-          s.defer = true;
-          s.type = 'text/javascript';
-          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
-      })();
     </script>
+    <script src="//{{ DISQUS_SITENAME }}.disqus.com/embed.js" async defer></script>
   {% endif %}
 {% endblock %}
