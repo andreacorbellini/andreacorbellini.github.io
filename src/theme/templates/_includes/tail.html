@@ -1,20 +1,3 @@
-<script>
-  var cb = function() {
-    var h = document.getElementsByTagName('head')[0];
-    var l = document.createElement('link');
-    l.rel = 'stylesheet';
-    l.href = '//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700';
-    h.parentNode.insertBefore(l, h);
-    var l = document.createElement('link');
-    l.rel = 'stylesheet';
-    l.href = '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css';
-    h.parentNode.insertBefore(l, h);
-  };
-  var raf = requestAnimationFrame || mozRequestAnimationFrame ||
-      webkitRequestAnimationFrame || msRequestAnimationFrame;
-  if (raf) raf(cb);
-  else window.addEventListener('load', cb);
-</script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: { inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ] },
