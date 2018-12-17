@@ -3,11 +3,11 @@
   <head>
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
-  <link rel="icon" type="image/png" sizes="16x16" href="http://andrea.corbellini.name/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="http://andrea.corbellini.name/favicon-32x32.png">
-    <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
-    <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/favicon-32x32.png">
+    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="preload" href="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" as="script">
@@ -18,7 +18,7 @@
       <meta name="tags" content="ecc">
       <meta name="tags" content="math">
       <meta name="tags" content="security">
-    <link rel="canonical" href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">
+    <link rel="canonical" href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">
     <title>Elliptic Curve Cryptography: finite fields and discrete logarithms - Andrea Corbellini</title>
   </head>
   <body>
@@ -26,12 +26,12 @@
     <div class="container">
       <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-bars"></span></button>
       <div class="navbar-header">
-        <a class="navbar-brand" href="http://andrea.corbellini.name/">Andrea Corbellini</a>
+        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="http://andrea.corbellini.name/">Home</a></li>
-            <li><a href="http://andrea.corbellini.name/about/">About</a></li>
+          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
     </div>
@@ -40,14 +40,14 @@
       <div class="main-container container">
         <main id="content">    <article>
       <header>
-        <h1><a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/" rel="bookmark" title="Elliptic Curve Cryptography: finite fields and discrete logarithms">Elliptic Curve Cryptography: finite fields and discrete logarithms</a></h1>
+        <h1><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/" rel="bookmark" title="Elliptic Curve Cryptography: finite fields and discrete logarithms">Elliptic Curve Cryptography: finite fields and discrete logarithms</a></h1>
 <div class="details small">
   <span><span class="fa fa-calendar-o"></span><time datetime="2015-05-23T14:08:00+00:00">May 23, 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-finite-fields-and-discrete-logarithms">Comments</a></span>
+  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-finite-fields-and-discrete-logarithms">Comments</a></span>
 </div>      </header>
-      <div class="body"><p><strong>This post is the second in the series <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
-<p>In the <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">previous post</a>, we have seen how elliptic curves over the real numbers can be used to define a group. Specifically, we have defined a rule for <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law">point addition</a>: given three aligned points, their sum is zero ($P + Q + R = 0$). We have derived a <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#geometric-addition">geometric method</a> and an <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#algebraic-addition">algebraic method</a> for computing point additions.</p>
-<p>We then introduced <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#scalar-multiplication">scalar multiplication</a> ($nP = P + P + \cdots + P$) and we found out an "easy" algorithm for computing scalar multiplication: <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add</a>.</p>
+      <div class="body"><p><strong>This post is the second in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
+<p>In the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">previous post</a>, we have seen how elliptic curves over the real numbers can be used to define a group. Specifically, we have defined a rule for <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law">point addition</a>: given three aligned points, their sum is zero ($P + Q + R = 0$). We have derived a <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#geometric-addition">geometric method</a> and an <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#algebraic-addition">algebraic method</a> for computing point additions.</p>
+<p>We then introduced <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#scalar-multiplication">scalar multiplication</a> ($nP = P + P + \cdots + P$) and we found out an "easy" algorithm for computing scalar multiplication: <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add</a>.</p>
 <p><strong>Now we will restrict our elliptic curves to finite fields</strong>, rather than the set of real numbers, and see how things change.</p>
 <h2>The field of integers modulo <em>p</em></h2>
 <p>A finite field is, first of all, a set with a finite number of elements. An example of finite field is the set of integers modulo $p$, where $p$ is a prime number. It is generally denoted as $\mathbb{Z}/p$, $GF(p)$ or $\mathbb{F}_p$. We will use the latter notation.</p>
@@ -116,7 +116,7 @@
 
 
 <h2>Elliptic curves in $\mathbb{F}_p$</h2>
-<p>Now we have all the necessary elements to restrict elliptic curves over $\mathbb{F}_p$. The set of points, that in the <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">previous post</a> was:
+<p>Now we have all the necessary elements to restrict elliptic curves over $\mathbb{F}_p$. The set of points, that in the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">previous post</a> was:
 $$\begin{array}{rcl}
   \left\{(x, y) \in \mathbb{R}^2 \right. &amp; \left. | \right. &amp; \left. y^2 = x^3 + ax + b, \right. \\
   &amp; &amp; \left. 4a^3 + 27b^2 \ne 0\right\}\ \cup\ \left\{0\right\}
@@ -128,12 +128,12 @@ $$\begin{array}{rcl}
 \end{array}$$</p>
 <p>where 0 is still the point at infinity, and $a$ and $b$ are two integers in $\mathbb{F}_p$.</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/elliptic-curves-mod-p.png" alt="Elliptic curves in Fp" width="608" height="608">
+  <img src="https://andrea.corbellini.name/images/elliptic-curves-mod-p.png" alt="Elliptic curves in Fp" width="608" height="608">
   <figcaption>The curve $y^2 \equiv x^3 - 7x + 10 \pmod{p}$ with $p = 19, 97, 127, 487$. Note that, for every $x$, there are at most two points. Also note the symmetry about $y = p / 2$.</figcaption>
 </figure>
 
 <figure>
-  <img src="http://andrea.corbellini.name/images/singular-mod-p.png" alt="Singular curve in Fp" width="300" height="300">
+  <img src="https://andrea.corbellini.name/images/singular-mod-p.png" alt="Singular curve in Fp" width="300" height="300">
   <figcaption>The curve $y^2 \equiv x^3 \pmod{29}$ is singular and has a triple point in $(0, 0)$. It is not a valid elliptic curve.</figcaption>
 </figure>
 
@@ -142,7 +142,7 @@ $$\begin{array}{rcl}
 <p>Clearly, we need to change a bit our definition of addition in order to make it work in $\mathbb{F}_p$. With reals, we said that the sum of three aligned points was zero ($P + Q + R = 0$). We can keep this definition, but what does it mean for three points to be aligned in $\mathbb{F}_p$?</p>
 <p>We can say that <strong>three points are aligned if there's a line that connects all of them</strong>. Now, of course, lines in $\mathbb{F}_p$ are not the same as lines in $\mathbb{R}$. We can say, informally, that a line in $\mathbb{F}_p$ is the set of points $(x, y)$ that satisfy the equation $ax + by + c \equiv 0 \pmod{p}$ (this is the standard line equation, with the addition of "$(\text{mod}\ p)$").</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/point-addition-mod-p.png" alt="Point addition for elliptic curves in Z/p" width="523" height="528">
+  <img src="https://andrea.corbellini.name/images/point-addition-mod-p.png" alt="Point addition for elliptic curves in Z/p" width="523" height="528">
   <figcaption>Point addition over the curve $y^2 \equiv x^3 - x + 3 \pmod{127}$, with $P = (16, 20)$ and $Q = (41, 120)$. Note how the line $y \equiv 4x + 83 \pmod{127}$ that connects the points "repeats" itself in the plane.</figcaption>
 </figure>
 
@@ -175,10 +175,10 @@ $$m = (3 x_P^2 + a)(2 y_P)^{-1} \bmod{p}$$</p>
 <h2 id="scalar-multiplication">Scalar multiplication and cyclic subgroups</h2>
 <p>As with reals, multiplication can be defined as:
 $$n P = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
-<p>And, again, we can use the <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add algorithm</a> to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I've written an <strong><a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/modk-mul.html">interactive tool</a> for scalar multiplication</strong> too.</p>
+<p>And, again, we can use the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add algorithm</a> to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I've written an <strong><a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/modk-mul.html">interactive tool</a> for scalar multiplication</strong> too.</p>
 <p>Multiplication over points for elliptic curves in $\mathbb{F}_p$ has an interesting property. Take the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the point $P = (3, 6)$. Now <a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/modk-mul.html">calculate</a> all the multiples of $P$:</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/cyclic-subgroup.png" alt="Cyclic subgroup" width="322" height="255">
+  <img src="https://andrea.corbellini.name/images/cyclic-subgroup.png" alt="Cyclic subgroup" width="322" height="255">
   <figcaption>The multiples of $P = (3, 6)$ are just five distinct points ($0$, $P$, $2P$, $3P$, $4P$) and they are repeating cyclically. It's easy to spot the similarity between scalar multiplication on elliptic curves and addition in modular arithmetic.</figcaption>
 </figure>
 
@@ -253,26 +253,26 @@ $$n(hP) = 0$$</p>
 <h2>More next week!</h2>
 <p>Enough for today! I really hope you enjoyed this post. Leave a comment if you didn't.</p>
 <p>Next week's post will be the third in this series and will be about ECC algorithms: key pair generation, ECDH and ECDSA. That will be one of the most interesting parts of this series. Don't miss it!</p>
-<p><strong><a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Read the next post of the series &raquo;</a></strong></p></div>
+<p><strong><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Read the next post of the series &raquo;</a></strong></p></div>
     </article>
       <section>
         <div class="comments">
           <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
         </div>
       </section>
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
   <p>Copyright &copy; 2015-2018 Andrea Corbellini</p>
-  <p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
+  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "elliptic-curve-cryptography-finite-fields-and-discrete-logarithms";
       var disqus_title = "Elliptic Curve Cryptography: finite fields and discrete logarithms";
-      var disqus_url = "http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/";
+      var disqus_url = "https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/";
     </script>
     <script src="//andreacorbellini.disqus.com/embed.js" async defer></script>
 </footer>

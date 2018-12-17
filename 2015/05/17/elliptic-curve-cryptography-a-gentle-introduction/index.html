@@ -3,11 +3,11 @@
   <head>
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
-  <link rel="icon" type="image/png" sizes="16x16" href="http://andrea.corbellini.name/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="http://andrea.corbellini.name/favicon-32x32.png">
-    <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
-    <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/favicon-32x32.png">
+    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="preload" href="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" as="script">
@@ -26,7 +26,7 @@
       <meta name="tags" content="ssh">
       <meta name="tags" content="tls">
       <meta name="tags" content="web">
-    <link rel="canonical" href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">
+    <link rel="canonical" href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">
     <title>Elliptic Curve Cryptography: a gentle introduction - Andrea Corbellini</title>
   </head>
   <body>
@@ -34,12 +34,12 @@
     <div class="container">
       <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-bars"></span></button>
       <div class="navbar-header">
-        <a class="navbar-brand" href="http://andrea.corbellini.name/">Andrea Corbellini</a>
+        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="http://andrea.corbellini.name/">Home</a></li>
-            <li><a href="http://andrea.corbellini.name/about/">About</a></li>
+          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
     </div>
@@ -48,10 +48,10 @@
       <div class="main-container container">
         <main id="content">    <article>
       <header>
-        <h1><a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" rel="bookmark" title="Elliptic Curve Cryptography: a gentle introduction">Elliptic Curve Cryptography: a gentle introduction</a></h1>
+        <h1><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" rel="bookmark" title="Elliptic Curve Cryptography: a gentle introduction">Elliptic Curve Cryptography: a gentle introduction</a></h1>
 <div class="details small">
   <span><span class="fa fa-calendar-o"></span><time datetime="2015-05-17T11:24:00+00:00">May 17, 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-a-gentle-introduction">Comments</a></span>
+  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-a-gentle-introduction">Comments</a></span>
 </div>      </header>
       <div class="body"><p>Those of you who know what public-key cryptography is may have already heard of <strong>ECC</strong>, <strong>ECDH</strong> or <strong>ECDSA</strong>. The first is an acronym for Elliptic Curve Cryptography, the others are names for algorithms based on it.</p>
 <p>Today, we can find elliptic curves cryptosystems in <a href="https://tools.ietf.org/html/rfc4492">TLS</a>, <a href="https://tools.ietf.org/html/rfc6637">PGP</a> and <a href="https://tools.ietf.org/html/rfc5656">SSH</a>, which are just three of the main technologies on which the modern web and IT world are based. Not to mention <a href="https://en.bitcoin.it/wiki/Secp256k1">Bitcoin</a> and other cryptocurrencies.</p>
@@ -59,10 +59,10 @@
 <p>With a series of blog posts I'm going to give you a gentle introduction to the world of elliptic curve cryptography. My aim is not to provide a complete and detailed guide to ECC (the web is full of information on the subject), but to provide <strong>a simple overview of what ECC is and why it is considered secure</strong>, without losing time on long mathematical proofs or boring implementation details. I will also give <strong>helpful examples together with visual interactive tools and scripts to play with</strong>.</p>
 <p>Specifically, here are the topics I'll touch:</p>
 <ol>
-<li><strong><a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">Elliptic curves over real numbers and the group law</a></strong> (covered in this blog post)</li>
-<li><strong><a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Elliptic curves over finite fields and the discrete logarithm problem</a></strong></li>
-<li><strong><a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Key pair generation and two ECC algorithms: ECDH and ECDSA</a></strong></li>
-<li><strong><a href="http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">Algorithms for breaking ECC security, and a comparison with RSA</a></strong></li>
+<li><strong><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">Elliptic curves over real numbers and the group law</a></strong> (covered in this blog post)</li>
+<li><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Elliptic curves over finite fields and the discrete logarithm problem</a></strong></li>
+<li><strong><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Key pair generation and two ECC algorithms: ECDH and ECDSA</a></strong></li>
+<li><strong><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">Algorithms for breaking ECC security, and a comparison with RSA</a></strong></li>
 </ol>
 <p>In order to understand what's written here, you'll need to know some basic stuff of set theory, geometry and modular arithmetic, and have familiarity with symmetric and asymmetric cryptography. Lastly, you need to have a clear idea of what an "easy" problem is, what a "hard" problem is, and their roles in cryptography.</p>
 <p>Ready? Let's start!</p>
@@ -71,12 +71,12 @@
 $$y^2 = x^3 + ax + b$$</p>
 <p>where $4a^3 + 27b^2 \ne 0$ (this is required to exclude <a href="https://en.wikipedia.org/wiki/Singularity_(mathematics)">singular curves</a>). The equation above is what is called <em>Weierstrass normal form</em> for elliptic curves.</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/curves.png" alt="Different shapes for different elliptic curves" width="440" height="450">
+  <img src="https://andrea.corbellini.name/images/curves.png" alt="Different shapes for different elliptic curves" width="440" height="450">
   <figcaption>Different shapes for different elliptic curves ($b = 1$, $a$ varying from 2 to -3).</figcaption>
 </figure>
 
 <figure>
-  <img src="http://andrea.corbellini.name/images/singularities.png" alt="Types of singularities" width="300" height="220">
+  <img src="https://andrea.corbellini.name/images/singularities.png" alt="Types of singularities" width="300" height="220">
   <figcaption>Types of singularities: on the left, a curve with a cusp ($y^2 = x^3$). On the right, a curve with a self-intersection ($y^2 = x^3 - 3x + 2$). None of them is a valid elliptic curve.</figcaption>
 </figure>
 
@@ -109,7 +109,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <li><strong>addition</strong> is given by the following rule: <strong>given three aligned, non-zero points $P$, $Q$ and $R$, their sum is $P + Q + R = 0$</strong>.</li>
 </ul>
 <figure>
-  <img src="http://andrea.corbellini.name/images/three-aligned-points.png" alt="Three aligned points" width="300" height="300">
+  <img src="https://andrea.corbellini.name/images/three-aligned-points.png" alt="Three aligned points" width="300" height="300">
   <figcaption>The sum of three aligned point is 0.</figcaption>
 </figure>
 
@@ -118,7 +118,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <h2 id="geometric-addition">Geometric addition</h2>
 <p>Thanks to the fact that we are in an abelian group, we can write $P + Q + R = 0$ as $P + Q = -R$. This equation, in this form, lets us derive a geometric method to compute the sum between two points $P$ and $Q$: <strong>if we draw a line passing through $P$ and $Q$, this line will intersect a third point on the curve, $R$</strong> (this is implied by the fact that $P$, $Q$ and $R$ are aligned). <strong>If we take the inverse of this point, $-R$, we have found the result of $P + Q$</strong>.</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/point-addition.png" alt="Point addition" width="287" height="300">
+  <img src="https://andrea.corbellini.name/images/point-addition.png" alt="Point addition" width="287" height="300">
   <figcaption>Draw the line through $P$ and $Q$. The line intersects a third point $R$. The point symmetric to it, $-R$, is the result of $P + Q$.</figcaption>
 </figure>
 
@@ -128,13 +128,13 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <li><strong>What if $P = -Q$?</strong> In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.</li>
 <li><strong>What if $P = Q$?</strong> In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q' \ne P$. What happens if we make $Q'$ approach $P$, getting closer and closer to it?
    <figure>
-     <img src="http://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P">
+     <img src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P">
      <figcaption>As the two points become closer together, the line passing through them becomes tangent to the curve.</figcaption>
    </figure>
    As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.</li>
 <li><strong>What if $P \ne Q$, but there is no third point $R$?</strong> We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
    <figure>
-     <img src="http://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300">
+     <img src="https://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300">
      <figcaption>If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.</figcaption>
    </figure>
    Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.</li>
@@ -244,26 +244,26 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 <p>But there's a variant of the logarithm problem: the <em>discrete</em> logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, <strong>scalar multiplication remains "easy", while the discrete logarithm becomes a "hard" problem</strong>. This duality is the key brick of elliptic curve cryptography.</p>
 <h2>See you next week</h2>
 <p>That's all for today, I hope you enjoyed this post! Next week we will discover <strong>finite fields</strong> and the <strong><em>discrete</em> logarithm problem</strong>, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!</p>
-<p><strong><a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series &raquo;</a></strong></p></div>
+<p><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series &raquo;</a></strong></p></div>
     </article>
       <section>
         <div class="comments">
           <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
         </div>
       </section>
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
   <p>Copyright &copy; 2015-2018 Andrea Corbellini</p>
-  <p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
+  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "elliptic-curve-cryptography-a-gentle-introduction";
       var disqus_title = "Elliptic Curve Cryptography: a gentle introduction";
-      var disqus_url = "http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/";
+      var disqus_url = "https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/";
     </script>
     <script src="//andreacorbellini.disqus.com/embed.js" async defer></script>
 </footer>

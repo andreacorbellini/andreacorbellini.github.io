@@ -1,4 +1,4 @@
-This is the theme used for the blog at [andrea.corbellini.name](http://andrea.corbellini.name/).
+This is the theme used for the blog at [andrea.corbellini.name](https://andrea.corbellini.name/).
 
 It is composed of various files from various sources, with different copyright owners and with different licenses.
 

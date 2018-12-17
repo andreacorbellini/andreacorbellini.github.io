@@ -3,11 +3,11 @@
   <head>
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
-  <link rel="icon" type="image/png" sizes="16x16" href="http://andrea.corbellini.name/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="http://andrea.corbellini.name/favicon-32x32.png">
-    <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
-    <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/favicon-32x32.png">
+    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="preload" href="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" as="script">
@@ -23,7 +23,7 @@
       <meta name="tags" content="ecdsa">
       <meta name="tags" content="security">
       <meta name="tags" content="tls">
-    <link rel="canonical" href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">
+    <link rel="canonical" href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">
     <title>Elliptic Curve Cryptography: ECDH and ECDSA - Andrea Corbellini</title>
   </head>
   <body>
@@ -31,12 +31,12 @@
     <div class="container">
       <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-bars"></span></button>
       <div class="navbar-header">
-        <a class="navbar-brand" href="http://andrea.corbellini.name/">Andrea Corbellini</a>
+        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="http://andrea.corbellini.name/">Home</a></li>
-            <li><a href="http://andrea.corbellini.name/about/">About</a></li>
+          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
     </div>
@@ -45,14 +45,14 @@
       <div class="main-container container">
         <main id="content">    <article>
       <header>
-        <h1><a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" rel="bookmark" title="Elliptic Curve Cryptography: ECDH and ECDSA">Elliptic Curve Cryptography: ECDH and ECDSA</a></h1>
+        <h1><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" rel="bookmark" title="Elliptic Curve Cryptography: ECDH and ECDSA">Elliptic Curve Cryptography: ECDH and ECDSA</a></h1>
 <div class="details small">
   <span><span class="fa fa-calendar-o"></span><time datetime="2015-05-30T19:23:00+00:00">May 30, 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-ecdh-and-ecdsa">Comments</a></span>
+  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-ecdh-and-ecdsa">Comments</a></span>
 </div>      </header>
-      <div class="body"><p><strong>This post is the third in the series <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
-<p>In the previous posts, we have seen <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">what an elliptic curve is</a> and we have defined a <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law">group law</a> in order to do some math with the points of elliptic curves. Then we have <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">restricted elliptic curves to finite fields of integers modulo a prime</a>. With this restriction, we have seen that the points of elliptic curves generate <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication">cyclic subgrups</a> and we have introduced the terms <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#base-point">base point</a>, <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#subgroup-order">order</a> and <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#cofactor">cofactor</a>.</p>
-<p>Finally, we have seen that <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication">scalar multiplication in finite fields</a> is an "easy" problem, while the <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm">discrete logarithm problem</a> seems to be "hard". Now we'll see how all of this applies to cryptography.</p>
+      <div class="body"><p><strong>This post is the third in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
+<p>In the previous posts, we have seen <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">what an elliptic curve is</a> and we have defined a <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law">group law</a> in order to do some math with the points of elliptic curves. Then we have <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">restricted elliptic curves to finite fields of integers modulo a prime</a>. With this restriction, we have seen that the points of elliptic curves generate <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication">cyclic subgrups</a> and we have introduced the terms <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#base-point">base point</a>, <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#subgroup-order">order</a> and <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#cofactor">cofactor</a>.</p>
+<p>Finally, we have seen that <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication">scalar multiplication in finite fields</a> is an "easy" problem, while the <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm">discrete logarithm problem</a> seems to be "hard". Now we'll see how all of this applies to cryptography.</p>
 <h2>Domain parameters</h2>
 <p>Our elliptic curve algorithms will work in a cyclic subgroup of an elliptic curve over a finite field. Therefore, our algorithms will need the following parameters:</p>
 <ul>
@@ -68,12 +68,12 @@
 <p>Now, suppose that I give you the domain parameters of a curve. There's the possibility that I've discovered a new class of weak curves that nobody knows, and probably I have built a "fast" algorithm for computing discrete logarithms on the curve I gave you. How can I convince you of the contrary, i.e. that I'm not aware of any vulnerability? <strong>How can I assure you that the curve is "safe" (in the sense that it can't be used for special purpose attacks by me)?</strong></p>
 <p>In an attempt to solve this kind of problem, sometimes we have an additional domain parameter: the <strong>seed $S$</strong>. This is a random number used to generate the coefficients $a$ and $b$, or the base point $G$, or both. These parameters are generated by computing the hash of the seed $S$. Hashes, as we know, are "easy" to compute, but "hard" to reverse.</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/random-parameters-generation.png" alt="Random curve generation" width="500" height="74">
+  <img src="https://andrea.corbellini.name/images/random-parameters-generation.png" alt="Random curve generation" width="500" height="74">
   <figcaption>A simple sketch of how a random curve is generated from a seed: the hash of a random number is used to calculate different parameters of the curve.</figcaption>
 </figure>
 
 <figure>
-  <img src="http://andrea.corbellini.name/images/seed-inversion.png" alt="Building a seed from a hash" width="359" height="76">
+  <img src="https://andrea.corbellini.name/images/seed-inversion.png" alt="Building a seed from a hash" width="359" height="76">
   <figcaption>If we wanted to cheat and try to construct a seed from the domain parameters, we would have to solve a "hard" problem: hash inversion.</figcaption>
 </figure>
 
@@ -115,7 +115,7 @@
 </blockquote>
 <p>(The latter form is used in the original Diffie-Hellman algorithm, based on modular arithmetic.)</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/ecdh.png" alt="ECDH" width="468" height="196">
+  <img src="https://andrea.corbellini.name/images/ecdh.png" alt="ECDH" width="468" height="196">
   <figcaption>The Diffie-Hellman key exchange: Alice and Bob can "easily" calculate the shared secret, the Man in the Middle has to solve a "hard" problem.</figcaption>
 </figure>
 
@@ -165,12 +165,12 @@
 </ol>
 <p>The pair <strong>$(r, s)$ is the signature</strong>.</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/ecdsa.png" alt="ECDSA" width="514" height="255">
+  <img src="https://andrea.corbellini.name/images/ecdsa.png" alt="ECDSA" width="514" height="255">
   <figcaption>Alice signs the hash $z$ using her private key $d_A$ and a random $k$. Bob verifies that the message has been correctly signed using Alice's public key $H_A$.</figcaption>
 </figure>
 
 <p>In plain words, this algorithm first generates a secret ($k$). This secret is hidden in $r$ thanks to point multiplication (that, as we know, is "easy" one way, and "hard" the other way round). $r$ is then bound to the message hash by the equation $s = k^{-1} (z + rd_A) \bmod{n}$.</p>
-<p>Note that in order to calculate $s$, we have computed the inverse of $k$ modulo $n$. We have <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#p-must-be-prime">already said in the previous post</a> that this is guaranteed to work only if $n$ is a prime number. <strong>If a subgroup has a non-prime order, ECDSA can't be used.</strong> It's not by chance that almost all standardized curves have a prime order, and those that have a non-prime order are unsuitable for ECDSA.</p>
+<p>Note that in order to calculate $s$, we have computed the inverse of $k$ modulo $n$. We have <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#p-must-be-prime">already said in the previous post</a> that this is guaranteed to work only if $n$ is a prime number. <strong>If a subgroup has a non-prime order, ECDSA can't be used.</strong> It's not by chance that almost all standardized curves have a prime order, and those that have a non-prime order are unsuitable for ECDSA.</p>
 <h4>Verifying signatures</h4>
 <p>In order to verify the signature we'll need Alice's public key $H_A$, the (truncated) hash $z$ and, obviously, the signature $(r, s)$.</p>
 <ol>
@@ -238,26 +238,26 @@ $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}
 <h2>Have a great weekend</h2>
 <p>I really hope you enjoyed what I've written here. As usual, don't hesitate to leave a comment or send me a poke if you need help with something.</p>
 <p>Next week I'll publish the fourth and last article of this series. It'll be about techniques for solving discrete logarithms, some important problems of Elliptic Curve cryptography, and how ECC compares with RSA. Don't miss it!</p>
-<p><strong><a href="http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">Read the next post of the series &raquo;</a></strong></p></div>
+<p><strong><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">Read the next post of the series &raquo;</a></strong></p></div>
     </article>
       <section>
         <div class="comments">
           <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
         </div>
       </section>
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
   <p>Copyright &copy; 2015-2018 Andrea Corbellini</p>
-  <p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
+  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "elliptic-curve-cryptography-ecdh-and-ecdsa";
       var disqus_title = "Elliptic Curve Cryptography: ECDH and ECDSA";
-      var disqus_url = "http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/";
+      var disqus_url = "https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/";
     </script>
     <script src="//andreacorbellini.disqus.com/embed.js" async defer></script>
 </footer>

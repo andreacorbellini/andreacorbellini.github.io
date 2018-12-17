@@ -3,11 +3,11 @@
   <head>
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
-  <link rel="icon" type="image/png" sizes="16x16" href="http://andrea.corbellini.name/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="http://andrea.corbellini.name/favicon-32x32.png">
-    <link href="http://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
-    <link href="http://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="http://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/favicon-32x32.png">
+    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="preload" href="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" as="script">
@@ -23,7 +23,7 @@
       <meta name="tags" content="ecdsa">
       <meta name="tags" content="rsa">
       <meta name="tags" content="security">
-    <link rel="canonical" href="http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">
+    <link rel="canonical" href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">
     <title>Elliptic Curve Cryptography: breaking security and a comparison with RSA - Andrea Corbellini</title>
   </head>
   <body>
@@ -31,12 +31,12 @@
     <div class="container">
       <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-bars"></span></button>
       <div class="navbar-header">
-        <a class="navbar-brand" href="http://andrea.corbellini.name/">Andrea Corbellini</a>
+        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="http://andrea.corbellini.name/">Home</a></li>
-            <li><a href="http://andrea.corbellini.name/about/">About</a></li>
+          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
     </div>
@@ -45,13 +45,13 @@
       <div class="main-container container">
         <main id="content">    <article>
       <header>
-        <h1><a href="http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/" rel="bookmark" title="Elliptic Curve Cryptography: breaking security and a comparison with RSA">Elliptic Curve Cryptography: breaking security and a comparison with RSA</a></h1>
+        <h1><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/" rel="bookmark" title="Elliptic Curve Cryptography: breaking security and a comparison with RSA">Elliptic Curve Cryptography: breaking security and a comparison with RSA</a></h1>
 <div class="details small">
   <span><span class="fa fa-calendar-o"></span><time datetime="2015-06-08T13:28:00+00:00">June 08, 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa">Comments</a></span>
+  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa">Comments</a></span>
 </div>      </header>
-      <div class="body"><p><strong>This post is the fourth and last in the series <a href="http://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
-<p>In the <a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">last post</a> we have seen two algorithms, ECDH and ECDSA, and we have seen how the discrete logarithm problem for elliptic curves plays an important role for their security. But, if you remember, we said that <a href="http://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm">we have no mathematical proofs</a> for the complexity of the discrete logarithm problem: we believe it to be "hard", but we can't be sure. In the first part of this post, we'll try to get an idea of how "hard" it is in practice with today's techniques.</p>
+      <div class="body"><p><strong>This post is the fourth and last in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
+<p>In the <a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">last post</a> we have seen two algorithms, ECDH and ECDSA, and we have seen how the discrete logarithm problem for elliptic curves plays an important role for their security. But, if you remember, we said that <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm">we have no mathematical proofs</a> for the complexity of the discrete logarithm problem: we believe it to be "hard", but we can't be sure. In the first part of this post, we'll try to get an idea of how "hard" it is in practice with today's techniques.</p>
 <p>Then, in the second part, we will try to answer the question: why do we need elliptic curve cryptography if RSA (and the other cryptosystems based on modular arithmetic) work well?</p>
 <h1>Breaking the discrete logarithm problem</h1>
 <p>We will now see the two most efficient algorithms for computing discrete logarithms on elliptic curve: the baby-step, giant-step algorithm, and Pollard's rho method.</p>
@@ -79,7 +79,7 @@ $$\begin{array}{rl}
 </ol>
 <p>As you can see, initially we calculate the points $bP$ with little (i.e. <strong>"baby"</strong>) increments for the coefficient $b$ ($1P$, $2P$, $3P$, ...). Then, in the second part of the algorithm, we calculate the points $amP$ with huge (i.e. <strong>"giant"</strong>) increments for $am$ ($1mP$, $2mP$, $3mP$, ..., where $m$ is a huge number).</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/baby-step-giant-step.gif" alt="Baby-step, giant-step" width="310" height="346">
+  <img src="https://andrea.corbellini.name/images/baby-step-giant-step.gif" alt="Baby-step, giant-step" width="310" height="346">
   <figcaption>The baby-step, giant-step algorithm: initially we calculate few points via small steps and store them in a hash table. Then we perform the giant steps and compare the new points with the points in the hash table. Once a match is found, calculating the discrete logarithm is a matter of rearranging terms.</figcaption>
 </figure>
 
@@ -132,7 +132,7 @@ $$\begin{array}{rl}
 <p>In order to detect our cycle, we could try all the possible values for $a$ and $b$ using a <a href="http://en.wikipedia.org/wiki/Pairing_function">pairing function</a>, but given that there are $n^2$ such pairs, our algorithm would be $O(n^2)$, much worse than a brute-force attack.</p>
 <p>But there exist a faster method: the <strong>tortoise and hare algorithm</strong> (also known as Floyd's cycle-finding algorithm). The picture below shows the principle of operation of the tortoise and hare method, which is at the core of Pollard's rho.</p>
 <figure>
-  <img src="http://andrea.corbellini.name/images/tortoise-hare.gif" alt="Tortoise and Hare" width="650" height="101">
+  <img src="https://andrea.corbellini.name/images/tortoise-hare.gif" alt="Tortoise and Hare" width="650" height="101">
   <figcaption>We have the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the points $P = (3, 6)$ and $Q = (80, 87)$. The points belong to a cyclic subgroup of order 5.<br>We walk a sequence of pairs at different speeds until we find two different pairs $(a, b)$ and $(A, B)$ that produce the same point. In this case, we have found the pairs $(3, 3)$ and $(2, 0)$ that allow us to calculate the logarithm as $x = (3 - 2)(0 - 3)^{-1} \bmod{5} = 3$. And in fact we correctly have $Q = 3P$.</figcaption>
 </figure>
 
@@ -211,7 +211,7 @@ Took 0m 21s (138 steps on average)
 <p>With respect to this, RSA wins, as it does not require special domain parameters that can be tampered. RSA (as well as other modular arithmetic systems) may be a good alternative if we can't trust authorities and if we can't construct our own domain parameters. And in case you are asking: yes, TLS may use NIST curves. If you check <a href="https://google.com/">https://google.com</a>, you'll see that the connection is using ECDHE and ECDSA, with a certificate based on <code>prime256v1</code> (aka <code>secp256p1</code>).</p>
 <h1>That's all!</h1>
 <p>I hope you have enjoyed this series. My aim was to give you the basic knowledge, terminology and conventions to understand what elliptic curve cryptography today is. If I reached my aim, you should now be able to understand existing ECC-based cryptosystems and to expand your knowledge by reading "not so gentle" documentation. When writing this series, I could have skipped over many details and use a simpler terminology, but I felt that by doing so you would have not been able to understand what the web has to offer. I believe I have found a good compromise between simplicity and completeness.</p>
-<p>Note though that by reading just this series, you are not able to implement secure ECC cryptosystems: security requires us to know many subtle but important details. Remember the <a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#random-curves">requirements for Smart's attack</a> and <a href="http://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#ecdsa-k">Sony's mistake</a> — these are just two examples that should teach you how easy is to produce insecure algorithms and how easy it is to exploit them.</p>
+<p>Note though that by reading just this series, you are not able to implement secure ECC cryptosystems: security requires us to know many subtle but important details. Remember the <a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#random-curves">requirements for Smart's attack</a> and <a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#ecdsa-k">Sony's mistake</a> — these are just two examples that should teach you how easy is to produce insecure algorithms and how easy it is to exploit them.</p>
 <p>So, if you are interested in diving deeper into the world of ECC, where to go from here?</p>
 <p>First off, so far we have seen Weierstrass curves over prime fields, but you must know that there exist other kinds of curve and fields, in particular:</p>
 <ul>
@@ -237,21 +237,21 @@ Took 0m 21s (138 steps on average)
       <section>
         <div class="comments">
           <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="http://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
         </div>
       </section>
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
   <p>Copyright &copy; 2015-2018 Andrea Corbellini</p>
-  <p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="http://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="http://getbootstrap.com/">Bootstrap</a>, <a href="http://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
+  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa";
       var disqus_title = "Elliptic Curve Cryptography: breaking security and a comparison with RSA";
-      var disqus_url = "http://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/";
+      var disqus_url = "https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/";
     </script>
     <script src="//andreacorbellini.disqus.com/embed.js" async defer></script>
 </footer>
