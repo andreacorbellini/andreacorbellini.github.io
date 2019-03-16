@@ -1,6 +1,10 @@
 cssmin
 flask
-markdown
+
+# Pin version of Markdown to work around bug:
+# https://github.com/getpelican/pelican/issues/2493
+markdown==2.6.8
+
 -e git://github.com/getpelican/pelican.git#egg=pelican
 
 # For pelican-plugins/assets

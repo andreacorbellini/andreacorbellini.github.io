@@ -15,7 +15,7 @@ fi
 
 . "$envdir/bin/activate"
 
-pip install -U pip
+pip install -U pip wheel
 
 # Be verbose from now on.
 set -x
