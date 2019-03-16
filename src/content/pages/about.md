@@ -11,7 +11,7 @@ I'm passionate about:
 * Information security: cryptography, authentication, validation. I think that
   building walls is more important than following conventions.
 * Pure mathematics: in these days I'm particularly focused on algebraic
-  topology and complex analysis.
+  topology, category theory and complex analysis.
 
 When I'm not coding, I'm usually some feet underwater. The watery picture above
 from the beautiful [Lake Garda](https://en.wikipedia.org/wiki/Lake_Garda), in
