@@ -1000,7 +1000,7 @@ $$m = (y_P - y_Q)(x_P - x_Q)^{-1} \bmod{p}$$&lt;/p&gt;
 $$m = (3 x_P^2 + a)(2 y_P)^{-1} \bmod{p}$$&lt;/p&gt;
 &lt;p&gt;It's not a coincidence that the equations have not changed: in fact, these equations work in every field, finite or infinite (with the exception of $\mathbb{F}_2$ and $\mathbb{F}_3$, which are special cased). Now I feel I have to provide a justification for this fact. The problem is: proofs for the group law generally involve complex mathematical concepts. However, I found out a &lt;a href="http://math.rice.edu/~friedl/papers/AAELLIPTIC.PDF"&gt;proof from Stefan Friedl&lt;/a&gt; that uses only elementary concepts. Read it if you are interested in why these equations work in (almost) every field.&lt;/p&gt;
 &lt;p&gt;Back to us — we won't define a geometric method: in fact, there are a few problems with that. For example, in the previous post, we said that to compute $P + P$ we needed to take the tangent to the curve in $P$. But without continuity, the word "tangent" does not make any sense. We can workaround this and other problems, however a pure geometric method would just be too complicated and not practical at all.&lt;/p&gt;
-&lt;p&gt;Instead, you can play with the &lt;strong&gt;&lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/modk-add.html"&gt;interactive tool&lt;/a&gt; I've written for computing point additions&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Instead, you can play with the &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-add.html"&gt;interactive tool&lt;/a&gt; I've written for computing point additions&lt;/strong&gt;.&lt;/p&gt;
 &lt;h2&gt;The order of an elliptic curve group&lt;/h2&gt;
 &lt;p&gt;We said that an elliptic curve defined over a finite field has a finite number of points. An important question that we need to answer is: &lt;strong&gt;how many points are there exactly?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Firstly, let's say that the number of points in a group is called the &lt;strong&gt;order of the group&lt;/strong&gt;.&lt;/p&gt;
@@ -1009,8 +1009,8 @@ $$m = (3 x_P^2 + a)(2 y_P)^{-1} \bmod{p}$$&lt;/p&gt;
 &lt;h2 id="scalar-multiplication"&gt;Scalar multiplication and cyclic subgroups&lt;/h2&gt;
 &lt;p&gt;As with reals, multiplication can be defined as:
 $$n P = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$&lt;/p&gt;
-&lt;p&gt;And, again, we can use the &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add"&gt;double and add algorithm&lt;/a&gt; to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I've written an &lt;strong&gt;&lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/modk-mul.html"&gt;interactive tool&lt;/a&gt; for scalar multiplication&lt;/strong&gt; too.&lt;/p&gt;
-&lt;p&gt;Multiplication over points for elliptic curves in $\mathbb{F}_p$ has an interesting property. Take the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the point $P = (3, 6)$. Now &lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/modk-mul.html"&gt;calculate&lt;/a&gt; all the multiples of $P$:&lt;/p&gt;
+&lt;p&gt;And, again, we can use the &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add"&gt;double and add algorithm&lt;/a&gt; to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I've written an &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html"&gt;interactive tool&lt;/a&gt; for scalar multiplication&lt;/strong&gt; too.&lt;/p&gt;
+&lt;p&gt;Multiplication over points for elliptic curves in $\mathbb{F}_p$ has an interesting property. Take the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the point $P = (3, 6)$. Now &lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html"&gt;calculate&lt;/a&gt; all the multiples of $P$:&lt;/p&gt;
 &lt;figure&gt;
   &lt;img src="https://andrea.corbellini.name/images/cyclic-subgroup.png" alt="Cyclic subgroup" width="322" height="255"&gt;
   &lt;figcaption&gt;The multiples of $P = (3, 6)$ are just five distinct points ($0$, $P$, $2P$, $3P$, $4P$) and they are repeating cyclically. It's easy to spot the similarity between scalar multiplication on elliptic curves and addition in modular arithmetic.&lt;/figcaption&gt;
@@ -1059,7 +1059,7 @@ $$nP + mP = \underbrace{P + \cdots + P}_{n\ \text{times}} + \underbrace{P + \cdo
 &lt;li&gt;For every divisor $n$ of $N$, compute $nP$.&lt;/li&gt;
 &lt;li&gt;The smallest $n$ such that $nP = 0$ is the order of the subgroup.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;For example, the curve $y^2 = x^3 - x + 3$ over the field $\mathbb{F}_{37}$ has order $N = 42$. Its subgroups may have order $n = 1$, $2$, $3$, $6$, $7$, $14$, $21$ or $42$. If &lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/modk-mul.html?a=-1&amp;amp;b=3&amp;amp;p=37&amp;amp;px=2&amp;amp;py=3"&gt;we try $P = (2, 3)$&lt;/a&gt; we can see that $P \ne 0$, $2P \ne 0$, ..., $7P = 0$, hence the order of $P$ is $n = 7$.&lt;/p&gt;
+&lt;p&gt;For example, the curve $y^2 = x^3 - x + 3$ over the field $\mathbb{F}_{37}$ has order $N = 42$. Its subgroups may have order $n = 1$, $2$, $3$, $6$, $7$, $14$, $21$ or $42$. If &lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html?a=-1&amp;amp;b=3&amp;amp;p=37&amp;amp;px=2&amp;amp;py=3"&gt;we try $P = (2, 3)$&lt;/a&gt; we can see that $P \ne 0$, $2P \ne 0$, ..., $7P = 0$, hence the order of $P$ is $n = 7$.&lt;/p&gt;
 &lt;p&gt;Note that &lt;strong&gt;it's important to take the smallest divisor, not a random one&lt;/strong&gt;. If we proceeded randomly, we could have taken $n = 14$, which is not the order of the subgroup, but one of its multiples.&lt;/p&gt;
 &lt;p&gt;Another example: the elliptic curve defined by the equation $y^2 = x^3 - x + 1$ over the field $\mathbb{F}_{29}$ has order $N = 37$, which is a prime. Its subgroups may only have order $n = 1$ or $37$. As you can easily guess, when $n = 1$, the subgroup contains only the point at infinity; when $n = N$, the subgroup contains all the points of the elliptic curve.&lt;/p&gt;
 &lt;h3&gt;Finding a base point&lt;/h3&gt;
@@ -1174,7 +1174,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
    &lt;/figure&gt;
    Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The geometric method is now complete and covers all cases. With a pencil and a ruler we are able to perform addition involving every point of any elliptic curve. If you want to try, &lt;strong&gt;take a look at the &lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/reals-add.html"&gt;HTML5/JavaScript visual tool&lt;/a&gt; I've built for computing sums on elliptic curves!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The geometric method is now complete and covers all cases. With a pencil and a ruler we are able to perform addition involving every point of any elliptic curve. If you want to try, &lt;strong&gt;take a look at the &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html"&gt;HTML5/JavaScript visual tool&lt;/a&gt; I've built for computing sums on elliptic curves!&lt;/strong&gt;&lt;/p&gt;
 &lt;h2 id="algebraic-addition"&gt;Algebraic addition&lt;/h2&gt;
 &lt;p&gt;If we want a computer to perform point addition, we need to turn the geometric method into an algebraic method. Transforming the rules described above into a set of equations may seem straightforward, but actually it can be really tedious because it requires solving cubic equations. For this reason, here I will report only the results.&lt;/p&gt;
 &lt;p&gt;First, let's get get rid of the most annoying corner cases. We already know that $P + (-P) = 0$, and we also know that $P + 0 = 0 + P = P$. So, in our equations, we will avoid these two cases and we will only consider &lt;strong&gt;two non-zero, non-symmetric points $P = (x_P, y_P)$ and $Q = (x_Q, y_Q)$&lt;/strong&gt;.&lt;/p&gt;
@@ -1189,7 +1189,7 @@ $$\begin{array}{rcl}
 $$y_R = y_Q + m(x_R - x_Q)$$&lt;/p&gt;
 &lt;p&gt;Hence $(x_P, y_P) + (x_Q, y_Q) = (x_R, -y_R)$ (pay attention at the signs and remember that $P + Q = -R$).&lt;/p&gt;
 &lt;p&gt;If we wanted to check whether this result is right, we would have had to check whether $R$ belongs to the curve and whether $P$, $Q$ and $R$ are aligned. Checking whether the points are aligned is trivial, checking that $R$ belongs to the curve is not, as we would need to solve a cubic equation, which is not fun at all.&lt;/p&gt;
-&lt;p&gt;Instead, let's play with an example: according to our &lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/reals-add.html"&gt;visual tool&lt;/a&gt;, given $P = (1, 2)$ and $Q = (3, 4)$ over the curve $y^2 = x^3 - 7x + 10$, their sum is $P + Q = -R = (-3, 2)$. Let's see if our equations agree:
+&lt;p&gt;Instead, let's play with an example: according to our &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html"&gt;visual tool&lt;/a&gt;, given $P = (1, 2)$ and $Q = (3, 4)$ over the curve $y^2 = x^3 - 7x + 10$, their sum is $P + Q = -R = (-3, 2)$. Let's see if our equations agree:
 $$\begin{array}{rcl}
     m &amp;amp; = &amp;amp; \frac{y_P - y_Q}{x_P - x_Q} = \frac{2 - 4}{1 - 3} = 1 \\
     x_R &amp;amp; = &amp;amp; m^2 - x_P - x_Q = 1^2 - 1 - 3 = -3 \\
@@ -1203,7 +1203,7 @@ $$\begin{array}{rcl}
     x_R &amp;amp; = &amp;amp; m^2 - x_P - x_Q = (-1)^2 - (-1) - 1 = 1 \\
     y_R &amp;amp; = &amp;amp; y_P + m(x_R - x_P) = 4 + -1 \cdot (1 - (-1)) = 2
 \end{array}$$&lt;/p&gt;
-&lt;p&gt;We get the result $P + Q = (1, -2)$, which is the same result given by the &lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/reals-add.html?px=-1&amp;amp;py=4&amp;amp;qx=1&amp;amp;qy=2"&gt;visual tool&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We get the result $P + Q = (1, -2)$, which is the same result given by the &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html?px=-1&amp;amp;py=4&amp;amp;qx=1&amp;amp;qy=2"&gt;visual tool&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;The case $P = Q$ needs to be treated a bit differently&lt;/strong&gt;: the equations for $x_R$ and $y_R$ are the same, but given that $x_P = x_Q$, we must use a different equation for the &lt;strong&gt;slope&lt;/strong&gt;:
 $$m = \frac{3 x_P^2 + a}{2 y_P}$$&lt;/p&gt;
 &lt;p&gt;Note that, as we would expect, this expression for $m$ is the first derivative of:
@@ -1214,12 +1214,12 @@ $$\begin{array}{rcl}
     x_R &amp;amp; = &amp;amp; m^2 - x_P - x_Q = (-1)^2 - 1 - 1 = -1 \\
     y_R &amp;amp; = &amp;amp; y_P + m(x_R - x_P) = 2 + (-1) \cdot (-1 - 1) = 4
 \end{array}$$&lt;/p&gt;
-&lt;p&gt;Which gives us $P + P = -R = (-1, -4)$. &lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/reals-add.html?px=1&amp;amp;py=2&amp;amp;qx=1&amp;amp;qy=2"&gt;Correct&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;Which gives us $P + P = -R = (-1, -4)$. &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html?px=1&amp;amp;py=2&amp;amp;qx=1&amp;amp;qy=2"&gt;Correct&lt;/a&gt;!&lt;/p&gt;
 &lt;p&gt;Although the procedure to derive them can be really tedious, our equations are pretty compact. This is thanks to Weierstrass normal form: without it, these equations could have been really long and complicated!&lt;/p&gt;
 &lt;h2 id="scalar-multiplication"&gt;Scalar multiplication&lt;/h2&gt;
 &lt;p&gt;Other than addition, we can define another operation: &lt;strong&gt;scalar multiplication&lt;/strong&gt;, that is:
 $$nP = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$&lt;/p&gt;
-&lt;p&gt;where $n$ is a natural number. I've written a &lt;strong&gt;&lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/reals-mul.html"&gt;visual tool&lt;/a&gt; for scalar multiplication&lt;/strong&gt; too, if you want to play with that.&lt;/p&gt;
+&lt;p&gt;where $n$ is a natural number. I've written a &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html"&gt;visual tool&lt;/a&gt; for scalar multiplication&lt;/strong&gt; too, if you want to play with that.&lt;/p&gt;
 &lt;p&gt;Written in that form, it may seem that computing $nP$ requires $n$ additions. If $n$ has $k$ binary digits, then our algorithm would be $O(2^k)$, which is not really good. But there exist faster algorithms.&lt;/p&gt;
 &lt;p&gt;One of them is the &lt;span id="double-and-add"&gt;&lt;strong&gt;double and add&lt;/strong&gt;&lt;/span&gt; algorithm. Its principle of operation can be better explained with an example. Take $n = 151$. Its binary representation is $10010111_2$. This binary representation can be turned into a sum of powers of two:
 $$\begin{array}{rcl}
@@ -1275,7 +1275,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;If doubling and adding are both $O(1)$ operations, then &lt;strong&gt;this algorithm is $O(\log n)$&lt;/strong&gt; (or $O(k)$ if we consider the bit length), which is pretty good. Surely much better than the initial $O(n)$ algorithm!&lt;/p&gt;
 &lt;h2&gt;Logarithm&lt;/h2&gt;
 &lt;p&gt;Given $n$ and $P$, we now have at least one polynomial time algorithm for computing $Q = nP$. But what about the other way round? &lt;strong&gt;What if we know $Q$ and $P$ and need to find out $n$&lt;/strong&gt;? This problem is known as the &lt;strong&gt;logarithm problem&lt;/strong&gt;. We call it "logarithm" instead of "division" for conformity with other cryptosystems (where instead of multiplication we have exponentiation).&lt;/p&gt;
-&lt;p&gt;I don't know of any "easy" algorithm for the logarithm problem, however &lt;a href="https://cdn.rawgit.com/andreacorbellini/ecc/920b29a/interactive/reals-mul.html?a=-3&amp;amp;b=1&amp;amp;px=0&amp;amp;py=1"&gt;playing with multiplication&lt;/a&gt; it's easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.&lt;/p&gt;
+&lt;p&gt;I don't know of any "easy" algorithm for the logarithm problem, however &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html?a=-3&amp;amp;b=1&amp;amp;px=0&amp;amp;py=1"&gt;playing with multiplication&lt;/a&gt; it's easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.&lt;/p&gt;
 &lt;p&gt;But there's a variant of the logarithm problem: the &lt;em&gt;discrete&lt;/em&gt; logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, &lt;strong&gt;scalar multiplication remains "easy", while the discrete logarithm becomes a "hard" problem&lt;/strong&gt;. This duality is the key brick of elliptic curve cryptography.&lt;/p&gt;
 &lt;h2&gt;See you next week&lt;/h2&gt;
 &lt;p&gt;That's all for today, I hope you enjoyed this post! Next week we will discover &lt;strong&gt;finite fields&lt;/strong&gt; and the &lt;strong&gt;&lt;em&gt;discrete&lt;/em&gt; logarithm problem&lt;/strong&gt;, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!&lt;/p&gt;
