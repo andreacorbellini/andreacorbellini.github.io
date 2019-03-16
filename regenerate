@@ -14,7 +14,7 @@ rm -f "$blogdir/feed.rss"
 rm -f "$blogdir/ubuntu.rss"
 
 rm -f "$blogdir/index.html"
-rm -rf "$blogdir/"201[0-9]
+rm -rf "$blogdir/"20[10-99]
 rm -rf "$blogdir/about"
 rm -rf "$blogdir/category"
 rm -rf "$blogdir/tag"
