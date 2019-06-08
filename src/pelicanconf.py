@@ -31,7 +31,7 @@ def get_venv_path():
 
 # General.
 AUTHOR = 'Andrea Corbellini'
-SITENAME = "Andrea's Corner"
+SITENAME = 'Andrea Corbellini'
 SITEURL = 'http://{}:8000'.format(get_ip_address())
 RELATIVE_URLS = False
 
