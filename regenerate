@@ -22,4 +22,6 @@ rm -rf "$blogdir/tag"
 rm -rf "$blogdir/theme"
 rm -rf "$blogdir/images"
 
+pip freeze > "$blogdir/versions.txt"
+
 pelican -s "$srcdir/publishconf.py"
