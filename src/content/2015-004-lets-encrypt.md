@@ -17,7 +17,7 @@ I remember that I got excited when I first heard of **[CAcert](http://www.cacert
 Recently, I learned about **[Let's Encrypt](https://letsencrypt.org/): a "free, automated, and open" Certificate Authority** arriving in mid-2015. There are many important facts that make Let's Encrypt different and better from all the other Certificate Authorities out there. I'll let you discover all of them. Probably, the most important fact is that Let's Encrypt has **[important sponsors](https://letsencrypt.org/sponsors/), including Mozilla**. And this is what matters today, because it gives Let's Encrypt a chance to be included in at least one major browser.
 
 <figure>
-  <a href="https://letsencrypt.org/"><img src="{filename}/images/letsencrypt-logo-horizontal.png" alt="Let&#039;s Encrypt" width="519" height="124"></a>
+  <a href="https://letsencrypt.org/"><img src="{static}/images/letsencrypt-logo-horizontal.png" alt="Let&#039;s Encrypt" width="519" height="124"></a>
   <figcaption>Let's Encrypt logo.</figcaption>
 </figure>
 

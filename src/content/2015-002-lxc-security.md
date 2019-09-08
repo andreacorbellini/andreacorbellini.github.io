@@ -13,7 +13,7 @@ LXC and Docker are used not only to achieve modular architecture design, but als
 We can agree that the LXC and Docker ecosystems are great and work well, but there's an important question that I believe everyone should ask, but too few people are asking: **are LXC and Docker secure?**
 
 <figure>
-  <img src="{filename}/images/broken-chain.jpg" alt="Broken Chain">
+  <img src="{static}/images/broken-chain.jpg" alt="Broken Chain">
   <figcaption>A system is as safe as its weakest component.</figcaption>
 </figure>
 
@@ -54,7 +54,7 @@ LXC offers ways to limit resource usage, but no special restrictions are put in 
 With the default configuration, I can run fork-bombs, request huge memory maps, keep all CPUs busy, doing high loads of I/O. All of this without special privileges. Remember this when running untrusted code.
 
 <figure>
-  <img src="{filename}/images/memory-usage.png" alt="Uncontrolled memory consumption">
+  <img src="{static}/images/memory-usage.png" alt="Uncontrolled memory consumption">
 </figure>
 
 To limit resource consumption in LXC, open the configuration file for your container and set the `lxc.cgroup.&lt;system&gt;` values you need.

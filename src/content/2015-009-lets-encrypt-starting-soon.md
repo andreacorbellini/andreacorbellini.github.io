@@ -11,12 +11,12 @@ Status: published
 Their intermediate certificates, which [were generated a few days ago](https://letsencrypt.org/2015/06/04/isrg-ca-certs.html), will be signed by [IdenTrust](https://www.identrustssl.com/). What this means is that if you browse a web page secured by Let's Encrypt, you won't get any scary message, but the usual green lock.
 
 <figure>
-  <img src="{filename}/images/green-lock.png" alt="Green lock" width="612" height="188">
+  <img src="{static}/images/green-lock.png" alt="Green lock" width="612" height="188">
   <figcaption><strong>You will see this...</strong></figcaption>
 </figure>
 
 <figure>
-  <img src="{filename}/images/red-lock.png" alt="Red lock" width="612" height="300">
+  <img src="{static}/images/red-lock.png" alt="Red lock" width="612" height="300">
   <figcaption><strong>... not this.</strong></figcaption>
 </figure>
 
