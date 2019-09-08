@@ -16,18 +16,21 @@ All these characteristics make it particularly appealing for the cloud. And, in 
 
 As of writing, the latest Ubuntu Core image is alpha 3 and can be downloaded with:
 
+    :::console
     $ wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 
 (If you browse to [cdimage.ubuntu.com](http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/), you can also find the signed hashsums.)
 
 The downloaded image is XZ-compressed and we need to extract it:
 
+    :::console
     $ unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 
 ### Step 2: connect the image using qemu-nbd
 
 The file we have just downloaded and extracted is a filesystem dump. The previous version of the image (Alpha 2) was a QCOW2 image (the format used by QEMU). In order to access its contents, we have a few options. Here I'll show one that works with both filesystem dumps and QCOW2 images. The trick consists in using `qemu-nbd` (a tool from the [qemu-utils](https://apps.ubuntu.com/cat/applications/qemu-utils/) package):
 
+    :::console
     # qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
 
 This command will create a virtual device named `/dev/nbd0`, with virtual partitions named `/dev/nbd0p1`, `/dev/nbd0p2`, ... Use `fdisk -l /dev/nbd0` to get an idea of what partitions are inside the QCOW2 image.
@@ -36,6 +39,7 @@ This command will create a virtual device named `/dev/nbd0`, with virtual partit
 
 The partition we are interested in is `/dev/nbd0p3`, so we need to mount it:
 
+    :::console
     # mkdir nbd0p3
     # mount -r /dev/nbd0p3 nbd0p3
 
@@ -43,16 +47,19 @@ The partition we are interested in is `/dev/nbd0p3`, so we need to mount it:
 
 As suggested on the [Docker documentation](https://docs.docker.com/articles/baseimages/), creating a base Docker image from a directory is pretty straightforward:
 
-    tar -C nbd0p3 -c . | docker import - ubuntu-core alpha-3
+    :::console
+    # tar -C nbd0p3 -c . | docker import - ubuntu-core alpha-3
 
 Our newly created image will now appear when running `docker images`:
 
+    :::console
     # docker images
     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
     ubuntu-core         alpha-3             f6df3c0e2d74        5 seconds ago       543.5 MB
 
 Let's verify if we did a good job:
 
+    :::console
     # docker run ubuntu-core:alpha-3 snappy
     Usage:snappy [-h] [-v]
                  {info,versions,search,update-versions,update,rollback,install,uninstall,tags,config,build,booted,chroot,framework,fake-version,nap}
@@ -64,6 +71,7 @@ Yes! We have successfully added Ubuntu Core to the available Docker images and w
 
 Without wasting too many words, here's how to install and run the `xkcd-webserver` snappy package inside docker:
 
+    :::console
     # docker run -p 8000:80 ubuntu-core:alpha-3 /bin/sh -c 'snappy install xkcd-webserver && cd /apps/xkcd-webserver/0.3.1 && ./bin/xkcd-webserver'
     WARN: AppArmor not available when processing AppArmor hook
     Failed to get D-Bus connection: Operation not permitted
@@ -83,6 +91,7 @@ If you have payed attention, you may have noticed a few warnings about AppArmor,
 
 Once you have created the base Docker image, you can start creating some `Dockerfile`s, if you need to. Here's an example:
 
+    :::dockerfile
     FROM ubuntu-core:alpha-3
     RUN snappy install xkcd-webserver
     EXPOSE 8000:80
@@ -90,10 +99,12 @@ Once you have created the base Docker image, you can start creating some `Docker
 
 This `Dockerfile` does the same job as the previous command: it installs and runs `xkcd-webserver` on port 8000. In order to use it, first build it:
 
+    :::console
     # docker build -t xkcd-webserver .
 
 Check that it has been correctly installed:
 
+    :::console
     # docker images
     REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
     xkcd-webserver      latest              260e0116e9e3        3 minutes ago       543.5 MB
@@ -101,6 +112,7 @@ Check that it has been correctly installed:
 
 Then run it:
 
+    :::console
     # docker run xkcd-webserver
 
 Again, you should see a random XKCD comic on [http://localhost:8000/](http://localhost:8000/).

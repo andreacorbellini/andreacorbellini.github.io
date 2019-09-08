@@ -557,13 +557,13 @@ $$\begin{array}{rl}
 &lt;h3&gt;Playing with baby-step giant-step&lt;/h3&gt;
 &lt;p&gt;I made &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py"&gt;a Python script&lt;/a&gt; that computes discrete logarithms using the baby-step giant-step algorithm. Obviously it only works with curves with small orders: don't try it with &lt;code&gt;secp521r1&lt;/code&gt;, unless you want to receive a &lt;code&gt;MemoryError&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;It should produce an output like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Curve&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="n"&gt;mod&lt;/span&gt; &lt;span class="mi"&gt;10177&lt;/span&gt;
-&lt;span class="n"&gt;Curve&lt;/span&gt; &lt;span class="n"&gt;order&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;10331&lt;/span&gt;
-&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x1a28&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x8fb&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="mi"&gt;325&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;
-&lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;325&lt;/span&gt;
-&lt;span class="n"&gt;Took&lt;/span&gt; &lt;span class="mi"&gt;105&lt;/span&gt; &lt;span class="n"&gt;steps&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Curve: y^2 = (x^3 + 1x - 1) mod 10177
+Curve order: 10331
+p = (0x1, 0x1)
+q = (0x1a28, 0x8fb)
+325 * p = q
+log(p, q) = 325
+Took 105 steps
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -778,12 +778,12 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;(These numbers were taken from &lt;a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c#L766"&gt;OpenSSL source code&lt;/a&gt;.)&lt;/p&gt;
 &lt;p&gt;Of course, you are free to modify the script to use other curves and domain parameters, just be sure to use prime fields and curves Weierstrass normal form, otherwise the script won't work.&lt;/p&gt;
 &lt;p&gt;The script is really simple and includes some of the algorithms we have described so far: point addition, double and add, ECDH. I recommend you to read and run it. It will produce an output like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Curve&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;secp256k1&lt;/span&gt;
-&lt;span class="n"&gt;Alice&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;s private key: 0xe32868331fa8ef0138de0de85478346aec5e3912b6029ae71691c384237a3eeb&lt;/span&gt;
-&lt;span class="s1"&gt;Alice&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x86b1aa5120f079594348c67647679e7ac4c365b2c01330db782b0ba611c1d677&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x5f4376a23eed633657a90f385ba21068ed7e29859a7fab09e953cc5b3e89beba&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Bob&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;s private key: 0xcef147652aa90162e1fff9cf07f2605ea05529ca215a04350a98ecc24aa34342&lt;/span&gt;
-&lt;span class="s1"&gt;Bob&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8a26fc2c20134a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x9e773199edc1ea792b150270ea3317689286c9fe239dd5b9c5cfd9e81b4b632&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Shared&lt;/span&gt; &lt;span class="n"&gt;secret&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Curve: secp256k1
+Alice&amp;#39;s private key: 0xe32868331fa8ef0138de0de85478346aec5e3912b6029ae71691c384237a3eeb
+Alice&amp;#39;s public key: (0x86b1aa5120f079594348c67647679e7ac4c365b2c01330db782b0ba611c1d677, 0x5f4376a23eed633657a90f385ba21068ed7e29859a7fab09e953cc5b3e89beba)
+Bob&amp;#39;s private key: 0xcef147652aa90162e1fff9cf07f2605ea05529ca215a04350a98ecc24aa34342
+Bob&amp;#39;s public key: (0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8a26fc2c20134a, 0x9e773199edc1ea792b150270ea3317689286c9fe239dd5b9c5cfd9e81b4b632)
+Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd, 0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083)
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -843,20 +843,20 @@ $$\begin{array}{rl}
 &lt;h4&gt;Playing with ECDSA&lt;/h4&gt;
 &lt;p&gt;Of course, I've created &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdsa.py"&gt;a Python script&lt;/a&gt; for signature generation and verification&lt;/strong&gt;. The code shares some parts with the ECDH script, in particular the domain parameters and the public/private key pair generation algorithm.&lt;/p&gt;
 &lt;p&gt;Here is the kind of output produced by the script:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Curve&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;secp256k1&lt;/span&gt;
-&lt;span class="n"&gt;Private&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x9f4c9eb899bd86e0e83ecca659602a15b2edb648e2ae4ee4a256b17bb29a1a1e&lt;/span&gt;
-&lt;span class="n"&gt;Public&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0xabd9791437093d377ca25ea974ddc099eafa3d97c7250d2ea32af6a1556f92a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x3fe60f6150b6d87ae8d64b78199b13f26977407c801f233288c97ddc4acca326&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Curve: secp256k1
+Private key: 0x9f4c9eb899bd86e0e83ecca659602a15b2edb648e2ae4ee4a256b17bb29a1a1e
+Public key: (0xabd9791437093d377ca25ea974ddc099eafa3d97c7250d2ea32af6a1556f92a, 0x3fe60f6150b6d87ae8d64b78199b13f26977407c801f233288c97ddc4acca326)
 
-&lt;span class="n"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello!&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;Signature&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0xddcb8b5abfe46902f2ac54ab9cd5cf205e359c03fdf66ead1130826f79d45478&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x551a5b2cd8465db43254df998ba577cb28e1ee73c5530430395e4fba96610151&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Verification&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;signature&lt;/span&gt; &lt;span class="n"&gt;matches&lt;/span&gt;
+Message: b&amp;#39;Hello!&amp;#39;
+Signature: (0xddcb8b5abfe46902f2ac54ab9cd5cf205e359c03fdf66ead1130826f79d45478, 0x551a5b2cd8465db43254df998ba577cb28e1ee73c5530430395e4fba96610151)
+Verification: signature matches
 
-&lt;span class="n"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hi there!&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;Verification&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;invalid&lt;/span&gt; &lt;span class="n"&gt;signature&lt;/span&gt;
+Message: b&amp;#39;Hi there!&amp;#39;
+Verification: invalid signature
 
-&lt;span class="n"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello!&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;Public&lt;/span&gt; &lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0xc40572bb38dec72b82b3efb1efc8552588b8774149a32e546fb703021cf3b78a&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mh"&gt;0x8c6e5c5a9c1ea4cad778072fe955ed1c6a2a92f516f02cab57e0ba7d0765f8bb&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;Verification&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;invalid&lt;/span&gt; &lt;span class="n"&gt;signature&lt;/span&gt;
+Message: b&amp;#39;Hello!&amp;#39;
+Public key: (0xc40572bb38dec72b82b3efb1efc8552588b8774149a32e546fb703021cf3b78a, 0x8c6e5c5a9c1ea4cad778072fe955ed1c6a2a92f516f02cab57e0ba7d0765f8bb)
+Verification: invalid signature
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1303,64 +1303,64 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;h2&gt;Creating the Docker image&lt;/h2&gt;
 &lt;h3&gt;Step 1: get the latest Ubuntu Core&lt;/h3&gt;
 &lt;p&gt;As of writing, the latest Ubuntu Core image is alpha 3 and can be downloaded with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;(If you browse to &lt;a href="http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/"&gt;cdimage.ubuntu.com&lt;/a&gt;, you can also find the signed hashsums.)&lt;/p&gt;
 &lt;p&gt;The downloaded image is XZ-compressed and we need to extract it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Step 2: connect the image using qemu-nbd&lt;/h3&gt;
 &lt;p&gt;The file we have just downloaded and extracted is a filesystem dump. The previous version of the image (Alpha 2) was a QCOW2 image (the format used by QEMU). In order to access its contents, we have a few options. Here I'll show one that works with both filesystem dumps and QCOW2 images. The trick consists in using &lt;code&gt;qemu-nbd&lt;/code&gt; (a tool from the &lt;a href="https://apps.ubuntu.com/cat/applications/qemu-utils/"&gt;qemu-utils&lt;/a&gt; package):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This command will create a virtual device named &lt;code&gt;/dev/nbd0&lt;/code&gt;, with virtual partitions named &lt;code&gt;/dev/nbd0p1&lt;/code&gt;, &lt;code&gt;/dev/nbd0p2&lt;/code&gt;, ... Use &lt;code&gt;fdisk -l /dev/nbd0&lt;/code&gt; to get an idea of what partitions are inside the QCOW2 image.&lt;/p&gt;
 &lt;h3&gt;Step 3: mount the filesystem&lt;/h3&gt;
 &lt;p&gt;The partition we are interested in is &lt;code&gt;/dev/nbd0p3&lt;/code&gt;, so we need to mount it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# mkdir nbd0p3
-# mount -r /dev/nbd0p3 nbd0p3
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mkdir nbd0p3
+&lt;span class="gp"&gt;#&lt;/span&gt; mount -r /dev/nbd0p3 nbd0p3
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Step 4: create a base Docker image&lt;/h3&gt;
 &lt;p&gt;As suggested on the &lt;a href="https://docs.docker.com/articles/baseimages/"&gt;Docker documentation&lt;/a&gt;, creating a base Docker image from a directory is pretty straightforward:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;C&lt;/span&gt; &lt;span class="n"&gt;nbd0p3&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;docker&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;ubuntu&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; tar -C nbd0p3 -c . &lt;span class="p"&gt;|&lt;/span&gt; docker import - ubuntu-core alpha-3
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Our newly created image will now appear when running &lt;code&gt;docker images&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-ubuntu-core         alpha-3             f6df3c0e2d74        5 seconds ago       543.5 MB
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
+&lt;span class="go"&gt;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&lt;/span&gt;
+&lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        5 seconds ago       543.5 MB&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Let's verify if we did a good job:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# docker run ubuntu-core:alpha-3 snappy
-Usage:snappy [-h] [-v]
-             {info,versions,search,update-versions,update,rollback,install,uninstall,tags,config,build,booted,chroot,framework,fake-version,nap}
-             ...
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run ubuntu-core:alpha-3 snappy
+&lt;span class="go"&gt;Usage:snappy [-h] [-v]&lt;/span&gt;
+&lt;span class="go"&gt;             {info,versions,search,update-versions,update,rollback,install,uninstall,tags,config,build,booted,chroot,framework,fake-version,nap}&lt;/span&gt;
+&lt;span class="go"&gt;             ...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Yes! We have successfully added Ubuntu Core to the available Docker images and we have run our first snappy container!&lt;/p&gt;
 &lt;h2&gt;Installing and running software&lt;/h2&gt;
 &lt;p&gt;Without wasting too many words, here's how to install and run the &lt;code&gt;xkcd-webserver&lt;/code&gt; snappy package inside docker:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# docker run -p 8000:80 ubuntu-core:alpha-3 /bin/sh -c &amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;
-WARN: AppArmor not available when processing AppArmor hook
-Failed to get D-Bus connection: Operation not permitted
-Failed to get D-Bus connection: Operation not permitted
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run -p &lt;span class="m"&gt;8000&lt;/span&gt;:80 ubuntu-core:alpha-3 /bin/sh -c &lt;span class="s1"&gt;&amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;&lt;/span&gt;
+&lt;span class="go"&gt;WARN: AppArmor not available when processing AppArmor hook&lt;/span&gt;
+&lt;span class="go"&gt;Failed to get D-Bus connection: Operation not permitted&lt;/span&gt;
+&lt;span class="go"&gt;Failed to get D-Bus connection: Operation not permitted&lt;/span&gt;
 
-** (process:13): WARNING **: user.vala:637: Can not connect to logind
-xkcd-webserver     21 kB     [======================================]    OK
-WARNING: failed to connect to dbus: org.freedesktop.DBus.Error.FileNotFound: Failed to connect to socket /var/run/dbus/system_bus_socket: No such file or directory
-Part            Tag   Installed  Available  Fingerprint     Active
-xkcd-webserver  edge  0.3.1      -          3a9152b8bff494  *
+&lt;span class="go"&gt;** (process:13): WARNING **: user.vala:637: Can not connect to logind&lt;/span&gt;
+&lt;span class="go"&gt;xkcd-webserver     21 kB     [======================================]    OK&lt;/span&gt;
+&lt;span class="go"&gt;WARNING: failed to connect to dbus: org.freedesktop.DBus.Error.FileNotFound: Failed to connect to socket /var/run/dbus/system_bus_socket: No such file or directory&lt;/span&gt;
+&lt;span class="go"&gt;Part            Tag   Installed  Available  Fingerprint     Active&lt;/span&gt;
+&lt;span class="go"&gt;xkcd-webserver  edge  0.3.1      -          3a9152b8bff494  *&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1368,28 +1368,28 @@ xkcd-webserver  edge  0.3.1      -          3a9152b8bff494  *
 &lt;p&gt;If you have payed attention, you may have noticed a few warnings about AppArmor, DBus and logind. The reason why you are seeing these warnings is pretty simple: we did not start neither AppArmor nor DBus nor logind. Now, generally speaking, we could run init inside Docker and fix these and other warnings. However that's not what Docker is meant for. So if you want to run AppArmor or similar stuff &lt;em&gt;from inside&lt;/em&gt; Docker or LXC, then probably you should consider virtualization.&lt;/p&gt;
 &lt;h2&gt;Dockerfile&lt;/h2&gt;
 &lt;p&gt;Once you have created the base Docker image, you can start creating some &lt;code&gt;Dockerfile&lt;/code&gt;s, if you need to. Here's an example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;FROM ubuntu-core:alpha-3
-RUN snappy install xkcd-webserver
-EXPOSE 8000:80
-CMD cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; ubuntu-core:alpha-3&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt; snappy install xkcd-webserver
+&lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="s"&gt; 8000:80&lt;/span&gt;
+&lt;span class="k"&gt;CMD&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /apps/xkcd-webserver/0.3.1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./bin/xkcd-webserver
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This &lt;code&gt;Dockerfile&lt;/code&gt; does the same job as the previous command: it installs and runs &lt;code&gt;xkcd-webserver&lt;/code&gt; on port 8000. In order to use it, first build it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# docker build -t xkcd-webserver .
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker build -t xkcd-webserver .
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Check that it has been correctly installed:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-xkcd-webserver      latest              260e0116e9e3        3 minutes ago       543.5 MB
-ubuntu-core         alpha-3             f6df3c0e2d74        About an hour ago   543.5 MB
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
+&lt;span class="go"&gt;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&lt;/span&gt;
+&lt;span class="go"&gt;xkcd-webserver      latest              260e0116e9e3        3 minutes ago       543.5 MB&lt;/span&gt;
+&lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        About an hour ago   543.5 MB&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Then run it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# docker run xkcd-webserver
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run xkcd-webserver
 &lt;/pre&gt;&lt;/div&gt;
 
 

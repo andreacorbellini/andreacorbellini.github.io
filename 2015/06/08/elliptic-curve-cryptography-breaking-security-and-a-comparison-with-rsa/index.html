@@ -96,13 +96,13 @@ $$\begin{array}{rl}
 <h3>Playing with baby-step giant-step</h3>
 <p>I made <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py">a Python script</a> that computes discrete logarithms using the baby-step giant-step algorithm. Obviously it only works with curves with small orders: don't try it with <code>secp521r1</code>, unless you want to receive a <code>MemoryError</code>.</p>
 <p>It should produce an output like this:</p>
-<div class="highlight"><pre><span></span><span class="n">Curve</span><span class="o">:</span> <span class="n">y</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> <span class="o">(</span><span class="n">x</span><span class="o">^</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="n">mod</span> <span class="mi">10177</span>
-<span class="n">Curve</span> <span class="n">order</span><span class="o">:</span> <span class="mi">10331</span>
-<span class="n">p</span> <span class="o">=</span> <span class="o">(</span><span class="mh">0x1</span><span class="o">,</span> <span class="mh">0x1</span><span class="o">)</span>
-<span class="n">q</span> <span class="o">=</span> <span class="o">(</span><span class="mh">0x1a28</span><span class="o">,</span> <span class="mh">0x8fb</span><span class="o">)</span>
-<span class="mi">325</span> <span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">q</span>
-<span class="n">log</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">q</span><span class="o">)</span> <span class="o">=</span> <span class="mi">325</span>
-<span class="n">Took</span> <span class="mi">105</span> <span class="n">steps</span>
+<div class="highlight"><pre><span></span>Curve: y^2 = (x^3 + 1x - 1) mod 10177
+Curve order: 10331
+p = (0x1, 0x1)
+q = (0x1a28, 0x8fb)
+325 * p = q
+log(p, q) = 325
+Took 105 steps
 </pre></div>
 
 

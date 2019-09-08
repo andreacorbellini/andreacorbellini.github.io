@@ -134,12 +134,12 @@
 <p>(These numbers were taken from <a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c#L766">OpenSSL source code</a>.)</p>
 <p>Of course, you are free to modify the script to use other curves and domain parameters, just be sure to use prime fields and curves Weierstrass normal form, otherwise the script won't work.</p>
 <p>The script is really simple and includes some of the algorithms we have described so far: point addition, double and add, ECDH. I recommend you to read and run it. It will produce an output like this:</p>
-<div class="highlight"><pre><span></span><span class="n">Curve</span><span class="o">:</span> <span class="n">secp256k1</span>
-<span class="n">Alice</span><span class="s1">&#39;s private key: 0xe32868331fa8ef0138de0de85478346aec5e3912b6029ae71691c384237a3eeb</span>
-<span class="s1">Alice&#39;</span><span class="n">s</span> <span class="kd">public</span> <span class="n">key</span><span class="o">:</span> <span class="o">(</span><span class="mh">0x86b1aa5120f079594348c67647679e7ac4c365b2c01330db782b0ba611c1d677</span><span class="o">,</span> <span class="mh">0x5f4376a23eed633657a90f385ba21068ed7e29859a7fab09e953cc5b3e89beba</span><span class="o">)</span>
-<span class="n">Bob</span><span class="s1">&#39;s private key: 0xcef147652aa90162e1fff9cf07f2605ea05529ca215a04350a98ecc24aa34342</span>
-<span class="s1">Bob&#39;</span><span class="n">s</span> <span class="kd">public</span> <span class="n">key</span><span class="o">:</span> <span class="o">(</span><span class="mh">0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8a26fc2c20134a</span><span class="o">,</span> <span class="mh">0x9e773199edc1ea792b150270ea3317689286c9fe239dd5b9c5cfd9e81b4b632</span><span class="o">)</span>
-<span class="n">Shared</span> <span class="n">secret</span><span class="o">:</span> <span class="o">(</span><span class="mh">0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd</span><span class="o">,</span> <span class="mh">0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083</span><span class="o">)</span>
+<div class="highlight"><pre><span></span>Curve: secp256k1
+Alice&#39;s private key: 0xe32868331fa8ef0138de0de85478346aec5e3912b6029ae71691c384237a3eeb
+Alice&#39;s public key: (0x86b1aa5120f079594348c67647679e7ac4c365b2c01330db782b0ba611c1d677, 0x5f4376a23eed633657a90f385ba21068ed7e29859a7fab09e953cc5b3e89beba)
+Bob&#39;s private key: 0xcef147652aa90162e1fff9cf07f2605ea05529ca215a04350a98ecc24aa34342
+Bob&#39;s public key: (0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8a26fc2c20134a, 0x9e773199edc1ea792b150270ea3317689286c9fe239dd5b9c5cfd9e81b4b632)
+Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd, 0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083)
 </pre></div>
 
 
@@ -199,20 +199,20 @@ $$\begin{array}{rl}
 <h4>Playing with ECDSA</h4>
 <p>Of course, I've created <strong><a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdsa.py">a Python script</a> for signature generation and verification</strong>. The code shares some parts with the ECDH script, in particular the domain parameters and the public/private key pair generation algorithm.</p>
 <p>Here is the kind of output produced by the script:</p>
-<div class="highlight"><pre><span></span><span class="n">Curve</span><span class="o">:</span> <span class="n">secp256k1</span>
-<span class="n">Private</span> <span class="n">key</span><span class="o">:</span> <span class="mh">0x9f4c9eb899bd86e0e83ecca659602a15b2edb648e2ae4ee4a256b17bb29a1a1e</span>
-<span class="n">Public</span> <span class="n">key</span><span class="o">:</span> <span class="o">(</span><span class="mh">0xabd9791437093d377ca25ea974ddc099eafa3d97c7250d2ea32af6a1556f92a</span><span class="o">,</span> <span class="mh">0x3fe60f6150b6d87ae8d64b78199b13f26977407c801f233288c97ddc4acca326</span><span class="o">)</span>
+<div class="highlight"><pre><span></span>Curve: secp256k1
+Private key: 0x9f4c9eb899bd86e0e83ecca659602a15b2edb648e2ae4ee4a256b17bb29a1a1e
+Public key: (0xabd9791437093d377ca25ea974ddc099eafa3d97c7250d2ea32af6a1556f92a, 0x3fe60f6150b6d87ae8d64b78199b13f26977407c801f233288c97ddc4acca326)
 
-<span class="n">Message</span><span class="o">:</span> <span class="n">b</span><span class="s1">&#39;Hello!&#39;</span>
-<span class="n">Signature</span><span class="o">:</span> <span class="o">(</span><span class="mh">0xddcb8b5abfe46902f2ac54ab9cd5cf205e359c03fdf66ead1130826f79d45478</span><span class="o">,</span> <span class="mh">0x551a5b2cd8465db43254df998ba577cb28e1ee73c5530430395e4fba96610151</span><span class="o">)</span>
-<span class="n">Verification</span><span class="o">:</span> <span class="n">signature</span> <span class="n">matches</span>
+Message: b&#39;Hello!&#39;
+Signature: (0xddcb8b5abfe46902f2ac54ab9cd5cf205e359c03fdf66ead1130826f79d45478, 0x551a5b2cd8465db43254df998ba577cb28e1ee73c5530430395e4fba96610151)
+Verification: signature matches
 
-<span class="n">Message</span><span class="o">:</span> <span class="n">b</span><span class="s1">&#39;Hi there!&#39;</span>
-<span class="n">Verification</span><span class="o">:</span> <span class="n">invalid</span> <span class="n">signature</span>
+Message: b&#39;Hi there!&#39;
+Verification: invalid signature
 
-<span class="n">Message</span><span class="o">:</span> <span class="n">b</span><span class="s1">&#39;Hello!&#39;</span>
-<span class="n">Public</span> <span class="n">key</span><span class="o">:</span> <span class="o">(</span><span class="mh">0xc40572bb38dec72b82b3efb1efc8552588b8774149a32e546fb703021cf3b78a</span><span class="o">,</span> <span class="mh">0x8c6e5c5a9c1ea4cad778072fe955ed1c6a2a92f516f02cab57e0ba7d0765f8bb</span><span class="o">)</span>
-<span class="n">Verification</span><span class="o">:</span> <span class="n">invalid</span> <span class="n">signature</span>
+Message: b&#39;Hello!&#39;
+Public key: (0xc40572bb38dec72b82b3efb1efc8552588b8774149a32e546fb703021cf3b78a, 0x8c6e5c5a9c1ea4cad778072fe955ed1c6a2a92f516f02cab57e0ba7d0765f8bb)
+Verification: invalid signature
 </pre></div>
 
 
