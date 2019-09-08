@@ -9,6 +9,7 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def get_ip_address():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.settimeout(5)
     try:
         sock.connect(('1.1.1.1', 80))
         return sock.getsockname()[0]
