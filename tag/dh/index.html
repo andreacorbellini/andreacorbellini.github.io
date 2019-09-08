@@ -3,19 +3,31 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a663b36">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ]
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+    <script src="//andreacorbellini.disqus.com/count.js" async></script>
     <title>dh - Andrea Corbellini</title>
   </head>
   <body>
     <header class="main-header">  <nav class="navbar navbar-inverse">
     <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-bars"></span></button>
+      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
       <div class="navbar-header">
         <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
       </div>
@@ -38,40 +50,40 @@
       <article class="article-summary row">
         <header class="col-sm-3">
 <div class="details small">
-  <span><span class="fa fa-calendar-o"></span><time datetime="2015-06-08T13:28:00+00:00">June 08, 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa">Comments</a></span>
+  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-06-08T13:28:00+00:00">June 08, 2015</time></span>
+  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa">Comments</a></span>
 </div>        </header>
         <div class="summary col-sm-9">
           <h2><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/" rel="bookmark" title="Elliptic Curve Cryptography: breaking security and a comparison with RSA">Elliptic Curve Cryptography: breaking security and a comparison with RSA</a></h2>
           <blockquote class="body"><p><strong>This post is the fourth and last in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
 <p>In the <a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">last post</a> we have seen two algorithms, ECDH and ECDSA, and we have seen how the discrete logarithm problem for elliptic curves plays an important role for their security. But, if you remember, we said that <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm">we have no mathematical proofs</a> for the complexity of the discrete logarithm …</p></blockquote>
-          <p><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/" rel="bookmark" title="Elliptic Curve Cryptography: breaking security and a comparison with RSA" class="btn btn-default">Continue Reading <span class="fa fa-arrow-circle-right"></span></a></p>
+          <p><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/" rel="bookmark" title="Elliptic Curve Cryptography: breaking security and a comparison with RSA" class="btn btn-default">Continue Reading <span class="fas fa-arrow-circle-right" aria-hidden="true"></span></a></p>
         </div>
       </article>
       <article class="article-summary row">
         <header class="col-sm-3">
 <div class="details small">
-  <span><span class="fa fa-calendar-o"></span><time datetime="2015-05-30T19:23:00+00:00">May 30, 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-ecdh-and-ecdsa">Comments</a></span>
+  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-05-30T19:23:00+00:00">May 30, 2015</time></span>
+  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-ecdh-and-ecdsa">Comments</a></span>
 </div>        </header>
         <div class="summary col-sm-9">
           <h2><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" rel="bookmark" title="Elliptic Curve Cryptography: ECDH and ECDSA">Elliptic Curve Cryptography: ECDH and ECDSA</a></h2>
           <blockquote class="body"><p><strong>This post is the third in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
 <p>In the previous posts, we have seen <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">what an elliptic curve is</a> and we have defined a <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law">group law</a> in order to do some math with the points of elliptic curves. Then we have <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">restricted elliptic curves to finite fields of integers modulo a prime</a>. With this restriction, we have seen that …</p></blockquote>
-          <p><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" rel="bookmark" title="Elliptic Curve Cryptography: ECDH and ECDSA" class="btn btn-default">Continue Reading <span class="fa fa-arrow-circle-right"></span></a></p>
+          <p><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" rel="bookmark" title="Elliptic Curve Cryptography: ECDH and ECDSA" class="btn btn-default">Continue Reading <span class="fas fa-arrow-circle-right" aria-hidden="true"></span></a></p>
         </div>
       </article>
       <article class="article-summary row">
         <header class="col-sm-3">
 <div class="details small">
-  <span><span class="fa fa-calendar-o"></span><time datetime="2015-05-17T11:24:00+00:00">May 17, 2015</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-a-gentle-introduction">Comments</a></span>
+  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-05-17T11:24:00+00:00">May 17, 2015</time></span>
+  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-a-gentle-introduction">Comments</a></span>
 </div>        </header>
         <div class="summary col-sm-9">
           <h2><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" rel="bookmark" title="Elliptic Curve Cryptography: a gentle introduction">Elliptic Curve Cryptography: a gentle introduction</a></h2>
           <blockquote class="body"><p>Those of you who know what public-key cryptography is may have already heard of <strong>ECC</strong>, <strong>ECDH</strong> or <strong>ECDSA</strong>. The first is an acronym for Elliptic Curve Cryptography, the others are names for algorithms based on it.</p>
 <p>Today, we can find elliptic curves cryptosystems in <a href="https://tools.ietf.org/html/rfc4492">TLS</a>, <a href="https://tools.ietf.org/html/rfc6637">PGP</a> and <a href="https://tools.ietf.org/html/rfc5656">SSH</a>, which are just three of the main technologies on which the modern web and IT world …</p></blockquote>
-          <p><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" rel="bookmark" title="Elliptic Curve Cryptography: a gentle introduction" class="btn btn-default">Continue Reading <span class="fa fa-arrow-circle-right"></span></a></p>
+          <p><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" rel="bookmark" title="Elliptic Curve Cryptography: a gentle introduction" class="btn btn-default">Continue Reading <span class="fas fa-arrow-circle-right" aria-hidden="true"></span></a></p>
         </div>
       </article>
   </div>
@@ -83,14 +95,5 @@
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div></footer>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: { inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ] },
-    elements: [ 'content' ]
-  });
-</script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" async defer></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js" async defer></script>
-  <script src="//andreacorbellini.disqus.com/count.js" async defer></script>
   </body>
 </html>

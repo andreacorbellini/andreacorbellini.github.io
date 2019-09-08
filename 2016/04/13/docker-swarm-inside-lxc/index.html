@@ -3,13 +3,25 @@
   <head>
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?4388d40a">
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a663b36">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ]
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+    <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
       <meta name="tags" content="docker">
       <meta name="tags" content="swarm">
@@ -22,7 +34,7 @@
   <body>
     <header class="main-header">  <nav class="navbar navbar-inverse">
     <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fa fa-bars"></span></button>
+      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
       <div class="navbar-header">
         <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
       </div>
@@ -40,8 +52,8 @@
       <header>
         <h1><a href="https://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/" rel="bookmark" title="Running Docker Swarm inside LXC (outdated)">Running Docker Swarm inside LXC (outdated)</a></h1>
 <div class="details small">
-  <span><span class="fa fa-calendar-o"></span><time datetime="2016-04-13T18:00:00+00:00">April 13, 2016</time></span>
-  <span><span class="fa fa-comments-o"></span><a href="https://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/#disqus_thread" title="Comments" data-disqus-identifier="docker-swarm-inside-lxc">Comments</a></span>
+  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2016-04-13T18:00:00+00:00">April 13, 2016</time></span>
+  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/#disqus_thread" title="Comments" data-disqus-identifier="docker-swarm-inside-lxc">Comments</a></span>
 </div>      </header>
       <div class="body"><p><strong>UPDATE:</strong> This article was written in 2016 and refers to a version of Docker Swarm that is now known as "legacy Swarm". The newer Docker Swarm won't work in LXC as described in this article.</p>
 <p>I've been using <a href="https://docs.docker.com/swarm/">Docker Swarm</a> inside <a href="https://linuxcontainers.org/lxc/introduction/">LXC</a> containers for a while now, and I thought that I could share my experience with you. Due to their nature, LXC containers are pretty lightweight and require very few resources if compared to virtual machines. This makes LXC ideal for development and simulation purposes. Running Docker Swarm inside LXC requires a few steps that I'm going to show you in this tutorial.</p>
@@ -529,14 +541,5 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
     </script>
     <script src="//andreacorbellini.disqus.com/embed.js" async defer></script>
 </footer>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: { inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ] },
-    elements: [ 'content' ]
-  });
-</script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" async defer></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js" async defer></script>
-  <script src="//andreacorbellini.disqus.com/count.js" async defer></script>
   </body>
 </html>
