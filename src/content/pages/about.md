@@ -20,9 +20,9 @@ Italy, where I did hunderds of dives.
 If you have something cool to share, or if you just want to know more about me,
 feel free to get in touch with me:
 
-<span class="fa fa-envelope-o"></span> [Email](mailto:corbellini.andrea@gmail.com) &emsp;
-<span class="fa fa-twitter"></span> [Twitter](https://twitter.com/andreacorbe) &emsp;
-<span class="fa fa-stack-overflow"></span> [StackOverflow Careers](https://careers.stackoverflow.com/andreacorbellini) &emsp;
-<span class="fa fa-linkedin-square"></span> [LinkedIn](https://linkedin.com/in/andreacorbellini)
+<span class="far fa-envelope" aria-hidden="true"></span> [Email](mailto:corbellini.andrea@gmail.com) &emsp;
+<span class="fab fa-twitter" aria-hidden="true"></span> [Twitter](https://twitter.com/andreacorbe) &emsp;
+<span class="fab fa-stack-overflow" aria-hidden="true"></span> [StackOverflow Careers](https://careers.stackoverflow.com/andreacorbellini) &emsp;
+<span class="fab fa-linkedin" aria-hidden="true"></span> [LinkedIn](https://linkedin.com/in/andreacorbellini)
 
 (Opinions are my own and not the views of my employer.)
