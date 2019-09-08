@@ -46,14 +46,15 @@
   {% endif %}
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: { inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ] },
-      elements: [ 'content' ]
-    });
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ]
+      },
+    };
   </script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/MathJax.js" async defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.6.1/config/TeX-AMS_HTML.js" async defer></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async defer></script>
   {% if DISQUS_SITENAME %}
     <script src="//{{ DISQUS_SITENAME }}.disqus.com/count.js" async defer></script>
   {% endif %}
