@@ -5,11 +5,14 @@ __pycache__
 /src/theme/static/bootstrap
 /src/theme/static/css/pygments.css
 /src/theme/static/css/style.css
+/theme/Makefile
 /theme/bootstrap
 /theme/css/bootstrap-config.json
 /theme/css/bootstrap.css
 /theme/css/pygments.css
 /theme/css/style.css
 /theme/css/style.less
-/theme/Makefile
+/theme/favicon-16x16.png
+/theme/favicon-32x32.png
+/theme/favicon.ico
 .webassets-cache
