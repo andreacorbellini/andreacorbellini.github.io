@@ -1,3 +1,9 @@
 user-agent: *
 disallow: /CNAME
-disallow: /src/
+disallow: /bootstrap
+disallow: /env
+disallow: /pubkey.asc
+disallow: /regenerate
+disallow: /requirements.txt
+disallow: /src
+disallow: /versions.txt
