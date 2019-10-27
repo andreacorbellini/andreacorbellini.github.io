@@ -58,7 +58,7 @@ class SpellChecker:
             logger.warn('%s: misspelled word: %s', path, word)
 
 
-def test(generators):
+def spellcheck(generators):
     articles_generator, pages_generator, static_generator = generators
     spellchecker = SpellChecker(articles_generator.settings.get('SPELL_CHECKER_WORDS'))
     all_content = articles_generator.articles + pages_generator.pages
@@ -69,4 +69,4 @@ def test(generators):
         spellchecker.check(item.source_path, item.content, mode='html')
 
 def register():
-    signals.all_generators_finalized.connect(test)
+    signals.all_generators_finalized.connect(spellcheck)
