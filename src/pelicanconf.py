@@ -86,6 +86,7 @@ PLUGINS = [
     'assets',
     'redirects',
     'ubuntuplanet',
+    'spellcheck',
 ]
 
 MARKDOWN = {
@@ -142,6 +143,10 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 UBUNTU_FEED_ATOM = None
 UBUNTU_FEED_RSS = None
+
+
+# Spell checking
+SPELL_CHECKER_WORDS = os.path.join(PROJECT_PATH, 'words.txt')
 
 
 # Variables used in template
