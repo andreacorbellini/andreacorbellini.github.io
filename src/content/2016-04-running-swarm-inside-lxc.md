@@ -35,7 +35,7 @@ To avoid ambiguity, all commands will be prefixed with a prompt such as `root@ho
 
 This tutorial assumes that you have at least a vague idea of what Docker and Docker Swarm are. You should also be familiar with the shell.
 
-This tutorial has been succesfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.
+This tutorial has been successfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.
 
 ## Step 1: Create the Swarm Manager container {#step-1}
 

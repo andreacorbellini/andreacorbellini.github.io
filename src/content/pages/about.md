@@ -15,7 +15,7 @@ I'm passionate about:
 
 When I'm not coding, I'm usually some feet underwater. The watery picture above
 from the beautiful [Lake Garda](https://en.wikipedia.org/wiki/Lake_Garda), in
-Italy, where I did hunderds of dives.
+Italy, where I did hundreds of dives.
 
 If you have something cool to share, or if you just want to know more about me,
 feel free to get in touch with me:

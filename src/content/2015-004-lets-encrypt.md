@@ -10,7 +10,7 @@ I've always dreamed of a encrypted web, where HTTPS is the standard and plain HT
 
 I remember that I got excited when I first heard of **[CAcert](http://www.cacert.org/): "a community-driven Certificate Authority that issues certificates to the public at large for free"**. Unfortunately, CAcert's root certificate never made it into the major web browsers and operating systems. Whatever the reasons, the result is that visiting a HTTPS website with a certificate released by CAcert produces nothing but a [scary warning with a call to leave the site](https://cacert.org/), making CAcert unsuitable for most.
 
-[StarCom](https://www.startssl.com/), on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom [has](https://news.ycombinator.com/item?id=7557764) [been](https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml) [heavily](https://twitter.com/startssl/status/453631038883758080) [criticized](https://bugzilla.mozilla.org/show_bug.cgi?id=994033) for how the Hearbleed vulnerability was handled, and AFAIK this has led many customers away.
+[StarCom](https://www.startssl.com/), on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom [has](https://news.ycombinator.com/item?id=7557764) [been](https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml) [heavily](https://twitter.com/startssl/status/453631038883758080) [criticized](https://bugzilla.mozilla.org/show_bug.cgi?id=994033) for how the Heartbleed vulnerability was handled, and AFAIK this has led many customers away.
 
 ## Let's Encrypt
 
@@ -26,7 +26,7 @@ Another interesting fact about Let's Encrypt is that its **certificates are rele
 If Let's Encrypt wins, then everyone will have an easy way to obtain a free HTTPS certificate for their website. The next big step would be making Let's Encrypt increase in adoption and the final step would be deprecating plain HTTP. There are however a few open questions:
 
 * What will be the answer from Google, Apple, Microsoft and other major browser/operating systems makers?
-* What will be the reaction of VeriSign and Comodo? (That together hold [more than 50%](http://w3techs.com/technologies/overview/ssl_certificate/all) of all the certificates currently used on the web.)
+* What will be the reaction of Verisign and Comodo? (That together hold [more than 50%](http://w3techs.com/technologies/overview/ssl_certificate/all) of all the certificates currently used on the web.)
 * Will they declare war to Let's Encrypt or will they consolidate their efforts on customer services and Extended Validation?
 * Will the technology behind Let's Encrypt allow the creation of a new model for certificate management? Will we see web servers and providers with built-in support for it?
 

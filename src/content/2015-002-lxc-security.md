@@ -57,7 +57,7 @@ With the default configuration, I can run fork-bombs, request huge memory maps, 
   <img src="{static}/images/memory-usage.png" alt="Uncontrolled memory consumption">
 </figure>
 
-To limit resource consumption in LXC, open the configuration file for your container and set the `lxc.cgroup.&lt;system&gt;` values you need.
+To limit resource consumption in LXC, open the configuration file for your container and set the `lxc.cgroup.<system>` values you need.
 
 For example, if you want to limit the container memory usage to 512 MiB, set `lxc.cgroup.memory.limit_in_bytes = 512M`. Note that the container with that option, once it exceeds the 512 MiB cap, will start using the swap without limits. If this is not what you want, then set `lxc.cgroup.memory.memsw.max_usage_in_bytes = 512M`. Note that to use both options you may need to add `cgroup_enable=memory` and `swapaccount=1` to the kernel command line.
 
