@@ -5,15 +5,15 @@ docutils==0.15.2
 feedgenerator==1.9
 Flask==1.1.1
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.10.3
 Markdown==3.1.1
 MarkupSafe==1.1.1
--e git://github.com/getpelican/pelican.git@60e80ad6346392ee13189e65f7875d5be72d4851#egg=pelican
+-e git://github.com/getpelican/pelican.git@01eb08c42b543450ee5e0e3de3854526708a6711#egg=pelican
 pkg-resources==0.0.0
 Pygments==2.4.2
 python-dateutil==2.8.0
-pytz==2019.2
+pytz==2019.3
 six==1.12.0
 Unidecode==1.1.1
 webassets==0.12.1
-Werkzeug==0.15.6
+Werkzeug==0.16.0

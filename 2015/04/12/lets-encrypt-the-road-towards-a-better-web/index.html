@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a663b36">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?646edbac">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
@@ -56,7 +56,7 @@
 </div>      </header>
       <div class="body"><p>I've always dreamed of a encrypted web, where HTTPS is the standard and plain HTTP is no more. A web where eavesdropping or manipulating information is not possible, or at least much harder than today.</p>
 <p>I remember that I got excited when I first heard of <strong><a href="http://www.cacert.org/">CAcert</a>: "a community-driven Certificate Authority that issues certificates to the public at large for free"</strong>. Unfortunately, CAcert's root certificate never made it into the major web browsers and operating systems. Whatever the reasons, the result is that visiting a HTTPS website with a certificate released by CAcert produces nothing but a <a href="https://cacert.org/">scary warning with a call to leave the site</a>, making CAcert unsuitable for most.</p>
-<p><a href="https://www.startssl.com/">StarCom</a>, on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom <a href="https://news.ycombinator.com/item?id=7557764">has</a> <a href="https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml">been</a> <a href="https://twitter.com/startssl/status/453631038883758080">heavily</a> <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=994033">criticized</a> for how the Hearbleed vulnerability was handled, and AFAIK this has led many customers away.</p>
+<p><a href="https://www.startssl.com/">StarCom</a>, on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom <a href="https://news.ycombinator.com/item?id=7557764">has</a> <a href="https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml">been</a> <a href="https://twitter.com/startssl/status/453631038883758080">heavily</a> <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=994033">criticized</a> for how the Heartbleed vulnerability was handled, and AFAIK this has led many customers away.</p>
 <h2>Let's Encrypt</h2>
 <p>Recently, I learned about <strong><a href="https://letsencrypt.org/">Let's Encrypt</a>: a "free, automated, and open" Certificate Authority</strong> arriving in mid-2015. There are many important facts that make Let's Encrypt different and better from all the other Certificate Authorities out there. I'll let you discover all of them. Probably, the most important fact is that Let's Encrypt has <strong><a href="https://letsencrypt.org/sponsors/">important sponsors</a>, including Mozilla</strong>. And this is what matters today, because it gives Let's Encrypt a chance to be included in at least one major browser.</p>
 <figure>
@@ -68,7 +68,7 @@
 <p>If Let's Encrypt wins, then everyone will have an easy way to obtain a free HTTPS certificate for their website. The next big step would be making Let's Encrypt increase in adoption and the final step would be deprecating plain HTTP. There are however a few open questions:</p>
 <ul>
 <li>What will be the answer from Google, Apple, Microsoft and other major browser/operating systems makers?</li>
-<li>What will be the reaction of VeriSign and Comodo? (That together hold <a href="http://w3techs.com/technologies/overview/ssl_certificate/all">more than 50%</a> of all the certificates currently used on the web.)</li>
+<li>What will be the reaction of Verisign and Comodo? (That together hold <a href="http://w3techs.com/technologies/overview/ssl_certificate/all">more than 50%</a> of all the certificates currently used on the web.)</li>
 <li>Will they declare war to Let's Encrypt or will they consolidate their efforts on customer services and Extended Validation?</li>
 <li>Will the technology behind Let's Encrypt allow the creation of a new model for certificate management? Will we see web servers and providers with built-in support for it?</li>
 </ul>

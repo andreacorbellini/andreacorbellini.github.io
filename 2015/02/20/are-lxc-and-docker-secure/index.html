@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a663b36">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?646edbac">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
@@ -87,7 +87,7 @@
   <img src="https://andrea.corbellini.name/images/memory-usage.png" alt="Uncontrolled memory consumption">
 </figure>
 
-<p>To limit resource consumption in LXC, open the configuration file for your container and set the <code>lxc.cgroup.&amp;lt;system&amp;gt;</code> values you need.</p>
+<p>To limit resource consumption in LXC, open the configuration file for your container and set the <code>lxc.cgroup.&lt;system&gt;</code> values you need.</p>
 <p>For example, if you want to limit the container memory usage to 512 MiB, set <code>lxc.cgroup.memory.limit_in_bytes = 512M</code>. Note that the container with that option, once it exceeds the 512 MiB cap, will start using the swap without limits. If this is not what you want, then set <code>lxc.cgroup.memory.memsw.max_usage_in_bytes = 512M</code>. Note that to use both options you may need to add <code>cgroup_enable=memory</code> and <code>swapaccount=1</code> to the kernel command line.</p>
 <p>To have an overview of all possible options, check out <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/ch-Subsystems_and_Tunable_Parameters.html">Red Hat's documentation</a> or the <a href="https://www.kernel.org/doc/Documentation/cgroups/">Kernel documentation</a>.</p>
 <p>With Docker, the story is similar: just use <code>--lxc-conf</code> from the command line to set LXC's options.</p>

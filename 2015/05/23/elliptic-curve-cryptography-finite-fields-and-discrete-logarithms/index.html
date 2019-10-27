@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a663b36">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?646edbac">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
@@ -239,7 +239,7 @@ $$nP + mP = \underbrace{P + \cdots + P}_{n\ \text{times}} + \underbrace{P + \cdo
 <h3>Finding a base point</h3>
 <p>For our ECC algorithms, we want subgroups with a high order. So in general we will choose an elliptic curve, calculate its order ($N$), choose a high divisor as the subgroup order ($n$) and eventually find a suitable base point. That is: we won't choose a base point and then calculate its order, but we'll do the opposite: we will first choose an order that looks good enough and then we will hunt for a suitable base point. How do we do that?</p>
 <p><span id="cofactor">Firstly, we need to introduce one more term. Lagrange's theorem implies that the number <strong>$h = N / n$ is always an integer</strong> (because $n$ is a divisor of $N$). The number $h$ has a name: it's the <strong>cofactor of the subgroup</strong>.</span></p>
-<p>Now consider that for every point of an elliptic curve we have $NP = 0$. This happens because $N$ is a multiple of any candidate $n$. Using the definition of cofator, we can write:
+<p>Now consider that for every point of an elliptic curve we have $NP = 0$. This happens because $N$ is a multiple of any candidate $n$. Using the definition of cofactor, we can write:
 $$n(hP) = 0$$</p>
 <p>Now suppose that $n$ is a prime number (for reason that will be explained in the next post, we prefer prime orders). This equation, written in this form, is telling us that the point $G = hP$ generates a subgroup of order $n$ (except when $G = hP = 0$, in which case the subgroup has order 1).</p>
 <p>In the light of this, we can outline the following algorithm:</p>
