@@ -156,7 +156,7 @@ Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3
 
 
 <h4>Ephemeral ECDH</h4>
-<p>Some of you may have heard of ECDHE instead of ECDH. The "E" in ECHDE stands for "Ephemeral" and refers to the fact that the <strong>keys exchanged are temporary</strong>, rather than static.</p>
+<p>Some of you may have heard of ECDHE instead of ECDH. The "E" in ECDHE stands for "Ephemeral" and refers to the fact that the <strong>keys exchanged are temporary</strong>, rather than static.</p>
 <p>ECDHE is used, for example, in TLS, where both the client and the server generate their public-private key pair on the fly, when the connection is established. The keys are then signed with the TLS certificate (for authentication) and exchanged between the parties.</p>
 <h3>Signing with ECDSA</h3>
 <p>The scenario is the following: <strong>Alice wants to sign a message with her private key</strong> ($d_A$), and <strong>Bob wants to validate the signature using Alice's public key</strong> ($H_A$). Nobody but Alice should be able to produce valid signatures. Everyone should be able to check signatures.</p>
