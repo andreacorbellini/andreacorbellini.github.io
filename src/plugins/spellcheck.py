@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+import shlex
 import subprocess
 from pelican import signals
 
@@ -25,8 +26,8 @@ class SpellChecker:
         strip = [
             r'\$\$[^\$]*\$\$',          # block math
             r'\$[^\$]*\$',              # inline math
-            r'<pre>.*</pre>',           # code blocks
-            r'<code>.*</code>',         # inline code
+            r'<pre>.*?</pre>',           # code blocks
+            r'<code>.*?</code>',         # inline code
             r'\b(0x)?[0-9a-f]{6,}\b',   # hex numbers (lowercase)
             r'\b(0x)?[0-9A-F]{6,}\b',   # hex numbers (uppercase)
         ]
@@ -35,13 +36,15 @@ class SpellChecker:
         return content
 
     def _run_aspell(self, content, mode='none'):
+        args = [
+            'aspell',
+            'list',
+            '--mode=' + mode,
+            '--personal=' + self.words_file,
+        ]
+        logger.debug('Running: %s', ' '.join(shlex.quote(arg) for arg in args))
         return subprocess.run(
-            [
-                'aspell',
-                'list',
-                '--mode=' + mode,
-                '--personal=' + self.words_file,
-            ],
+            args,
             input=content,
             capture_output=True,
             text=True,
@@ -64,6 +67,7 @@ def spellcheck(generators):
     all_content = articles_generator.articles + pages_generator.pages
 
     for item in all_content:
+        logger.info('Spell checking %s', item.source_path)
         spellchecker.check(item.source_path, item.title)
         spellchecker.check(item.source_path, item.summary, mode='html')
         spellchecker.check(item.source_path, item.content, mode='html')
