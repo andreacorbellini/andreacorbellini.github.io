@@ -1,7 +1,8 @@
-personal_ws-1.1 en 122 
+personal_ws-1.1 en 122
 AppArmor
 CAcert
 CAcert's
+CPUs
 Certicom
 Comodo
 DBus
@@ -23,6 +24,7 @@ LinkedIn
 MathJax
 MathWorld
 MiB
+Monico
 NIST
 OpenSSH
 OpenSSL
@@ -54,10 +56,12 @@ cpu
 cpus
 cryptocurrencies
 cryptocurrency
+cryptographically
 cryptosystems
 dbus
 des
 dev
+devicemapper
 dockerfile
 doublings
 dsa
@@ -76,6 +80,7 @@ img
 init
 kB
 logind
+loopback
 lts
 lvm
 lxc
@@ -85,7 +90,9 @@ mknod
 namespaces
 nbd
 numberempire
+octillions
 overlayfs
+parallelized
 primality
 proc
 procfs
@@ -109,6 +116,7 @@ transactional
 ubuntu
 uid
 ulimit
+unsuspicious
 untrusted
 unxz
 urandom
@@ -120,4 +128,6 @@ webserver
 wget
 xkcd
 xz
+yay
+zettabyte
 zfs

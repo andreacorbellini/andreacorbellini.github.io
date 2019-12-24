@@ -322,7 +322,7 @@ Thanks to this script, creating 10 new agents is as simple as running one comman
     :::console
     root@host:~# ./swarm-agent-create swarm-agent-{0..9}
 
-Here's an explaination of what the script does:
+Here's an explanation of what the script does:
 
 * It first sets up a new LXC container following steps 1-5 above, that is: create a new LXC container (with `lxc-create`), apply the LXC configuration (`lxc.aa_profile` and `lxc.cap.drop` rules), start the container and install Docker.
 
