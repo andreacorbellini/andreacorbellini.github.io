@@ -6,6 +6,8 @@ CPUs
 Certicom
 Comodo
 DBus
+DNS
+DNSSEC
 Diffie
 Disqus
 ElGamal
@@ -26,6 +28,7 @@ MathWorld
 MiB
 Monico
 NIST
+NetworkManager
 OpenSSH
 OpenSSL
 OverlayFS
@@ -85,6 +88,7 @@ lts
 lvm
 lxc
 lxd
+misconfigured
 mkdir
 mknod
 namespaces
@@ -93,6 +97,7 @@ numberempire
 octillions
 overlayfs
 parallelized
+plaintext
 primality
 proc
 procfs
@@ -109,6 +114,7 @@ swapaccount
 sys
 syscalls
 sysfs
+systemd
 tangency
 tls
 todo
