@@ -1,8 +1,8 @@
 Title: 11 years of Ubuntu membership
 Date: 2018-05-12 21:30
 Author: andreacorbellini
-Category: misc
-Tags: misc
+Category: ubuntu
+Tags: ubuntu
 Slug: 11-years-of-ubuntu-membership
 Status: published
 
