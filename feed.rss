@@ -1,7 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Sat, 12 May 2018 21:30:00 +0000</lastBuildDate><item><title>11 years of Ubuntu membership</title><link>https://andrea.corbellini.name/2018/05/12/11-years-of-ubuntu-membership/</link><description>&lt;p&gt;It's been 11 years and 1 month since I was awarded with &lt;a href="https://wiki.ubuntu.com/Membership"&gt;official Ubuntu membership&lt;/a&gt;. I will never forget that day: as a kid I had to write about myself on &lt;a href="https://en.wikipedia.org/wiki/Internet_Relay_Chat"&gt;IRC&lt;/a&gt;, in front of the Community Council members and answer their questions in a language that was not my primary one. I must confess that I was a bit scared that evening, but once I made it, it felt &lt;em&gt;so&lt;/em&gt; good. It felt good not just because of the award itself, but rather because that was the recognition that I did &lt;em&gt;something&lt;/em&gt; that &lt;em&gt;mattered&lt;/em&gt;. I did something useful that other people could benefit from. And for me, that meant a lot.&lt;/p&gt;
+<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Tue, 28 Apr 2020 06:30:00 +0000</lastBuildDate><item><title>How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)</title><link>https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/</link><description>&lt;h1&gt;Problem&lt;/h1&gt;
+&lt;p&gt;Currently Ubuntu does not offer an easy way to set up a "global" DNS for all network connections: whenever you connect to a new WiFi network, if you don't want to use the DNS server provided by the WiFi, you are forced to go to the network settings and manually set your preferred DNS server.&lt;/p&gt;
+&lt;p&gt;With this brief guide I want to show how you can setup a global DNS to be used for &lt;em&gt;all&lt;/em&gt; the WiFi and network connections, both old and new ones. I will also show you how to use DNSSEC, DNS-over-TLS and randomized MAC addresses for all connections.&lt;/p&gt;
+&lt;p&gt;This guide is written for Ubuntu 20.04, but in general it will work on every distribution using systemd-resolved and NetworkManager.&lt;/p&gt;
+&lt;h1&gt;Step 1: setup the Global DNS in resolved&lt;/h1&gt;
+&lt;p&gt;In Ubuntu (as well as many other distributions), DNS is managed by systemd-resolved. Its configuration is in &lt;code&gt;/etc/systemd/resolved.conf&lt;/code&gt;. Open that file and add a &lt;code&gt;DNS=&lt;/code&gt; line inside the &lt;code&gt;[Resolve]&lt;/code&gt; section listing your preferred DNS servers. For example, if you want to use &lt;a href="https://1.1.1.1/"&gt;&lt;code&gt;1.1.1.1&lt;/code&gt;&lt;/a&gt;, your &lt;code&gt;resolved.conf&lt;/code&gt; should look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[Resolve]
+DNS=1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
+#FallbackDNS=
+#Domains=
+#LLMNR=no
+#MulticastDNS=no
+#Cache=yes
+#DNSStubListener=yes
+#ReadEtcHosts=yes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once you are done with the changes, reload systemd-resolved:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl restart systemd-resolved.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can check your changes with &lt;code&gt;resolvectl status&lt;/code&gt;: you should see your DNS servers on top of the output, under the &lt;em&gt;Global&lt;/em&gt; section:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ resolvectl status
+Global
+       LLMNR setting: no
+MulticastDNS setting: no
+  DNSOverTLS setting: opportunistic
+      DNSSEC setting: allow-downgrade
+    DNSSEC supported: no
+  Current DNS Server: 1.1.1.1
+         DNS Servers: 1.1.1.1
+                      1.0.0.1
+                      2606:4700:4700::1111
+                      2606:4700:4700::1001
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This however won't be enough to use that DNS! In fact, the &lt;em&gt;Global&lt;/em&gt; DNS of systemd-resolved is just a default option that is used whenever no DNS servers are configured for an interface. When you connect to a WiFi network, NetworkManager will ask the access point for a list of DNS servers and will communicate that list to systemd-resolved, effectively overriding the settings that we just edited. If you scroll down the output of &lt;code&gt;resolvectl status&lt;/code&gt;, you will see the DNS servers added by NetworkManager. We have to tell NetworkManager to stop doing that.&lt;/p&gt;
+&lt;h1&gt;Step 2: Disable DNS processing in NetworkManager&lt;/h1&gt;
+&lt;p&gt;In order for systemd-resolved to consider our global DNS, we need to tell NetworkManager not to provide any DNS information for new connections. Doing that is easy: just create a new file &lt;code&gt;/etc/NetworkManager/conf.d/dns.conf&lt;/code&gt; (or any name you like) with this content:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[main]
+# do not use the dhcp-provided dns servers, but rather use the global
+# ones specified in /etc/systemd/resolved.conf
+dns=none
+systemd-resolved=false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To apply the settings either run restart your computer or run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl reload NetworkManager.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, when you connect to a new network connection, NetworkManager won't push the list of DNS servers to systemd-resolved and only the global ones will be used. If you check &lt;code&gt;resolvectl status&lt;/code&gt;, you should see that, for every interface, there is &lt;em&gt;no&lt;/em&gt; DNS server specified. If you specified &lt;code&gt;1.1.1.1&lt;/code&gt; as your DNS servers, then you can also head over to &lt;a href="https://1.1.1.1/help"&gt;https://1.1.1.1/help&lt;/a&gt; to verify that they've been correctly set up.&lt;/p&gt;
+&lt;h1&gt;DNSSEC and DNS-over-TLS&lt;/h1&gt;
+&lt;p&gt;If you would like to enable DNSSEC and/or DNS-over-TLS, the file to edit is &lt;code&gt;/etc/systemd/resolved.conf&lt;/code&gt;. You can add the following options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DNSSEC=true&lt;/code&gt; if you want all queries to be DNSSEC-validated. The default is &lt;code&gt;DNSSEC=allow-downgrade&lt;/code&gt;, which attempts to use DNSSEC if it works properly, and falls back to disabling validation otherwise.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DNSOverTLS=true&lt;/code&gt; if you want all queries to go through TLS. You can also specify &lt;code&gt;DNSOverTLS=opportunistic&lt;/code&gt; to attempt to use TLS if it supported, and fall back to the plaintext DNS protocol if it's not.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With those options, my &lt;code&gt;/etc/systemd/resolved.conf&lt;/code&gt; looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[Resolve]
+DNS=1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
+#FallbackDNS=
+#Domains=
+#LLMNR=no
+#MulticastDNS=no
+DNSSEC=true
+DNSOverTLS=opportunistic
+#Cache=yes
+#DNSStubListener=yes
+#ReadEtcHosts=yes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note that I'm using &lt;code&gt;DNSOverTLS=opportunistic&lt;/code&gt; because I found that some access points with captive portals don't work properly when using &lt;code&gt;DNSOverTLS=true&lt;/code&gt;. Also note that &lt;code&gt;DNSSEC=true&lt;/code&gt; may cause some pain because there are still many misconfigured domain records out there that will make make DNSSEC validation fail.&lt;/p&gt;
+&lt;p&gt;Like before, to apply the changes, run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl restart systemd-resolved.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And to verify the changes:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;resolvectl status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you're using &lt;code&gt;1.1.1.1&lt;/code&gt;, you can also go to &lt;a href="https://1.1.1.1/help"&gt;https://1.1.1.1/help&lt;/a&gt; to verify DNS-over-TLS.&lt;/p&gt;
+&lt;h1&gt;Random MAC address&lt;/h1&gt;
+&lt;p&gt;NetworkManager supports 3 options to have a random MAC address (also known as "cloned" or "spoofed" MAC address):&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;wifi.scan-rand-mac-address&lt;/code&gt; controls the MAC address used when scanning for WiFi devices. This goes into the &lt;code&gt;[device]&lt;/code&gt; section&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wifi.cloned-mac-address&lt;/code&gt; controls the MAC address for WiFi connections. This goes into the &lt;code&gt;[connection]&lt;/code&gt; section&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ethernet.cloned-mac-address&lt;/code&gt; controls the MAC address for Ethernet connections. This goes into the &lt;code&gt;[connection]&lt;/code&gt; section&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The first option can take either &lt;code&gt;yes&lt;/code&gt; or &lt;code&gt;no&lt;/code&gt;. The last two can take various values, but if you want a randomized MAC address you are interested in these two:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;random&lt;/code&gt;: generate a new random MAC address each time you establish a connection&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;stable&lt;/code&gt;: this generates a MAC address that is kinda random (it's a hash), but will be reused when you connect to the same network again.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;random&lt;/code&gt; is better if you don't want to be tracked, but it has the disadvantage that captive portals won't remember you. Instead &lt;code&gt;stable&lt;/code&gt; allows captive portals to remember you and therefore won't show up whenever you reconnect.&lt;/p&gt;
+&lt;p&gt;Whatever options you want to go with, put them into a file &lt;code&gt;/etc/NetworkManager/conf.d/mac.conf&lt;/code&gt; (or any other name you like). Mine looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[device]
+# use a random mac address when scanning for wifi networks
+wifi.scan-rand-mac-address=yes
+
+[connection]
+# use a random mac address when connecting to a network
+ethernet.cloned-mac-address=random
+wifi.cloned-mac-address=random
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To apply the settings either run restart your computer or run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl reload NetworkManager.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You can test your changes with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ip link
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Tue, 28 Apr 2020 06:30:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2020-04-28:/2020/04/28/ubuntu-global-dns/</guid><category>ubuntu</category><category>ubuntu</category><category>systemd</category><category>resolved</category><category>network-manager</category><category>dns</category><category>mac-address</category><category>privacy</category></item><item><title>11 years of Ubuntu membership</title><link>https://andrea.corbellini.name/2018/05/12/11-years-of-ubuntu-membership/</link><description>&lt;p&gt;It's been 11 years and 1 month since I was awarded with &lt;a href="https://wiki.ubuntu.com/Membership"&gt;official Ubuntu membership&lt;/a&gt;. I will never forget that day: as a kid I had to write about myself on &lt;a href="https://en.wikipedia.org/wiki/Internet_Relay_Chat"&gt;IRC&lt;/a&gt;, in front of the Community Council members and answer their questions in a language that was not my primary one. I must confess that I was a bit scared that evening, but once I made it, it felt &lt;em&gt;so&lt;/em&gt; good. It felt good not just because of the award itself, but rather because that was the recognition that I did &lt;em&gt;something&lt;/em&gt; that &lt;em&gt;mattered&lt;/em&gt;. I did something useful that other people could benefit from. And for me, that meant a lot.&lt;/p&gt;
 &lt;p&gt;So much time has passed since then. So many things have changed both in my life and around me, for better or worse. So many that I cannot even &lt;a href="https://en.wikipedia.org/wiki/Cantor%27s_diagonal_argument"&gt;enumerate&lt;/a&gt; all of them. Nonetheless, deep inside of me, I still feel like that young kid: curious, always ready to experiment, full of hopes and uncertain (but never scared) about the future.&lt;/p&gt;
-&lt;p&gt;Through the years I received the support of a bunch of people who believed in me, and I thank them all. But if today I feel so hopeful it's undoubtedly thanks to one person in particular, a person who holds a special place in my life. A big thank you goes to you.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sat, 12 May 2018 21:30:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2018-05-12:/2018/05/12/11-years-of-ubuntu-membership/</guid><category>misc</category><category>misc</category></item><item><title>Running Docker Swarm inside LXC (outdated)</title><link>https://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/</link><description>&lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; This article was written in 2016 and refers to a version of Docker Swarm that is now known as "legacy Swarm". The newer Docker Swarm won't work in LXC as described in this article.&lt;/p&gt;
+&lt;p&gt;Through the years I received the support of a bunch of people who believed in me, and I thank them all. But if today I feel so hopeful it's undoubtedly thanks to one person in particular, a person who holds a special place in my life. A big thank you goes to you.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sat, 12 May 2018 21:30:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2018-05-12:/2018/05/12/11-years-of-ubuntu-membership/</guid><category>ubuntu</category><category>ubuntu</category></item><item><title>Running Docker Swarm inside LXC (outdated)</title><link>https://andrea.corbellini.name/2016/04/13/docker-swarm-inside-lxc/</link><description>&lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; This article was written in 2016 and refers to a version of Docker Swarm that is now known as "legacy Swarm". The newer Docker Swarm won't work in LXC as described in this article.&lt;/p&gt;
 &lt;p&gt;I've been using &lt;a href="https://docs.docker.com/swarm/"&gt;Docker Swarm&lt;/a&gt; inside &lt;a href="https://linuxcontainers.org/lxc/introduction/"&gt;LXC&lt;/a&gt; containers for a while now, and I thought that I could share my experience with you. Due to their nature, LXC containers are pretty lightweight and require very few resources if compared to virtual machines. This makes LXC ideal for development and simulation purposes. Running Docker Swarm inside LXC requires a few steps that I'm going to show you in this tutorial.&lt;/p&gt;
 &lt;p&gt;Before we begin, a quick premise: LXC, Docker and Swarm can be configured in many different ways. Here I'm showing just my preferred setup: LXC with AppArmor disabled, Docker with the OverlayFS storage driver, Swarm with etcd discovery. There exist many other kind of configurations that can work under LXC &amp;mdash; leave a comment if you want to know more.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Overview:&lt;/strong&gt;&lt;/p&gt;
@@ -27,15 +149,15 @@
 &lt;p&gt;This tutorial has been successfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.&lt;/p&gt;
 &lt;h2 id="step-1"&gt;Step 1: Create the Swarm Manager container&lt;/h2&gt;
 &lt;p&gt;Create a new LXC container with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-create -t download -n swarm-manager
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-create -t download -n swarm-manager
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;When prompted, choose your favorite distribution and architecture. I chose &lt;code&gt;ubuntu&lt;/code&gt; / &lt;code&gt;xenial&lt;/code&gt; / &lt;code&gt;amd64&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;lxc-create&lt;/code&gt; needs to run as root, &lt;a href="https://www.stgraber.org/2014/01/17/lxc-1-0-unprivileged-containers/"&gt;unprivileged containers&lt;/a&gt; won't work. We could actually make Docker start inside an unprivileged container, the problem is that we wouldn't be allowed to create block and character devices, and many Docker containers need this ability.&lt;/p&gt;
 &lt;h2 id="step-2"&gt;Step 2: Modify the configuration for the Swarm Manager container&lt;/h2&gt;
 &lt;p&gt;Before starting the LXC container, open the file &lt;code&gt;/var/lib/lxc/swarm-manager/config&lt;/code&gt; on the host and add the following configuration to the bottom of the file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Distribution configuration&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Distribution configuration&lt;/span&gt;
 &lt;span class="c1"&gt;# ...&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Container specific configuration&lt;/span&gt;
@@ -47,7 +169,7 @@
 &lt;span class="c1"&gt;# Allow running Docker inside LXC&lt;/span&gt;
 lxc.aa_profile &lt;span class="o"&gt;=&lt;/span&gt; unconfined
 lxc.cap.drop &lt;span class="o"&gt;=&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;The first rule (&lt;code&gt;lxc.aa_profile = unconfined&lt;/code&gt;) disables AppArmor confinement. The second one (&lt;code&gt;lxc.cap.drop =&lt;/code&gt;) gives all capabilities to the processes in LXC container.&lt;/p&gt;
@@ -55,54 +177,54 @@ lxc.cap.drop &lt;span class="o"&gt;=&lt;/span&gt;
 &lt;p&gt;So, while Docker itself won't be confined, &lt;strong&gt;Docker containers will be confined&lt;/strong&gt;, and this is an encouraging fact.&lt;/p&gt;
 &lt;h2 id="step-3"&gt;Step 3: Load the OverlayFS module&lt;/h2&gt;
 &lt;p&gt;OverlayFS is shipped with Ubuntu, but not enabled by default. To enable it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; modprobe overlay
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; modprobe overlay
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;It is important to do this step before installing Docker. Docker supports various storage drivers and when Docker is installed for the first time it tries to detect the most appropriate one for the system. If Docker detects that OverlayFS is not loaded, it'll fall back to the device mapper. There's nothing wrong with the device mapper, we can make it work, however, as I said at the beginning, in this tutorial I'm focusing only on OverlayFS.&lt;/p&gt;
 &lt;p&gt;If you want to load OverlayFS at boot, instead of doing it manually after every reboot, add it to &lt;code&gt;/etc/modules-load.d/modules.conf&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; overlay &amp;gt;&amp;gt; /etc/modules-load.d/modules.conf
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; overlay &amp;gt;&amp;gt; /etc/modules-load.d/modules.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2 id="step-4"&gt;Step 4: Start the container and install Docker&lt;/h2&gt;
 &lt;p&gt;It's time to see if we did everything right!&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-start -n swarm-manager
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-start -n swarm-manager
 &lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-attach -n swarm-manager
 &lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; apt update
 &lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; apt install docker.io
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Installation should complete without any problem. If you get an error like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Job for docker.service failed because the control process exited with error code. See &amp;quot;systemctl status docker.service&amp;quot; and &amp;quot;journalctl -xe&amp;quot; for details.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Job for docker.service failed because the control process exited with error code. See &amp;quot;systemctl status docker.service&amp;quot; and &amp;quot;journalctl -xe&amp;quot; for details.
 invoke-rc.d: initscript docker, action &amp;quot;start&amp;quot; failed.
 dpkg: error processing package docker.io (--configure):
  subprocess installed post-installation script returned error exit status 1
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;It means that Docker failed to start. Try checking &lt;code&gt;systemctl status docker&lt;/code&gt; as suggested, or run &lt;code&gt;docker daemon&lt;/code&gt; manually. You might get an error like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
 &lt;span class="go"&gt;WARN[0000] devmapper: Udev sync is not supported. This will lead to unexpected behavior, data loss and errors. For more information, see https://docs.docker.com/reference/commandline/daemon/#daemon-storage-driver-option&lt;/span&gt;
 &lt;span class="go"&gt;ERRO[0000] There are no more loopback devices available.&lt;/span&gt;
 &lt;span class="go"&gt;ERRO[0000] [graphdriver] prior storage driver &amp;quot;devicemapper&amp;quot; failed: loopback attach failed&lt;/span&gt;
 &lt;span class="go"&gt;FATA[0000] Error starting daemon: error initializing graphdriver: loopback attach failed&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;In this case, Docker is using the devicemapper storage driver and is complaining about the lack of loopback devices. If that's the case, check whether OverlayFS is loaded and reinstall Docker.&lt;/p&gt;
 &lt;p&gt;Or you might get an error like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
 &lt;span class="go"&gt;...&lt;/span&gt;
 &lt;span class="go"&gt;FATA[0000] Error starting daemon: AppArmor enabled on system but the docker-default profile could not be loaded.&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;It this other case, Docker is complaining about the fact that it can't talk to AppArmor. Check the configuration for the LXC container.&lt;/p&gt;
 &lt;h2 id="step-5"&gt;Step 5: Check if Docker is working&lt;/h2&gt;
 &lt;p&gt;Once you are all set, you should be able to use Docker: try running &lt;code&gt;docker info&lt;/code&gt;, &lt;code&gt;docker ps&lt;/code&gt; or launch a container:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm docker/whalesay cowsay burp!
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm docker/whalesay cowsay burp!
 &lt;span class="go"&gt;Unable to find image &amp;#39;docker/whalesay:latest&amp;#39; locally&lt;/span&gt;
 &lt;span class="go"&gt;latest: Pulling from docker/whalesay&lt;/span&gt;
 &lt;span class="go"&gt;...&lt;/span&gt;
@@ -121,11 +243,11 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;       \______ o          __/&lt;/span&gt;
 &lt;span class="go"&gt;        \    \        __/&lt;/span&gt;
 &lt;span class="go"&gt;          \____\______/&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;It appears to be working. By the way, we can check whether Docker is correctly confining containers. Try running a Docker container and check on the host the output of &lt;code&gt;aa-status&lt;/code&gt;: you should see a process running with the &lt;code&gt;docker-default&lt;/code&gt; profile. For example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm ubuntu bash -c &lt;span class="s1"&gt;&amp;#39;while true; do sleep 1; echo -n zZ; done&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm ubuntu bash -c &lt;span class="s1"&gt;&amp;#39;while true; do sleep 1; echo -n zZ; done&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;zZzZzZzZzZzZzZzZ...&lt;/span&gt;
 
 &lt;span class="gp"&gt;#&lt;/span&gt; On another shell
@@ -152,14 +274,14 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;root      6956  4982  0 17:17 ?        00:00:00 bash -c while true; do sleep 1; echo -n zZ; done&lt;/span&gt;
 &lt;span class="go"&gt;root      6973  6956  0 17:17 ?        00:00:00 sleep 1&lt;/span&gt;
 &lt;span class="go"&gt;root      6982  6808  0 17:17 pts/3    00:00:00 grep --color=auto 6956&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Yay! Everything is running as expected: we launched a process inside a Docker container, and that process is running with the &lt;code&gt;docker-default&lt;/code&gt; AppArmor profile. Once again: even if LXC is running unconfined, our Docker containers are not.&lt;/p&gt;
 &lt;h2 id="step-6"&gt;Step 6: Set up the Swarm Manager&lt;/h2&gt;
 &lt;p&gt;That was the hardest part. Now we can proceed setting up Swarm as we would usually do.&lt;/p&gt;
 &lt;p&gt;As I said at the beginning, Swarm can be configured in many ways. In this tutorial I'll show how to set it up with etcd discovery. First of all, we need the IP address of the LXC container:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; ifconfig eth0
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; ifconfig eth0
 &lt;span class="go"&gt;eth0      Link encap:Ethernet  HWaddr 00:16:3e:8e:cb:43&lt;/span&gt;
 &lt;span class="go"&gt;          inet addr:10.0.3.154  Bcast:10.0.3.255  Mask:255.255.255.0&lt;/span&gt;
 &lt;span class="go"&gt;          inet6 addr: fe80::216:3eff:fe8e:cb43/64 Scope:Link&lt;/span&gt;
@@ -168,11 +290,11 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;          TX packets:20859 errors:0 dropped:0 overruns:0 carrier:0&lt;/span&gt;
 &lt;span class="go"&gt;          collisions:0 txqueuelen:1000&lt;/span&gt;
 &lt;span class="go"&gt;          RX bytes:147652946 (147.6 MB)  TX bytes:1455613 (1.4 MB)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;&lt;code&gt;10.0.3.154&lt;/code&gt; is my IP address. Let's start etcd:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; &lt;span class="nv"&gt;SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.0.3.154
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; &lt;span class="nv"&gt;SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.0.3.154
 
 &lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;etcd -p &lt;span class="m"&gt;4001&lt;/span&gt;:4001 -p &lt;span class="m"&gt;2380&lt;/span&gt;:2380 -p &lt;span class="m"&gt;2379&lt;/span&gt;:2379 &lt;span class="se"&gt;\&lt;/span&gt;
                             quay.io/coreos/etcd -name etcd0 &lt;span class="se"&gt;\&lt;/span&gt;
@@ -192,13 +314,13 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker ps
 &lt;span class="go"&gt;CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                                NAMES&lt;/span&gt;
 &lt;span class="go"&gt;e742278a97d2        quay.io/coreos/etcd   &amp;quot;/etcd -name etcd0 -a&amp;quot;   32 seconds ago      Up 31 seconds       0.0.0.0:2379-2380-&amp;gt;2379-2380/tcp, 0.0.0.0:4001-&amp;gt;4001/tcp, 7001/tcp   etcd&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Replace &lt;code&gt;10.0.3.154&lt;/code&gt; with the IP address of your LXC container.&lt;/p&gt;
 &lt;p&gt;Note that I've started etcd with &lt;code&gt;--restart=always&lt;/code&gt;, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop &lt;code&gt;--restart=always&lt;/code&gt; if that's not what you want.&lt;/p&gt;
 &lt;p&gt;Now we can start the Swarm manager:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;swarm -p &lt;span class="m"&gt;3375&lt;/span&gt;:3375 &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;swarm -p &lt;span class="m"&gt;3375&lt;/span&gt;:3375 &lt;span class="se"&gt;\&lt;/span&gt;
                             swarm manage -H &lt;span class="m"&gt;0&lt;/span&gt;.0.0.0:3375 etcd://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2379
 &lt;span class="go"&gt;Unable to find image &amp;#39;swarm:latest&amp;#39; locally&lt;/span&gt;
 &lt;span class="go"&gt;latest: Pulling from library/swarm&lt;/span&gt;
@@ -210,11 +332,11 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                                NAMES&lt;/span&gt;
 &lt;span class="go"&gt;46b556e73e87        swarm                 &amp;quot;/swarm manage -H 0.0&amp;quot;   3 seconds ago       Up 2 seconds        2375/tcp, 0.0.0.0:3375-&amp;gt;3375/tcp                                     swarm&lt;/span&gt;
 &lt;span class="go"&gt;e742278a97d2        quay.io/coreos/etcd   &amp;quot;/etcd -name etcd0 -a&amp;quot;   7 minutes ago       Up 7 minutes        0.0.0.0:2379-2380-&amp;gt;2379-2380/tcp, 0.0.0.0:4001-&amp;gt;4001/tcp, 7001/tcp   etcd&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Our Swarm manager is up and running. We can connect to it and issue a few commands:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
 &lt;span class="go"&gt;Containers: 0&lt;/span&gt;
 &lt;span class="go"&gt; Running: 0&lt;/span&gt;
 &lt;span class="go"&gt; Paused: 0&lt;/span&gt;
@@ -234,13 +356,13 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;CPUs: 0&lt;/span&gt;
 &lt;span class="go"&gt;Total Memory: 0 B&lt;/span&gt;
 &lt;span class="go"&gt;Name: d39c33295ef3&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;As you can see there are no nodes connected, as we would expect. Everything looks good.&lt;/p&gt;
 &lt;h2 id="step-7"&gt;Step 7: Create the Swarm Agents&lt;/h2&gt;
 &lt;p&gt;Our Swarm manager can't do anything interesting without agent nodes. Creating new LXC containers for the agents is not much different from what we already did with the manager. To set up new agents in an automatic fashion I've created a script, so that you don't need to repeat the steps manually:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
 
 &lt;span class="nb"&gt;set&lt;/span&gt; -eu
 
@@ -281,20 +403,20 @@ dpkg: error processing package docker.io (--configure):
     lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;swarm &lt;span class="se"&gt;\&lt;/span&gt;
         swarm join --addr&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_AGENT_IP&lt;/span&gt;&lt;span class="s2"&gt;:2375&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;etcd://&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="s2"&gt;:2379&amp;quot;&lt;/span&gt;
 &lt;span class="k"&gt;done&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Be sure to change the values for &lt;code&gt;SWARM_MANAGER_IP&lt;/code&gt;, &lt;code&gt;DOWNLOAD_DIST&lt;/code&gt;, &lt;code&gt;DOWNLOAD_RELEASE&lt;/code&gt; and &lt;code&gt;DOWNLOAD_ARCH&lt;/code&gt; to fit your needs.&lt;/p&gt;
 &lt;p&gt;Thanks to this script, creating 10 new agents is as simple as running one command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; ./swarm-agent-create swarm-agent-&lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;..9&lt;span class="o"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; ./swarm-agent-create swarm-agent-&lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;..9&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Here's an explanation of what the script does:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;It first sets up a new LXC container following steps 1-5 above, that is: create a new LXC container (with &lt;code&gt;lxc-create&lt;/code&gt;), apply the LXC configuration (&lt;code&gt;lxc.aa_profile&lt;/code&gt; and &lt;code&gt;lxc.cap.drop&lt;/code&gt; rules), start the container and install Docker.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;LXC_PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/var/lib/lxc/&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;LXC_PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/var/lib/lxc/&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
 &lt;span class="nv"&gt;LXC_ROOTFS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_PATH&lt;/span&gt;&lt;span class="s2"&gt;/rootfs&amp;quot;&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Create the container.&lt;/span&gt;
@@ -314,33 +436,33 @@ sleep 10s
 &lt;span class="c1"&gt;# Install Docker.&lt;/span&gt;
 lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- apt-get update
 lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- apt-get install -y docker.io
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Our Swarm agents need to be reachable by the manager. For this reason we need to configure them so that they bind to a public interface. To do so, the script adds &lt;code&gt;DOCKER_OPTS="-H 0.0.0.0:2375"&lt;/code&gt; and restarts Docker.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Tell Docker to listen on all interfaces.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Tell Docker to listen on all interfaces.&lt;/span&gt;
 sed -i -e &lt;span class="s1"&gt;&amp;#39;s/^#DOCKER_OPTS=.*$/DOCKER_OPTS=&amp;quot;-H 0.0.0.0:2375&amp;quot;/&amp;#39;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_ROOTFS&lt;/span&gt;&lt;span class="s2"&gt;/etc/default/docker&amp;quot;&lt;/span&gt;
 lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- systemctl restart docker
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Lastly, the script checks the IP address for the LXC container and it launches Swarm.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Join the Swarm.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Join the Swarm.&lt;/span&gt;
 &lt;span class="nv"&gt;SWARM_AGENT_IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- ifconfig eth0 &lt;span class="p"&gt;|&lt;/span&gt; grep -Po &lt;span class="s1"&gt;&amp;#39;(?&amp;lt;=inet addr:)\S+&amp;#39;&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
 lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;swarm &lt;span class="se"&gt;\&lt;/span&gt;
     swarm join --addr&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_AGENT_IP&lt;/span&gt;&lt;span class="s2"&gt;:2375&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;etcd://&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="s2"&gt;:2379&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="step-8"&gt;Step 8: Play with the Swarm&lt;/h2&gt;
 &lt;p&gt;Now, if we check &lt;code&gt;docker info&lt;/code&gt; on the Swarm manager, we should see 10 healthy nodes:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
 &lt;span class="go"&gt;Containers: 10&lt;/span&gt;
 &lt;span class="go"&gt; Running: 10&lt;/span&gt;
 &lt;span class="go"&gt; Paused: 0&lt;/span&gt;
@@ -440,11 +562,11 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;span class="go"&gt;CPUs: 40&lt;/span&gt;
 &lt;span class="go"&gt;Total Memory: 40.52 GiB&lt;/span&gt;
 &lt;span class="go"&gt;Name: d39c33295ef3&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Let's try running a command on the Swarm:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 run -i --rm docker/whalesay cowsay &lt;span class="s1"&gt;&amp;#39;It works!&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 run -i --rm docker/whalesay cowsay &lt;span class="s1"&gt;&amp;#39;It works!&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt; ___________&lt;/span&gt;
 &lt;span class="go"&gt;&amp;lt; It works! &amp;gt;&lt;/span&gt;
 &lt;span class="go"&gt; -----------&lt;/span&gt;
@@ -459,7 +581,7 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;span class="go"&gt;       \______ o          __/&lt;/span&gt;
 &lt;span class="go"&gt;        \    \        __/&lt;/span&gt;
 &lt;span class="go"&gt;          \____\______/&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
@@ -552,14 +674,14 @@ $$\begin{array}{rl}
 &lt;h3&gt;Playing with baby-step giant-step&lt;/h3&gt;
 &lt;p&gt;I made &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py"&gt;a Python script&lt;/a&gt; that computes discrete logarithms using the baby-step giant-step algorithm. Obviously it only works with curves with small orders: don't try it with &lt;code&gt;secp521r1&lt;/code&gt;, unless you want to receive a &lt;code&gt;MemoryError&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;It should produce an output like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Curve: y^2 = (x^3 + 1x - 1) mod 10177
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve: y^2 = (x^3 + 1x - 1) mod 10177
 Curve order: 10331
 p = (0x1, 0x1)
 q = (0x1a28, 0x8fb)
 325 * p = q
 log(p, q) = 325
 Took 105 steps
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;Pollard's &amp;rho;&lt;/h2&gt;
@@ -616,7 +738,7 @@ $$17\ \text{months}\ \times \frac{\sqrt{2^{192}}}{\sqrt{2^{109}}} \approx 5 \cdo
 &lt;h2&gt;Pollard's &amp;rho; vs Baby-step giant-step&lt;/h2&gt;
 &lt;p&gt;I decided to put the &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py"&gt;baby-step giant-step script&lt;/a&gt; and the &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/pollardsrho.py"&gt;Pollard's rho script&lt;/a&gt; together with a &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/bruteforce.py"&gt;brute-force script&lt;/a&gt; into a &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/comparelogs.py"&gt;fourth script&lt;/a&gt; to compare their performances.&lt;/p&gt;
 &lt;p&gt;This fourth script computes all the logarithms for all the points on the "tiny" curve using different algorithms and reports how much time it did take:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Curve order: 10331
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve order: 10331
 Using bruteforce
 Computing all logarithms: 100.00% done
 Took 2m 31s (5193 steps on average)
@@ -626,7 +748,7 @@ Took 0m 6s (152 steps on average)
 Using pollardsrho
 Computing all logarithms: 100.00% done
 Took 0m 21s (138 steps on average)
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;As we could expect, the brute-force method is tremendously slow if compared to the others two. Baby-step giant-step is the faster, while Pollard's rho is more than three times slower than baby-step giant-step (although it uses far less memory and fewer number of steps on average).&lt;/p&gt;
@@ -781,13 +903,13 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;(These numbers were taken from &lt;a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c#L766"&gt;OpenSSL source code&lt;/a&gt;.)&lt;/p&gt;
 &lt;p&gt;Of course, you are free to modify the script to use other curves and domain parameters, just be sure to use prime fields and curves Weierstrass normal form, otherwise the script won't work.&lt;/p&gt;
 &lt;p&gt;The script is really simple and includes some of the algorithms we have described so far: point addition, double and add, ECDH. I recommend you to read and run it. It will produce an output like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Curve: secp256k1
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve: secp256k1
 Alice&amp;#39;s private key: 0xe32868331fa8ef0138de0de85478346aec5e3912b6029ae71691c384237a3eeb
 Alice&amp;#39;s public key: (0x86b1aa5120f079594348c67647679e7ac4c365b2c01330db782b0ba611c1d677, 0x5f4376a23eed633657a90f385ba21068ed7e29859a7fab09e953cc5b3e89beba)
 Bob&amp;#39;s private key: 0xcef147652aa90162e1fff9cf07f2605ea05529ca215a04350a98ecc24aa34342
 Bob&amp;#39;s public key: (0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8a26fc2c20134a, 0x9e773199edc1ea792b150270ea3317689286c9fe239dd5b9c5cfd9e81b4b632)
 Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd, 0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083)
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h4&gt;Ephemeral ECDH&lt;/h4&gt;
@@ -846,7 +968,7 @@ $$\begin{array}{rl}
 &lt;h4&gt;Playing with ECDSA&lt;/h4&gt;
 &lt;p&gt;Of course, I've created &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdsa.py"&gt;a Python script&lt;/a&gt; for signature generation and verification&lt;/strong&gt;. The code shares some parts with the ECDH script, in particular the domain parameters and the public/private key pair generation algorithm.&lt;/p&gt;
 &lt;p&gt;Here is the kind of output produced by the script:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Curve: secp256k1
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve: secp256k1
 Private key: 0x9f4c9eb899bd86e0e83ecca659602a15b2edb648e2ae4ee4a256b17bb29a1a1e
 Public key: (0xabd9791437093d377ca25ea974ddc099eafa3d97c7250d2ea32af6a1556f92a, 0x3fe60f6150b6d87ae8d64b78199b13f26977407c801f233288c97ddc4acca326)
 
@@ -860,7 +982,7 @@ Verification: invalid signature
 Message: b&amp;#39;Hello!&amp;#39;
 Public key: (0xc40572bb38dec72b82b3efb1efc8552588b8774149a32e546fb703021cf3b78a, 0x8c6e5c5a9c1ea4cad778072fe955ed1c6a2a92f516f02cab57e0ba7d0765f8bb)
 Verification: invalid signature
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;As you can see, the script first signs a message (the byte string "Hello!"), then verifies the signature. Afterwards, it tries to verify the same signature against another message ("Hi there!") and verification fails. Lastly, it tries to verify the signature against the correct message, but using another random public key and verification fails again.&lt;/p&gt;
@@ -908,7 +1030,7 @@ $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}
 &lt;p&gt;We will soon define elliptic curves over $\mathbb{F}_p$, but before doing so we need a clear idea of what $x / y$ means in $\mathbb{F}_p$. Simply put: $x / y = x \cdot y^{-1}$, or, in plain words, $x$ over $y$ is equal to $x$ times the multiplicative inverse of $y$. This fact is not surprising, but gives us a basic method to perform division: &lt;strong&gt;find the multiplicative inverse of a number and then perform a single multiplication&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Computing the multiplicative inverse can be "easily" done with the &lt;strong&gt;&lt;a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm"&gt;extended Euclidean algorithm&lt;/a&gt;&lt;/strong&gt;, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.&lt;/p&gt;
 &lt;p&gt;We won't enter the details of the extended Euclidean algorithm, as it is off-topic, however here's a working Python implementation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;extended_euclidean_algorithm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;extended_euclidean_algorithm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Returns a three-tuple (gcd, x, y) such that&lt;/span&gt;
 &lt;span class="sd"&gt;    a * x + b * y == gcd, where gcd is the greatest&lt;/span&gt;
@@ -944,11 +1066,11 @@ $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;gcd&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="c1"&gt;# Either n is 0, or p is not a prime number.&lt;/span&gt;
         &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-            &lt;span class="s1"&gt;&amp;#39;{} has no multiplicative inverse &amp;#39;&lt;/span&gt;
-            &lt;span class="s1"&gt;&amp;#39;modulo {}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s1"&gt; has no multiplicative inverse &amp;#39;&lt;/span&gt;
+            &lt;span class="s1"&gt;&amp;#39;modulo &lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
     &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h2&gt;Elliptic curves in $\mathbb{F}_p$&lt;/h2&gt;
@@ -1245,7 +1367,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;In the end, we can compute $151 \cdot P$ performing just seven doublings and four additions.&lt;/p&gt;
 &lt;p&gt;If this is not clear enough, here's a Python script that implements the algorithm:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;bits&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;bits&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    Generates the binary digits of n, starting&lt;/span&gt;
 &lt;span class="sd"&gt;    from the least significant bit.&lt;/span&gt;
@@ -1270,7 +1392,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
         &lt;span class="n"&gt;addend&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;If doubling and adding are both $O(1)$ operations, then &lt;strong&gt;this algorithm is $O(\log n)$&lt;/strong&gt; (or $O(k)$ if we consider the bit length), which is pretty good. Surely much better than the initial $O(n)$ algorithm!&lt;/p&gt;
@@ -1279,7 +1401,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;I don't know of any "easy" algorithm for the logarithm problem, however &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html?a=-3&amp;amp;b=1&amp;amp;px=0&amp;amp;py=1"&gt;playing with multiplication&lt;/a&gt; it's easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.&lt;/p&gt;
 &lt;p&gt;But there's a variant of the logarithm problem: the &lt;em&gt;discrete&lt;/em&gt; logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, &lt;strong&gt;scalar multiplication remains "easy", while the discrete logarithm becomes a "hard" problem&lt;/strong&gt;. This duality is the key brick of elliptic curve cryptography.&lt;/p&gt;
 &lt;h2&gt;See you next week&lt;/h2&gt;
-&lt;p&gt;That's all for today, I hope you enjoyed this post! Next week we will discover &lt;strong&gt;finite fields&lt;/strong&gt; and the &lt;strong&gt;&lt;em&gt;discrete&lt;/em&gt; logarithm problem&lt;/strong&gt;, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!&lt;/p&gt;
+&lt;p&gt;That's all for today, I hope you enjoyed this post! Next week we will discover &lt;strong&gt;finite fields*&lt;em&gt; and the &lt;/em&gt;&lt;/strong&gt;discrete&lt;em&gt; logarithm problem&lt;/em&gt;*, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/"&gt;Read the next post of the series &amp;raquo;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sun, 17 May 2015 11:24:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-05-17:/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/</guid><category>cryptography</category><category>bitcoin</category><category>dh</category><category>dsa</category><category>ecc</category><category>math</category><category>pgp</category><category>rsa</category><category>security</category><category>ssh</category><category>tls</category><category>web</category></item><item><title>Let's Encrypt: the road towards a better web?</title><link>https://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/</link><description>&lt;p&gt;I've always dreamed of a encrypted web, where HTTPS is the standard and plain HTTP is no more. A web where eavesdropping or manipulating information is not possible, or at least much harder than today.&lt;/p&gt;
 &lt;p&gt;I remember that I got excited when I first heard of &lt;strong&gt;&lt;a href="http://www.cacert.org/"&gt;CAcert&lt;/a&gt;: "a community-driven Certificate Authority that issues certificates to the public at large for free"&lt;/strong&gt;. Unfortunately, CAcert's root certificate never made it into the major web browsers and operating systems. Whatever the reasons, the result is that visiting a HTTPS website with a certificate released by CAcert produces nothing but a &lt;a href="https://cacert.org/"&gt;scary warning with a call to leave the site&lt;/a&gt;, making CAcert unsuitable for most.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.startssl.com/"&gt;StarCom&lt;/a&gt;, on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom &lt;a href="https://news.ycombinator.com/item?id=7557764"&gt;has&lt;/a&gt; &lt;a href="https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml"&gt;been&lt;/a&gt; &lt;a href="https://twitter.com/startssl/status/453631038883758080"&gt;heavily&lt;/a&gt; &lt;a href="https://bugzilla.mozilla.org/show_bug.cgi?id=994033"&gt;criticized&lt;/a&gt; for how the Heartbleed vulnerability was handled, and AFAIK this has led many customers away.&lt;/p&gt;
@@ -1303,55 +1425,55 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;h2&gt;Creating the Docker image&lt;/h2&gt;
 &lt;h3&gt;Step 1: get the latest Ubuntu Core&lt;/h3&gt;
 &lt;p&gt;As of writing, the latest Ubuntu Core image is alpha 3 and can be downloaded with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;(If you browse to &lt;a href="http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/"&gt;cdimage.ubuntu.com&lt;/a&gt;, you can also find the signed hashsums.)&lt;/p&gt;
 &lt;p&gt;The downloaded image is XZ-compressed and we need to extract it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$&lt;/span&gt; unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Step 2: connect the image using qemu-nbd&lt;/h3&gt;
 &lt;p&gt;The file we have just downloaded and extracted is a filesystem dump. The previous version of the image (Alpha 2) was a QCOW2 image (the format used by QEMU). In order to access its contents, we have a few options. Here I'll show one that works with both filesystem dumps and QCOW2 images. The trick consists in using &lt;code&gt;qemu-nbd&lt;/code&gt; (a tool from the &lt;a href="https://apps.ubuntu.com/cat/applications/qemu-utils/"&gt;qemu-utils&lt;/a&gt; package):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This command will create a virtual device named &lt;code&gt;/dev/nbd0&lt;/code&gt;, with virtual partitions named &lt;code&gt;/dev/nbd0p1&lt;/code&gt;, &lt;code&gt;/dev/nbd0p2&lt;/code&gt;, ... Use &lt;code&gt;fdisk -l /dev/nbd0&lt;/code&gt; to get an idea of what partitions are inside the QCOW2 image.&lt;/p&gt;
 &lt;h3&gt;Step 3: mount the filesystem&lt;/h3&gt;
 &lt;p&gt;The partition we are interested in is &lt;code&gt;/dev/nbd0p3&lt;/code&gt;, so we need to mount it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mkdir nbd0p3
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mkdir nbd0p3
 &lt;span class="gp"&gt;#&lt;/span&gt; mount -r /dev/nbd0p3 nbd0p3
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Step 4: create a base Docker image&lt;/h3&gt;
 &lt;p&gt;As suggested on the &lt;a href="https://docs.docker.com/articles/baseimages/"&gt;Docker documentation&lt;/a&gt;, creating a base Docker image from a directory is pretty straightforward:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; tar -C nbd0p3 -c . &lt;span class="p"&gt;|&lt;/span&gt; docker import - ubuntu-core alpha-3
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; tar -C nbd0p3 -c . &lt;span class="p"&gt;|&lt;/span&gt; docker import - ubuntu-core alpha-3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Our newly created image will now appear when running &lt;code&gt;docker images&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
 &lt;span class="go"&gt;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&lt;/span&gt;
 &lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        5 seconds ago       543.5 MB&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Let's verify if we did a good job:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run ubuntu-core:alpha-3 snappy
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run ubuntu-core:alpha-3 snappy
 &lt;span class="go"&gt;Usage:snappy [-h] [-v]&lt;/span&gt;
 &lt;span class="go"&gt;             {info,versions,search,update-versions,update,rollback,install,uninstall,tags,config,build,booted,chroot,framework,fake-version,nap}&lt;/span&gt;
 &lt;span class="go"&gt;             ...&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Yes! We have successfully added Ubuntu Core to the available Docker images and we have run our first snappy container!&lt;/p&gt;
 &lt;h2&gt;Installing and running software&lt;/h2&gt;
 &lt;p&gt;Without wasting too many words, here's how to install and run the &lt;code&gt;xkcd-webserver&lt;/code&gt; snappy package inside docker:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run -p &lt;span class="m"&gt;8000&lt;/span&gt;:80 ubuntu-core:alpha-3 /bin/sh -c &lt;span class="s1"&gt;&amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run -p &lt;span class="m"&gt;8000&lt;/span&gt;:80 ubuntu-core:alpha-3 /bin/sh -c &lt;span class="s1"&gt;&amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;WARN: AppArmor not available when processing AppArmor hook&lt;/span&gt;
 &lt;span class="go"&gt;Failed to get D-Bus connection: Operation not permitted&lt;/span&gt;
 &lt;span class="go"&gt;Failed to get D-Bus connection: Operation not permitted&lt;/span&gt;
@@ -1361,36 +1483,36 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;span class="go"&gt;WARNING: failed to connect to dbus: org.freedesktop.DBus.Error.FileNotFound: Failed to connect to socket /var/run/dbus/system_bus_socket: No such file or directory&lt;/span&gt;
 &lt;span class="go"&gt;Part            Tag   Installed  Available  Fingerprint     Active&lt;/span&gt;
 &lt;span class="go"&gt;xkcd-webserver  edge  0.3.1      -          3a9152b8bff494  *&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Now, if you visit http://localhost:8000/ you should see a random XKCD comic.&lt;/p&gt;
 &lt;p&gt;If you have payed attention, you may have noticed a few warnings about AppArmor, DBus and logind. The reason why you are seeing these warnings is pretty simple: we did not start neither AppArmor nor DBus nor logind. Now, generally speaking, we could run init inside Docker and fix these and other warnings. However that's not what Docker is meant for. So if you want to run AppArmor or similar stuff &lt;em&gt;from inside&lt;/em&gt; Docker or LXC, then probably you should consider virtualization.&lt;/p&gt;
 &lt;h2&gt;Dockerfile&lt;/h2&gt;
 &lt;p&gt;Once you have created the base Docker image, you can start creating some &lt;code&gt;Dockerfile&lt;/code&gt;s, if you need to. Here's an example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="s"&gt; ubuntu-core:alpha-3&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="s"&gt;ubuntu-core:alpha-3&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; snappy install xkcd-webserver
 &lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="s"&gt; 8000:80&lt;/span&gt;
 &lt;span class="k"&gt;CMD&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /apps/xkcd-webserver/0.3.1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./bin/xkcd-webserver
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;This &lt;code&gt;Dockerfile&lt;/code&gt; does the same job as the previous command: it installs and runs &lt;code&gt;xkcd-webserver&lt;/code&gt; on port 8000. In order to use it, first build it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker build -t xkcd-webserver .
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker build -t xkcd-webserver .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Check that it has been correctly installed:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
 &lt;span class="go"&gt;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&lt;/span&gt;
 &lt;span class="go"&gt;xkcd-webserver      latest              260e0116e9e3        3 minutes ago       543.5 MB&lt;/span&gt;
 &lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        About an hour ago   543.5 MB&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Then run it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run xkcd-webserver
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run xkcd-webserver
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Again, you should see a random XKCD comic on &lt;a href="http://localhost:8000/"&gt;http://localhost:8000/&lt;/a&gt;.&lt;/p&gt;
@@ -1460,13 +1582,13 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Well, it appears that Randall was right in that there's a help message hidden somewhere. And I just found it in a prime number:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;That number corresponds to the ASCII encoding of this message:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;help!! i&amp;#39;m trapped in a universe factory!!!!!!
-&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;help!! i&amp;#39;m trapped in a universe factory!!!!!!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Apparently, universe factory workers speak English and write ASCII. Nice coincidence, huh?&lt;/p&gt;
@@ -1476,7 +1598,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;At first I tried looking for all prime numbers corresponding to strings starting with &lt;code&gt;HELP! I'M TRAPPED IN A UNIVERSE FACTORY!&lt;/code&gt;, with an arbitrary suffix. I found many of them, but I wasn't satisfied with the result: I wanted something that was purely English/ASCII, without any garbage. Therefore I tried appending hashtags like &lt;code&gt;#help&lt;/code&gt; or &lt;code&gt;#universe&lt;/code&gt;, but could not find any interesting combination that was also a prime number (apparently, use of Twitter is forbidden inside universe factories).&lt;/p&gt;
 &lt;p&gt;So I decided to change approach: I looked for all primes corresponding to &lt;code&gt;HELP&lt;/code&gt;, followed by a variable number of exclamation marks, followed by &lt;code&gt;I'M TRAPPED IN A UNIVERSE FACTORY&lt;/code&gt;, followed by other exclamation marks. I could not find anything.&lt;/p&gt;
 &lt;p&gt;But then I tried with a lower case string, and... I found lots of such primes!&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;help i&amp;#39;m trapped in a universe factory!!!!!!!
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;help i&amp;#39;m trapped in a universe factory!!!!!!!
 help! i&amp;#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 help!! i&amp;#39;m trapped in a universe factory!!!!!!
 help!!! i&amp;#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1495,7 +1617,7 @@ help!!!!!!!!!!!!!!!!!!!!!!!!! i&amp;#39;m trapped in a universe factory!!!!!!!!!
 help!!!!!!!!!!!!!!!!!!!!!!!!!! i&amp;#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 help!!!!!!!!!!!!!!!!!!!!!!!!!!! i&amp;#39;m trapped in a universe factory!!!!!!!
 ...
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;I picked the one I liked most and verified its primality with &lt;a href="http://www.wolframalpha.com/input/?i=is+245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249+prime%3F"&gt;Wolfram|Alpha&lt;/a&gt; and &lt;a href="http://www.numberempire.com/primenumbers.php"&gt;numberempire.com&lt;/a&gt;.&lt;/p&gt;

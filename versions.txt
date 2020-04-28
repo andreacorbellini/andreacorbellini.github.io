@@ -1,19 +1,18 @@
 blinker==1.4
-Click==7.0
+click==7.1.2
 cssmin==0.2.0
-docutils==0.15.2
-feedgenerator==1.9
-Flask==1.1.1
+docutils==0.16
+feedgenerator==1.9.1
+Flask==1.1.2
 itsdangerous==1.1.0
-Jinja2==2.10.3
-Markdown==3.1.1
+Jinja2==2.11.2
+Markdown==3.2.1
 MarkupSafe==1.1.1
--e git://github.com/getpelican/pelican.git@01eb08c42b543450ee5e0e3de3854526708a6711#egg=pelican
-pkg-resources==0.0.0
-Pygments==2.4.2
-python-dateutil==2.8.0
+-e git://github.com/getpelican/pelican.git@e87717d27c8689ae288d1ab244648f38d20e3ddf#egg=pelican
+Pygments==2.6.1
+python-dateutil==2.8.1
 pytz==2019.3
-six==1.12.0
+six==1.14.0
 Unidecode==1.1.1
-webassets==0.12.1
-Werkzeug==0.16.0
+webassets==2.0
+Werkzeug==1.0.1

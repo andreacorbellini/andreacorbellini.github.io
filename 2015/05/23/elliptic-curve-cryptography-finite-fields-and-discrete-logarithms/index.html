@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?646edbac">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?e32ebe92">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
@@ -80,7 +80,7 @@
 <p>We will soon define elliptic curves over $\mathbb{F}_p$, but before doing so we need a clear idea of what $x / y$ means in $\mathbb{F}_p$. Simply put: $x / y = x \cdot y^{-1}$, or, in plain words, $x$ over $y$ is equal to $x$ times the multiplicative inverse of $y$. This fact is not surprising, but gives us a basic method to perform division: <strong>find the multiplicative inverse of a number and then perform a single multiplication</strong>.</p>
 <p>Computing the multiplicative inverse can be "easily" done with the <strong><a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended Euclidean algorithm</a></strong>, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.</p>
 <p>We won't enter the details of the extended Euclidean algorithm, as it is off-topic, however here's a working Python implementation:</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a three-tuple (gcd, x, y) such that</span>
 <span class="sd">    a * x + b * y == gcd, where gcd is the greatest</span>
@@ -116,11 +116,11 @@
     <span class="k">if</span> <span class="n">gcd</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># Either n is 0, or p is not a prime number.</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s1">&#39;{} has no multiplicative inverse &#39;</span>
-            <span class="s1">&#39;modulo {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has no multiplicative inverse &#39;</span>
+            <span class="s1">&#39;modulo </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">p</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2>Elliptic curves in $\mathbb{F}_p$</h2>
@@ -272,7 +272,7 @@ $$n(hP) = 0$$</p>
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2019 Andrea Corbellini</p>
+  <p>Copyright &copy; 2015-2020 Andrea Corbellini</p>
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>

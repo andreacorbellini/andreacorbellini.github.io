@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?646edbac">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?e32ebe92">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
@@ -108,14 +108,14 @@ $$\begin{array}{rl}
 <h3>Playing with baby-step giant-step</h3>
 <p>I made <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py">a Python script</a> that computes discrete logarithms using the baby-step giant-step algorithm. Obviously it only works with curves with small orders: don't try it with <code>secp521r1</code>, unless you want to receive a <code>MemoryError</code>.</p>
 <p>It should produce an output like this:</p>
-<div class="highlight"><pre><span></span>Curve: y^2 = (x^3 + 1x - 1) mod 10177
+<div class="highlight"><pre><span></span><code>Curve: y^2 = (x^3 + 1x - 1) mod 10177
 Curve order: 10331
 p = (0x1, 0x1)
 q = (0x1a28, 0x8fb)
 325 * p = q
 log(p, q) = 325
 Took 105 steps
-</pre></div>
+</code></pre></div>
 
 
 <h2>Pollard's &rho;</h2>
@@ -172,7 +172,7 @@ $$17\ \text{months}\ \times \frac{\sqrt{2^{192}}}{\sqrt{2^{109}}} \approx 5 \cdo
 <h2>Pollard's &rho; vs Baby-step giant-step</h2>
 <p>I decided to put the <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py">baby-step giant-step script</a> and the <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/pollardsrho.py">Pollard's rho script</a> together with a <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/bruteforce.py">brute-force script</a> into a <a href="https://github.com/andreacorbellini/ecc/blob/master/logs/comparelogs.py">fourth script</a> to compare their performances.</p>
 <p>This fourth script computes all the logarithms for all the points on the "tiny" curve using different algorithms and reports how much time it did take:</p>
-<div class="highlight"><pre><span></span>Curve order: 10331
+<div class="highlight"><pre><span></span><code>Curve order: 10331
 Using bruteforce
 Computing all logarithms: 100.00% done
 Took 2m 31s (5193 steps on average)
@@ -182,7 +182,7 @@ Took 0m 6s (152 steps on average)
 Using pollardsrho
 Computing all logarithms: 100.00% done
 Took 0m 21s (138 steps on average)
-</pre></div>
+</code></pre></div>
 
 
 <p>As we could expect, the brute-force method is tremendously slow if compared to the others two. Baby-step giant-step is the faster, while Pollard's rho is more than three times slower than baby-step giant-step (although it uses far less memory and fewer number of steps on average).</p>
@@ -260,7 +260,7 @@ Took 0m 21s (138 steps on average)
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2019 Andrea Corbellini</p>
+  <p>Copyright &copy; 2015-2020 Andrea Corbellini</p>
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
