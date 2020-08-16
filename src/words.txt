@@ -20,6 +20,7 @@ HTTP
 HTTPS
 Heartbleed
 IdenTrust
+KMS
 Koblitz
 LXC's
 LinkedIn
