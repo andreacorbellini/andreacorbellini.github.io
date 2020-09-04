@@ -6,12 +6,12 @@ feedgenerator==1.9.1
 Flask==1.1.2
 itsdangerous==1.1.0
 Jinja2==2.11.2
-Markdown==3.2.1
+Markdown==3.2.2
 MarkupSafe==1.1.1
--e git://github.com/getpelican/pelican.git@e87717d27c8689ae288d1ab244648f38d20e3ddf#egg=pelican
+-e git://github.com/getpelican/pelican.git@7a6686f4679adabdd690668a4ba7cedaf494e243#egg=pelican
 Pygments==2.6.1
 python-dateutil==2.8.1
-pytz==2019.3
+pytz==2020.1
 six==1.14.0
 Unidecode==1.1.1
 webassets==2.0
