@@ -37,7 +37,7 @@ This tutorial assumes that you have at least a vague idea of what Docker and Doc
 
 This tutorial has been successfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.
 
-## Step 1: Create the Swarm Manager container {#step-1}
+# Step 1: Create the Swarm Manager container {#step-1}
 
 Create a new LXC container with:
 
@@ -48,7 +48,7 @@ When prompted, choose your favorite distribution and architecture. I chose `ubun
 
 `lxc-create` needs to run as root, [unprivileged containers](https://www.stgraber.org/2014/01/17/lxc-1-0-unprivileged-containers/) won't work. We could actually make Docker start inside an unprivileged container, the problem is that we wouldn't be allowed to create block and character devices, and many Docker containers need this ability.
 
-## Step 2: Modify the configuration for the Swarm Manager container {#step-2}
+# Step 2: Modify the configuration for the Swarm Manager container {#step-2}
 
 Before starting the LXC container, open the file `/var/lib/lxc/swarm-manager/config` on the host and add the following configuration to the bottom of the file:
 
@@ -72,7 +72,7 @@ These two rules may seem harmful from a security standpoint, and in fact they ar
 
 So, while Docker itself won't be confined, **Docker containers will be confined**, and this is an encouraging fact.
 
-## Step 3: Load the OverlayFS module {#step-3}
+# Step 3: Load the OverlayFS module {#step-3}
 
 OverlayFS is shipped with Ubuntu, but not enabled by default. To enable it:
 
@@ -86,7 +86,7 @@ If you want to load OverlayFS at boot, instead of doing it manually after every 
     :::console
     root@host:~# echo overlay >> /etc/modules-load.d/modules.conf
 
-## Step 4: Start the container and install Docker {#step-4}
+# Step 4: Start the container and install Docker {#step-4}
 
 It's time to see if we did everything right!
 
@@ -123,7 +123,7 @@ Or you might get an error like this:
 
 It this other case, Docker is complaining about the fact that it can't talk to AppArmor. Check the configuration for the LXC container.
 
-## Step 5: Check if Docker is working {#step-5}
+# Step 5: Check if Docker is working {#step-5}
 
 Once you are all set, you should be able to use Docker: try running `docker info`, `docker ps` or launch a container:
 
@@ -181,7 +181,7 @@ It appears to be working. By the way, we can check whether Docker is correctly c
 
 Yay! Everything is running as expected: we launched a process inside a Docker container, and that process is running with the `docker-default` AppArmor profile. Once again: even if LXC is running unconfined, our Docker containers are not.
 
-## Step 6: Set up the Swarm Manager {#step-6}
+# Step 6: Set up the Swarm Manager {#step-6}
 
 That was the hardest part. Now we can proceed setting up Swarm as we would usually do.
 
@@ -268,7 +268,7 @@ Our Swarm manager is up and running. We can connect to it and issue a few comman
 
 As you can see there are no nodes connected, as we would expect. Everything looks good.
 
-## Step 7: Create the Swarm Agents {#step-7}
+# Step 7: Create the Swarm Agents {#step-7}
 
 Our Swarm manager can't do anything interesting without agent nodes. Creating new LXC containers for the agents is not much different from what we already did with the manager. To set up new agents in an automatic fashion I've created a script, so that you don't need to repeat the steps manually:
 
@@ -363,7 +363,7 @@ Here's an explanation of what the script does:
         lxc-attach -n "$LXC_NAME" -- docker run -d --restart=always --name=swarm \
             swarm join --addr="$SWARM_AGENT_IP:2375" "etcd://$SWARM_MANAGER_IP:2379"
 
-## Step 8: Play with the Swarm {#step-8}
+# Step 8: Play with the Swarm {#step-8}
 
 Now, if we check `docker info` on the Swarm manager, we should see 10 healthy nodes:
 
@@ -488,7 +488,7 @@ Let's try running a command on the Swarm:
             \    \        __/
               \____\______/
 
-## Conclusion
+# Conclusion
 
 We created a Swarm cluster consisting of one manager and 10 agents, and we kept memory and disk usage low thanks to LXC containers. We also succeeded in confining our Docker containers with AppArmor. Overall, this setup is probably not ideal for use in a production environment, but very useful for simulating clusters on your laptop.
 

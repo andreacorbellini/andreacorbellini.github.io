@@ -12,7 +12,7 @@ I remember that I got excited when I first heard of **[CAcert](http://www.cacert
 
 [StarCom](https://www.startssl.com/), on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom [has](https://news.ycombinator.com/item?id=7557764) [been](https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml) [heavily](https://twitter.com/startssl/status/453631038883758080) [criticized](https://bugzilla.mozilla.org/show_bug.cgi?id=994033) for how the Heartbleed vulnerability was handled, and AFAIK this has led many customers away.
 
-## Let's Encrypt
+# Let's Encrypt
 
 Recently, I learned about **[Let's Encrypt](https://letsencrypt.org/): a "free, automated, and open" Certificate Authority** arriving in mid-2015. There are many important facts that make Let's Encrypt different and better from all the other Certificate Authorities out there. I'll let you discover all of them. Probably, the most important fact is that Let's Encrypt has **[important sponsors](https://letsencrypt.org/sponsors/), including Mozilla**. And this is what matters today, because it gives Let's Encrypt a chance to be included in at least one major browser.
 
