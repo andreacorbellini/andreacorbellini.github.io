@@ -20,7 +20,7 @@
     };
   </script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
       <meta name="tags" content="docker">
@@ -79,15 +79,14 @@
 <p><strong>Prerequisites:</strong></p>
 <p>This tutorial assumes that you have at least a vague idea of what Docker and Docker Swarm are. You should also be familiar with the shell.</p>
 <p>This tutorial has been successfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.</p>
-<h2 id="step-1">Step 1: Create the Swarm Manager container</h2>
+<h1 id="step-1">Step 1: Create the Swarm Manager container</h1>
 <p>Create a new LXC container with:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> lxc-create -t download -n swarm-manager
 </code></pre></div>
 
-
 <p>When prompted, choose your favorite distribution and architecture. I chose <code>ubuntu</code> / <code>xenial</code> / <code>amd64</code>.</p>
 <p><code>lxc-create</code> needs to run as root, <a href="https://www.stgraber.org/2014/01/17/lxc-1-0-unprivileged-containers/">unprivileged containers</a> won't work. We could actually make Docker start inside an unprivileged container, the problem is that we wouldn't be allowed to create block and character devices, and many Docker containers need this ability.</p>
-<h2 id="step-2">Step 2: Modify the configuration for the Swarm Manager container</h2>
+<h1 id="step-2">Step 2: Modify the configuration for the Swarm Manager container</h1>
 <p>Before starting the LXC container, open the file <code>/var/lib/lxc/swarm-manager/config</code> on the host and add the following configuration to the bottom of the file:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Distribution configuration</span>
 <span class="c1"># ...</span>
@@ -103,23 +102,20 @@ lxc.aa_profile <span class="o">=</span> unconfined
 lxc.cap.drop <span class="o">=</span>
 </code></pre></div>
 
-
 <p>The first rule (<code>lxc.aa_profile = unconfined</code>) disables AppArmor confinement. The second one (<code>lxc.cap.drop =</code>) gives all capabilities to the processes in LXC container.</p>
 <p>These two rules may seem harmful from a security standpoint, and in fact they are. However we must remember that we will be running Docker inside the LXC container. Docker already ships with its own AppArmor profile and the two rules above are needed exactly for the purposes of letting Docker talk to AppArmor.</p>
 <p>So, while Docker itself won't be confined, <strong>Docker containers will be confined</strong>, and this is an encouraging fact.</p>
-<h2 id="step-3">Step 3: Load the OverlayFS module</h2>
+<h1 id="step-3">Step 3: Load the OverlayFS module</h1>
 <p>OverlayFS is shipped with Ubuntu, but not enabled by default. To enable it:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> modprobe overlay
 </code></pre></div>
-
 
 <p>It is important to do this step before installing Docker. Docker supports various storage drivers and when Docker is installed for the first time it tries to detect the most appropriate one for the system. If Docker detects that OverlayFS is not loaded, it'll fall back to the device mapper. There's nothing wrong with the device mapper, we can make it work, however, as I said at the beginning, in this tutorial I'm focusing only on OverlayFS.</p>
 <p>If you want to load OverlayFS at boot, instead of doing it manually after every reboot, add it to <code>/etc/modules-load.d/modules.conf</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> <span class="nb">echo</span> overlay &gt;&gt; /etc/modules-load.d/modules.conf
 </code></pre></div>
 
-
-<h2 id="step-4">Step 4: Start the container and install Docker</h2>
+<h1 id="step-4">Step 4: Start the container and install Docker</h1>
 <p>It's time to see if we did everything right!</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> lxc-start -n swarm-manager
 <span class="gp">root@host:~#</span> lxc-attach -n swarm-manager
@@ -127,14 +123,12 @@ lxc.cap.drop <span class="o">=</span>
 <span class="gp">root@swarm-manager:~#</span> apt install docker.io
 </code></pre></div>
 
-
 <p>Installation should complete without any problem. If you get an error like this:</p>
 <div class="highlight"><pre><span></span><code>Job for docker.service failed because the control process exited with error code. See &quot;systemctl status docker.service&quot; and &quot;journalctl -xe&quot; for details.
 invoke-rc.d: initscript docker, action &quot;start&quot; failed.
 dpkg: error processing package docker.io (--configure):
  subprocess installed post-installation script returned error exit status 1
 </code></pre></div>
-
 
 <p>It means that Docker failed to start. Try checking <code>systemctl status docker</code> as suggested, or run <code>docker daemon</code> manually. You might get an error like this:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker daemon
@@ -144,7 +138,6 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">FATA[0000] Error starting daemon: error initializing graphdriver: loopback attach failed</span>
 </code></pre></div>
 
-
 <p>In this case, Docker is using the devicemapper storage driver and is complaining about the lack of loopback devices. If that's the case, check whether OverlayFS is loaded and reinstall Docker.</p>
 <p>Or you might get an error like this:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker daemon
@@ -152,9 +145,8 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">FATA[0000] Error starting daemon: AppArmor enabled on system but the docker-default profile could not be loaded.</span>
 </code></pre></div>
 
-
 <p>It this other case, Docker is complaining about the fact that it can't talk to AppArmor. Check the configuration for the LXC container.</p>
-<h2 id="step-5">Step 5: Check if Docker is working</h2>
+<h1 id="step-5">Step 5: Check if Docker is working</h1>
 <p>Once you are all set, you should be able to use Docker: try running <code>docker info</code>, <code>docker ps</code> or launch a container:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker run --rm docker/whalesay cowsay burp!
 <span class="go">Unable to find image &#39;docker/whalesay:latest&#39; locally</span>
@@ -176,7 +168,6 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">        \    \        __/</span>
 <span class="go">          \____\______/</span>
 </code></pre></div>
-
 
 <p>It appears to be working. By the way, we can check whether Docker is correctly confining containers. Try running a Docker container and check on the host the output of <code>aa-status</code>: you should see a process running with the <code>docker-default</code> profile. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker run --rm ubuntu bash -c <span class="s1">&#39;while true; do sleep 1; echo -n zZ; done&#39;</span>
@@ -208,9 +199,8 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">root      6982  6808  0 17:17 pts/3    00:00:00 grep --color=auto 6956</span>
 </code></pre></div>
 
-
 <p>Yay! Everything is running as expected: we launched a process inside a Docker container, and that process is running with the <code>docker-default</code> AppArmor profile. Once again: even if LXC is running unconfined, our Docker containers are not.</p>
-<h2 id="step-6">Step 6: Set up the Swarm Manager</h2>
+<h1 id="step-6">Step 6: Set up the Swarm Manager</h1>
 <p>That was the hardest part. Now we can proceed setting up Swarm as we would usually do.</p>
 <p>As I said at the beginning, Swarm can be configured in many ways. In this tutorial I'll show how to set it up with etcd discovery. First of all, we need the IP address of the LXC container:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> ifconfig eth0
@@ -223,7 +213,6 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">          collisions:0 txqueuelen:1000</span>
 <span class="go">          RX bytes:147652946 (147.6 MB)  TX bytes:1455613 (1.4 MB)</span>
 </code></pre></div>
-
 
 <p><code>10.0.3.154</code> is my IP address. Let's start etcd:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> <span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span><span class="m">10</span>.0.3.154
@@ -248,7 +237,6 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">e742278a97d2        quay.io/coreos/etcd   &quot;/etcd -name etcd0 -a&quot;   32 seconds ago      Up 31 seconds       0.0.0.0:2379-2380-&gt;2379-2380/tcp, 0.0.0.0:4001-&gt;4001/tcp, 7001/tcp   etcd</span>
 </code></pre></div>
 
-
 <p>Replace <code>10.0.3.154</code> with the IP address of your LXC container.</p>
 <p>Note that I've started etcd with <code>--restart=always</code>, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop <code>--restart=always</code> if that's not what you want.</p>
 <p>Now we can start the Swarm manager:</p>
@@ -265,7 +253,6 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">46b556e73e87        swarm                 &quot;/swarm manage -H 0.0&quot;   3 seconds ago       Up 2 seconds        2375/tcp, 0.0.0.0:3375-&gt;3375/tcp                                     swarm</span>
 <span class="go">e742278a97d2        quay.io/coreos/etcd   &quot;/etcd -name etcd0 -a&quot;   7 minutes ago       Up 7 minutes        0.0.0.0:2379-2380-&gt;2379-2380/tcp, 0.0.0.0:4001-&gt;4001/tcp, 7001/tcp   etcd</span>
 </code></pre></div>
-
 
 <p>Our Swarm manager is up and running. We can connect to it and issue a few commands:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker -H localhost:3375 info
@@ -290,9 +277,8 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">Name: d39c33295ef3</span>
 </code></pre></div>
 
-
 <p>As you can see there are no nodes connected, as we would expect. Everything looks good.</p>
-<h2 id="step-7">Step 7: Create the Swarm Agents</h2>
+<h1 id="step-7">Step 7: Create the Swarm Agents</h1>
 <p>Our Swarm manager can't do anything interesting without agent nodes. Creating new LXC containers for the agents is not much different from what we already did with the manager. To set up new agents in an automatic fashion I've created a script, so that you don't need to repeat the steps manually:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
@@ -337,12 +323,10 @@ dpkg: error processing package docker.io (--configure):
 <span class="k">done</span>
 </code></pre></div>
 
-
 <p>Be sure to change the values for <code>SWARM_MANAGER_IP</code>, <code>DOWNLOAD_DIST</code>, <code>DOWNLOAD_RELEASE</code> and <code>DOWNLOAD_ARCH</code> to fit your needs.</p>
 <p>Thanks to this script, creating 10 new agents is as simple as running one command:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> ./swarm-agent-create swarm-agent-<span class="o">{</span><span class="m">0</span>..9<span class="o">}</span>
 </code></pre></div>
-
 
 <p>Here's an explanation of what the script does:</p>
 <ul>
@@ -370,7 +354,6 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><span class="s2">&quot;</span> -- apt-get install -y docker.io
 </code></pre></div>
 
-
 </li>
 <li>
 <p>Our Swarm agents need to be reachable by the manager. For this reason we need to configure them so that they bind to a public interface. To do so, the script adds <code>DOCKER_OPTS="-H 0.0.0.0:2375"</code> and restarts Docker.</p>
@@ -378,7 +361,6 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 sed -i -e <span class="s1">&#39;s/^#DOCKER_OPTS=.*$/DOCKER_OPTS=&quot;-H 0.0.0.0:2375&quot;/&#39;</span> <span class="s2">&quot;</span><span class="nv">$LXC_ROOTFS</span><span class="s2">/etc/default/docker&quot;</span>
 lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><span class="s2">&quot;</span> -- systemctl restart docker
 </code></pre></div>
-
 
 </li>
 <li>
@@ -389,10 +371,9 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
     swarm join --addr<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SWARM_AGENT_IP</span><span class="s2">:2375&quot;</span> <span class="s2">&quot;etcd://</span><span class="nv">$SWARM_MANAGER_IP</span><span class="s2">:2379&quot;</span>
 </code></pre></div>
 
-
 </li>
 </ul>
-<h2 id="step-8">Step 8: Play with the Swarm</h2>
+<h1 id="step-8">Step 8: Play with the Swarm</h1>
 <p>Now, if we check <code>docker info</code> on the Swarm manager, we should see 10 healthy nodes:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker -H localhost:3375 info
 <span class="go">Containers: 10</span>
@@ -496,7 +477,6 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 <span class="go">Name: d39c33295ef3</span>
 </code></pre></div>
 
-
 <p>Let's try running a command on the Swarm:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker -H localhost:3375 run -i --rm docker/whalesay cowsay <span class="s1">&#39;It works!&#39;</span>
 <span class="go"> ___________</span>
@@ -515,8 +495,7 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 <span class="go">          \____\______/</span>
 </code></pre></div>
 
-
-<h2>Conclusion</h2>
+<h1>Conclusion</h1>
 <p>We created a Swarm cluster consisting of one manager and 10 agents, and we kept memory and disk usage low thanks to LXC containers. We also succeeded in confining our Docker containers with AppArmor. Overall, this setup is probably not ideal for use in a production environment, but very useful for simulating clusters on your laptop.</p>
 <p>I hope you enjoyed the tutorial. Feel free to leave a comment if you have questions!</p></div>
     </article>

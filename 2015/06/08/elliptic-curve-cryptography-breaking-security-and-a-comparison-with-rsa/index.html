@@ -20,7 +20,7 @@
     };
   </script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
       <meta name="tags" content="dh">
@@ -67,12 +67,12 @@
 <h2>Baby-step, giant-step</h2>
 <p>Before entering the details of the algorithm, a quick consideration: we can always write any integer $x$ as <strong>$x = am + b$</strong>, where $a$, $m$ and $b$ are three arbitrary integers. For example, we can write $10 = 2 \cdot 3 + 4$.</p>
 <p>With this in mind, we can rewrite the equation for the discrete logarithm problem as follows:
-$$\begin{array}{rl}
+$$\begin{align*}
   Q &amp; = xP \\
   Q &amp; = (am + b) P \\
   Q &amp; = am P + b P \\
   Q - am P &amp; = b P
-\end{array}$$</p>
+\end{align*}$$</p>
 <p>The baby-step giant-step is a "meet in the middle" algorithm. Contrary to the brute-force attack (which forces us to calculate all the points $xP$ for every $x$ until we find $Q$), we will calculate "few" values for $bP$ and "few" values for $Q - amP$ until we find a correspondence. The algorithm works as follows:</p>
 <ol>
 <li>Calculate $m = \left\lceil{\sqrt{n}}\right\rceil$</li>
@@ -117,26 +117,23 @@ log(p, q) = 325
 Took 105 steps
 </code></pre></div>
 
-
 <h2>Pollard's &rho;</h2>
 <p>Pollard's rho is another algorithm for computing discrete logarithms. It has the same asymptotic time complexity $O(\sqrt{n})$ of the baby-step giant-step algorithm, but its space complexity is just $O(1)$. If baby-step giant-step can't solve discrete logarithms because of the huge memory requirements, will Pollard's rho make it? Let's see...</p>
 <p>First of all, another reminder of the discrete logarithm problem: given $P$ and $Q$ find $x$ such that $Q = xP$. With Pollard's rho, we will solve a sightly different problem: given $P$ and $Q$, <strong>find the integers $a$, $b$, $A$ and $B$ such that $aP + bQ = AP + BQ$</strong>.</p>
 <p>Once the four integers are found, we can use the equation $Q = xP$ to find out $x$:
-$$\begin{array}{rl}
+$$\begin{align*}
   aP + bQ &amp; = AP + BQ \\
   aP + bxP &amp; = AP + BxP \\
   (a + bx) P &amp; = (A + Bx) P \\
   (a - A) P &amp; = (B - b) xP
-\end{array}$$</p>
+\end{align*}$$</p>
 <p>Now we can get rid of $P$. But before doing so, remember that our subgroup is cyclic with order $n$, therefore the coefficients used in point multiplication are modulo $n$:
-$$\begin{array}{rl}
+$$\begin{align*}
   a - A &amp; \equiv (B - b) x \pmod{n} \\
   x &amp; = (a - A)(B - b)^{-1} \bmod{n}
-\end{array}$$</p>
+\end{align*}$$</p>
 <p>The principle of operation of Pollard's rho is simple: <strong>we generate a pseudo-random sequence of points $X_1$, $X_2$, ... where each $X = a_i P + b_i Q$</strong>. The sequence can be generated using a pseudo-random function $f$ like this:
-$$\begin{array}{rl}
-  (a_{i + 1}, b_{i + 1}) = f(X_i)
-\end{array}$$</p>
+$$(a_{i + 1}, b_{i + 1}) = f(X_i)$$</p>
 <p>That is: the pseudo-random function $f$ takes the latest point $X_i$ in the sequence as the input, and gives the coefficients $a_{i + 1}$ and $b_{i + 1}$ as the output. From there, we can calculate $X_{i + 1} = a_{i + 1} P + b_{i + 1} Q$; we can then input $X_{i + 1}$ into $f$ again and repeat.</p>
 <p>It doesn't really matter how $f$ works internally (although certain functions may yield results faster than others), what matters is that $f$ determines the next point in the sequence based on the previous one, and that all the $a_i$ and $b_i$ coefficients are known by us.</p>
 <p>By using such $f$, sooner or later we will see a loop in our sequence. That is, we will see a point $X_j = X_i$.</p>
@@ -183,7 +180,6 @@ Using pollardsrho
 Computing all logarithms: 100.00% done
 Took 0m 21s (138 steps on average)
 </code></pre></div>
-
 
 <p>As we could expect, the brute-force method is tremendously slow if compared to the others two. Baby-step giant-step is the faster, while Pollard's rho is more than three times slower than baby-step giant-step (although it uses far less memory and fewer number of steps on average).</p>
 <p>Also look at the number of steps: brute force used 5193 steps on average for computing each logarithm. 5193 is very near to 10331 / 2 (half the curve order). Baby-step giant-steps and Pollard's rho used 152 steps and 138 steps respectively, two numbers very close to the square root of 10331 (101.64).</p>

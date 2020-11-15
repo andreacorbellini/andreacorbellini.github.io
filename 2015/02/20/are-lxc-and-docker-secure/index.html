@@ -20,7 +20,7 @@
     };
   </script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
       <meta name="tags" content="docker">
@@ -62,7 +62,7 @@
 </figure>
 
 <p>In order to answer this question, I won't go deep into the details of what LXC and Docker are. The web is full of information on <a href="http://en.wikipedia.org/wiki/Cgroups#NAMESPACE-ISOLATION">namespaces</a> and <a href="http://en.wikipedia.org/wiki/Cgroups">cgroups</a>. Rather, I'd like to show what LXC and Docker can do, what they cannot do, and what their default configuration allows them to do. My hope is to provide a quick checklist for those who want to go with LXC/Docker, but are unsure on what they need to pay attention to.</p>
-<h2>What LXC and Docker can do</h2>
+<h1>What LXC and Docker can do</h1>
 <p>As we all know, LXC confines processes mainly thanks to two Linux kernel features: namespaces and cgroups. These provide ways to control and limit access to resource such as memory or filesystem. So, for example, you can limit the bandwidth used by processes inside a container, you can limit the priority of the CPU scheduler, and so on.</p>
 <p>As it is well known, processes inside a LXC guest cannot:</p>
 <ul>
@@ -75,12 +75,12 @@
 <p>And at the same time, processes inside an LXC guest can find an environment that is perfectly suitable to run a working operating system: I can run init, I can read from <code>/proc</code>, I can access the internet.</p>
 <p>This is most of what LXC can do, and it's also what you get by default. Docker (when used with the LXC backend) is a wrapper around LXC that provides utilities for easy deployment and management of the containers, so <strong>everything that applies to LXC, applies to Docker too</strong>.</p>
 <p>If this sounds great, then beware that there are the things you should know...</p>
-<h2>You need a security context</h2>
+<h1>You need a security context</h1>
 <p>LXC is somewhat incomplete. What I mean is that some parts of special filesystems like procfs or sysfs are not faked. For example, as of now, I can successfully change the value of host's <code>/proc/sys/kernel/panic</code> or <code>/sys/class/thermal/cooling_device0/cur_state</code>.</p>
 <p>The reason why LXC is "incomplete" doesn't really matter (it's actually the kernel to be incomplete, but anyhow...). What matters is that certain nasty actions can be forbade, not by LXC itself, but by an AppArmor/SELinux profile that blocks read and write access certain <code>/proc</code> and <code>/sys</code> components. The AppArmor rules were shipped in Ubuntu since 12.10 (Quantal), and have been included upstream since early 2014, together with the SELinux rules.</p>
 <p>Therefore, <strong>a security context like AppArmor or SELinux is required to run LXC safely</strong>. Without it, the root user inside a guest can take control of the host.</p>
 <p>Check that AppArmor or SELinux are running and are configured properly. If you want to go with Grsecurity, then remember to configure it manually.</p>
-<h2>Limit resource consumption</h2>
+<h1>Limit resource consumption</h1>
 <p>LXC offers ways to limit resource usage, but no special restrictions are put in place by default. <strong>You have to configure them by yourself.</strong></p>
 <p>With the default configuration, I can run fork-bombs, request huge memory maps, keep all CPUs busy, doing high loads of I/O. All of this without special privileges. Remember this when running untrusted code.</p>
 <figure>
@@ -91,22 +91,22 @@
 <p>For example, if you want to limit the container memory usage to 512 MiB, set <code>lxc.cgroup.memory.limit_in_bytes = 512M</code>. Note that the container with that option, once it exceeds the 512 MiB cap, will start using the swap without limits. If this is not what you want, then set <code>lxc.cgroup.memory.memsw.max_usage_in_bytes = 512M</code>. Note that to use both options you may need to add <code>cgroup_enable=memory</code> and <code>swapaccount=1</code> to the kernel command line.</p>
 <p>To have an overview of all possible options, check out <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/ch-Subsystems_and_Tunable_Parameters.html">Red Hat's documentation</a> or the <a href="https://www.kernel.org/doc/Documentation/cgroups/">Kernel documentation</a>.</p>
 <p>With Docker, the story is similar: just use <code>--lxc-conf</code> from the command line to set LXC's options.</p>
-<h2>Limit disk usage</h2>
+<h1>Limit disk usage</h1>
 <p>Something that LXC cannot do is limiting mass storage usage. Luckily, <strong><a href="https://www.stgraber.org/2013/12/27/lxc-1-0-container-storage/">LXC integrates nicely with LVM</a></strong> (and brtfs, and zfs, and overlayfs), and you can use that for easily limiting disk usage. You can, for example, create a logical volume for each of your guests, and give that volume a limited size, so that space usage inside a guest cannot grow indefinitely.</p>
 <p>The same <a href="http://developerblog.redhat.com/2014/09/30/overview-storage-scalability-docker/">holds for Docker</a>.</p>
-<h2>Pay attention at <code>/dev/random</code></h2>
+<h1>Pay attention at <code>/dev/random</code></h1>
 <p><strong>Processes inside LXC guests</strong>, by default, can read from <code>/dev/random</code> and <strong>can consume the entropy of the host</strong>. This may cause troubles if you need big amounts of randomness (to generate keys or whatever).</p>
 <p>If this is something that you don't want, then configure LXC so that it <a href="https://wiki.archlinux.org/index.php/Linux_Containers#Cgroups_device_configuration">denies access to the character devices</a> <code>1:8</code> (random) and <code>1:9</code> (urandom). Denying access to the path <code>/dev/random</code> is not enough, as <code>mknod</code> is allowed inside guests.</p>
 <p>Note however that doing so may break many applications inside the LXC guest that need randomness. Maybe consider using a different machine for processes that require randomness for security purposes.</p>
-<h2>Use unprivileged containers</h2>
+<h1>Use unprivileged containers</h1>
 <p><strong>Containers can be <a href="https://www.stgraber.org/2014/01/17/lxc-1-0-unprivileged-containers/">run from an unprivileged user</a></strong>. This means UID 0 of the guest can't match UID 0 of the host, and many potential security holes can't simply be exploited. Unfortunately, <a href="https://github.com/docker/docker/issues/2918">Docker has not support for unprivileged containers</a> yet.</p>
 <p>However, if Docker is not a requirement and you can do well with LXC, start experimenting with unprivileged containers and consider using them in production.</p>
 <p>Programs like Apache will complain that it's unable to change its ulimit (because setting the ulimit is a privilege of the real root user). If you need to run programs that require special privileges, either configure them so that they do not complain, or consider using <a href="http://linux.die.net/man/7/capabilities">capabilities</a> (but do not abuse them, and be cautious, or you risk introducing more problems than the ones your are trying to solve!)</p>
-<h2>Conclusion</h2>
+<h1>Conclusion</h1>
 <p>LXC, Docker and the entire ecosystem around them can be considered quite mature and stable. They're surely production ready, and, if the right configuration is put in place, it can be pretty difficult to cause troubles to the host.</p>
 <p>However, whether they can be considered secure or not is up to you: <strong>what are you using containers for? Who are you giving access to? What privileges are you giving, what actions are you restricting?</strong></p>
 <p>Always remember what LXC and Docker do by default, and what they do not do, especially when you use them to run untrusted code. Those that I have listed may only be a few of the problems that LXC, Docker and friends may expose. Remember to carefully review your configuration before opening the doors to others.</p>
-<h2>Further reading</h2>
+<h1>Further reading</h1>
 <p>If you liked this article, you'll find these ones interesting too:</p>
 <ul>
 <li><a href="http://blog.docker.com/2013/08/containers-docker-how-secure-are-they/">Containers &amp; Docker: how secure are they?</a>, from the Docker blog.</li>

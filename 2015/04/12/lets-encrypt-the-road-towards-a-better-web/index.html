@@ -20,7 +20,7 @@
     };
   </script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
       <meta name="tags" content="security">
@@ -57,7 +57,7 @@
       <div class="body"><p>I've always dreamed of a encrypted web, where HTTPS is the standard and plain HTTP is no more. A web where eavesdropping or manipulating information is not possible, or at least much harder than today.</p>
 <p>I remember that I got excited when I first heard of <strong><a href="http://www.cacert.org/">CAcert</a>: "a community-driven Certificate Authority that issues certificates to the public at large for free"</strong>. Unfortunately, CAcert's root certificate never made it into the major web browsers and operating systems. Whatever the reasons, the result is that visiting a HTTPS website with a certificate released by CAcert produces nothing but a <a href="https://cacert.org/">scary warning with a call to leave the site</a>, making CAcert unsuitable for most.</p>
 <p><a href="https://www.startssl.com/">StarCom</a>, on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom <a href="https://news.ycombinator.com/item?id=7557764">has</a> <a href="https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml">been</a> <a href="https://twitter.com/startssl/status/453631038883758080">heavily</a> <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=994033">criticized</a> for how the Heartbleed vulnerability was handled, and AFAIK this has led many customers away.</p>
-<h2>Let's Encrypt</h2>
+<h1>Let's Encrypt</h1>
 <p>Recently, I learned about <strong><a href="https://letsencrypt.org/">Let's Encrypt</a>: a "free, automated, and open" Certificate Authority</strong> arriving in mid-2015. There are many important facts that make Let's Encrypt different and better from all the other Certificate Authorities out there. I'll let you discover all of them. Probably, the most important fact is that Let's Encrypt has <strong><a href="https://letsencrypt.org/sponsors/">important sponsors</a>, including Mozilla</strong>. And this is what matters today, because it gives Let's Encrypt a chance to be included in at least one major browser.</p>
 <figure>
   <a href="https://letsencrypt.org/"><img src="https://andrea.corbellini.name/images/letsencrypt-logo-horizontal.png" alt="Let&#039;s Encrypt" width="519" height="124"></a>

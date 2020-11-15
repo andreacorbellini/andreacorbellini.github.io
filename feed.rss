@@ -16,11 +16,9 @@ DNS=1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
 #ReadEtcHosts=yes
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Once you are done with the changes, reload systemd-resolved:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl restart systemd-resolved.service
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;You can check your changes with &lt;code&gt;resolvectl status&lt;/code&gt;: you should see your DNS servers on top of the output, under the &lt;em&gt;Global&lt;/em&gt; section:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ resolvectl status
@@ -38,7 +36,6 @@ MulticastDNS setting: no
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This however won't be enough to use that DNS! In fact, the &lt;em&gt;Global&lt;/em&gt; DNS of systemd-resolved is just a default option that is used whenever no DNS servers are configured for an interface. When you connect to a WiFi network, NetworkManager will ask the access point for a list of DNS servers and will communicate that list to systemd-resolved, effectively overriding the settings that we just edited. If you scroll down the output of &lt;code&gt;resolvectl status&lt;/code&gt;, you will see the DNS servers added by NetworkManager. We have to tell NetworkManager to stop doing that.&lt;/p&gt;
 &lt;h1&gt;Step 2: Disable DNS processing in NetworkManager&lt;/h1&gt;
 &lt;p&gt;In order for systemd-resolved to consider our global DNS, we need to tell NetworkManager not to provide any DNS information for new connections. Doing that is easy: just create a new file &lt;code&gt;/etc/NetworkManager/conf.d/dns.conf&lt;/code&gt; (or any name you like) with this content:&lt;/p&gt;
@@ -49,11 +46,9 @@ dns=none
 systemd-resolved=false
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;To apply the settings either run restart your computer or run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl reload NetworkManager.service
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Now, when you connect to a new network connection, NetworkManager won't push the list of DNS servers to systemd-resolved and only the global ones will be used. If you check &lt;code&gt;resolvectl status&lt;/code&gt;, you should see that, for every interface, there is &lt;em&gt;no&lt;/em&gt; DNS server specified. If you specified &lt;code&gt;1.1.1.1&lt;/code&gt; as your DNS servers, then you can also head over to &lt;a href="https://1.1.1.1/help"&gt;https://1.1.1.1/help&lt;/a&gt; to verify that they've been correctly set up.&lt;/p&gt;
 &lt;h1&gt;DNSSEC and DNS-over-TLS&lt;/h1&gt;
@@ -76,17 +71,14 @@ DNSOverTLS=opportunistic
 #ReadEtcHosts=yes
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Note that I'm using &lt;code&gt;DNSOverTLS=opportunistic&lt;/code&gt; because I found that some access points with captive portals don't work properly when using &lt;code&gt;DNSOverTLS=true&lt;/code&gt;. Also note that &lt;code&gt;DNSSEC=true&lt;/code&gt; may cause some pain because there are still many misconfigured domain records out there that will make make DNSSEC validation fail.&lt;/p&gt;
 &lt;p&gt;Like before, to apply the changes, run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl restart systemd-resolved.service
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;And to verify the changes:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;resolvectl status
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;If you're using &lt;code&gt;1.1.1.1&lt;/code&gt;, you can also go to &lt;a href="https://1.1.1.1/help"&gt;https://1.1.1.1/help&lt;/a&gt; to verify DNS-over-TLS.&lt;/p&gt;
 &lt;h1&gt;Random MAC address&lt;/h1&gt;
@@ -113,11 +105,9 @@ ethernet.cloned-mac-address=random
 wifi.cloned-mac-address=random
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;To apply the settings either run restart your computer or run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl reload NetworkManager.service
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;You can test your changes with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;ip link
@@ -147,15 +137,14 @@ wifi.cloned-mac-address=random
 &lt;p&gt;&lt;strong&gt;Prerequisites:&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;This tutorial assumes that you have at least a vague idea of what Docker and Docker Swarm are. You should also be familiar with the shell.&lt;/p&gt;
 &lt;p&gt;This tutorial has been successfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.&lt;/p&gt;
-&lt;h2 id="step-1"&gt;Step 1: Create the Swarm Manager container&lt;/h2&gt;
+&lt;h1 id="step-1"&gt;Step 1: Create the Swarm Manager container&lt;/h1&gt;
 &lt;p&gt;Create a new LXC container with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-create -t download -n swarm-manager
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;When prompted, choose your favorite distribution and architecture. I chose &lt;code&gt;ubuntu&lt;/code&gt; / &lt;code&gt;xenial&lt;/code&gt; / &lt;code&gt;amd64&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;lxc-create&lt;/code&gt; needs to run as root, &lt;a href="https://www.stgraber.org/2014/01/17/lxc-1-0-unprivileged-containers/"&gt;unprivileged containers&lt;/a&gt; won't work. We could actually make Docker start inside an unprivileged container, the problem is that we wouldn't be allowed to create block and character devices, and many Docker containers need this ability.&lt;/p&gt;
-&lt;h2 id="step-2"&gt;Step 2: Modify the configuration for the Swarm Manager container&lt;/h2&gt;
+&lt;h1 id="step-2"&gt;Step 2: Modify the configuration for the Swarm Manager container&lt;/h1&gt;
 &lt;p&gt;Before starting the LXC container, open the file &lt;code&gt;/var/lib/lxc/swarm-manager/config&lt;/code&gt; on the host and add the following configuration to the bottom of the file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Distribution configuration&lt;/span&gt;
 &lt;span class="c1"&gt;# ...&lt;/span&gt;
@@ -171,23 +160,20 @@ lxc.aa_profile &lt;span class="o"&gt;=&lt;/span&gt; unconfined
 lxc.cap.drop &lt;span class="o"&gt;=&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The first rule (&lt;code&gt;lxc.aa_profile = unconfined&lt;/code&gt;) disables AppArmor confinement. The second one (&lt;code&gt;lxc.cap.drop =&lt;/code&gt;) gives all capabilities to the processes in LXC container.&lt;/p&gt;
 &lt;p&gt;These two rules may seem harmful from a security standpoint, and in fact they are. However we must remember that we will be running Docker inside the LXC container. Docker already ships with its own AppArmor profile and the two rules above are needed exactly for the purposes of letting Docker talk to AppArmor.&lt;/p&gt;
 &lt;p&gt;So, while Docker itself won't be confined, &lt;strong&gt;Docker containers will be confined&lt;/strong&gt;, and this is an encouraging fact.&lt;/p&gt;
-&lt;h2 id="step-3"&gt;Step 3: Load the OverlayFS module&lt;/h2&gt;
+&lt;h1 id="step-3"&gt;Step 3: Load the OverlayFS module&lt;/h1&gt;
 &lt;p&gt;OverlayFS is shipped with Ubuntu, but not enabled by default. To enable it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; modprobe overlay
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;It is important to do this step before installing Docker. Docker supports various storage drivers and when Docker is installed for the first time it tries to detect the most appropriate one for the system. If Docker detects that OverlayFS is not loaded, it'll fall back to the device mapper. There's nothing wrong with the device mapper, we can make it work, however, as I said at the beginning, in this tutorial I'm focusing only on OverlayFS.&lt;/p&gt;
 &lt;p&gt;If you want to load OverlayFS at boot, instead of doing it manually after every reboot, add it to &lt;code&gt;/etc/modules-load.d/modules.conf&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; overlay &amp;gt;&amp;gt; /etc/modules-load.d/modules.conf
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;h2 id="step-4"&gt;Step 4: Start the container and install Docker&lt;/h2&gt;
+&lt;h1 id="step-4"&gt;Step 4: Start the container and install Docker&lt;/h1&gt;
 &lt;p&gt;It's time to see if we did everything right!&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-start -n swarm-manager
 &lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-attach -n swarm-manager
@@ -195,14 +181,12 @@ lxc.cap.drop &lt;span class="o"&gt;=&lt;/span&gt;
 &lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; apt install docker.io
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Installation should complete without any problem. If you get an error like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Job for docker.service failed because the control process exited with error code. See &amp;quot;systemctl status docker.service&amp;quot; and &amp;quot;journalctl -xe&amp;quot; for details.
 invoke-rc.d: initscript docker, action &amp;quot;start&amp;quot; failed.
 dpkg: error processing package docker.io (--configure):
  subprocess installed post-installation script returned error exit status 1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;It means that Docker failed to start. Try checking &lt;code&gt;systemctl status docker&lt;/code&gt; as suggested, or run &lt;code&gt;docker daemon&lt;/code&gt; manually. You might get an error like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
@@ -212,7 +196,6 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;FATA[0000] Error starting daemon: error initializing graphdriver: loopback attach failed&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;In this case, Docker is using the devicemapper storage driver and is complaining about the lack of loopback devices. If that's the case, check whether OverlayFS is loaded and reinstall Docker.&lt;/p&gt;
 &lt;p&gt;Or you might get an error like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
@@ -220,9 +203,8 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;FATA[0000] Error starting daemon: AppArmor enabled on system but the docker-default profile could not be loaded.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;It this other case, Docker is complaining about the fact that it can't talk to AppArmor. Check the configuration for the LXC container.&lt;/p&gt;
-&lt;h2 id="step-5"&gt;Step 5: Check if Docker is working&lt;/h2&gt;
+&lt;h1 id="step-5"&gt;Step 5: Check if Docker is working&lt;/h1&gt;
 &lt;p&gt;Once you are all set, you should be able to use Docker: try running &lt;code&gt;docker info&lt;/code&gt;, &lt;code&gt;docker ps&lt;/code&gt; or launch a container:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm docker/whalesay cowsay burp!
 &lt;span class="go"&gt;Unable to find image &amp;#39;docker/whalesay:latest&amp;#39; locally&lt;/span&gt;
@@ -244,7 +226,6 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;        \    \        __/&lt;/span&gt;
 &lt;span class="go"&gt;          \____\______/&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;It appears to be working. By the way, we can check whether Docker is correctly confining containers. Try running a Docker container and check on the host the output of &lt;code&gt;aa-status&lt;/code&gt;: you should see a process running with the &lt;code&gt;docker-default&lt;/code&gt; profile. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm ubuntu bash -c &lt;span class="s1"&gt;&amp;#39;while true; do sleep 1; echo -n zZ; done&amp;#39;&lt;/span&gt;
@@ -276,9 +257,8 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;root      6982  6808  0 17:17 pts/3    00:00:00 grep --color=auto 6956&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Yay! Everything is running as expected: we launched a process inside a Docker container, and that process is running with the &lt;code&gt;docker-default&lt;/code&gt; AppArmor profile. Once again: even if LXC is running unconfined, our Docker containers are not.&lt;/p&gt;
-&lt;h2 id="step-6"&gt;Step 6: Set up the Swarm Manager&lt;/h2&gt;
+&lt;h1 id="step-6"&gt;Step 6: Set up the Swarm Manager&lt;/h1&gt;
 &lt;p&gt;That was the hardest part. Now we can proceed setting up Swarm as we would usually do.&lt;/p&gt;
 &lt;p&gt;As I said at the beginning, Swarm can be configured in many ways. In this tutorial I'll show how to set it up with etcd discovery. First of all, we need the IP address of the LXC container:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; ifconfig eth0
@@ -291,7 +271,6 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;          collisions:0 txqueuelen:1000&lt;/span&gt;
 &lt;span class="go"&gt;          RX bytes:147652946 (147.6 MB)  TX bytes:1455613 (1.4 MB)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;&lt;code&gt;10.0.3.154&lt;/code&gt; is my IP address. Let's start etcd:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; &lt;span class="nv"&gt;SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.0.3.154
@@ -316,7 +295,6 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;e742278a97d2        quay.io/coreos/etcd   &amp;quot;/etcd -name etcd0 -a&amp;quot;   32 seconds ago      Up 31 seconds       0.0.0.0:2379-2380-&amp;gt;2379-2380/tcp, 0.0.0.0:4001-&amp;gt;4001/tcp, 7001/tcp   etcd&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Replace &lt;code&gt;10.0.3.154&lt;/code&gt; with the IP address of your LXC container.&lt;/p&gt;
 &lt;p&gt;Note that I've started etcd with &lt;code&gt;--restart=always&lt;/code&gt;, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop &lt;code&gt;--restart=always&lt;/code&gt; if that's not what you want.&lt;/p&gt;
 &lt;p&gt;Now we can start the Swarm manager:&lt;/p&gt;
@@ -333,7 +311,6 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;46b556e73e87        swarm                 &amp;quot;/swarm manage -H 0.0&amp;quot;   3 seconds ago       Up 2 seconds        2375/tcp, 0.0.0.0:3375-&amp;gt;3375/tcp                                     swarm&lt;/span&gt;
 &lt;span class="go"&gt;e742278a97d2        quay.io/coreos/etcd   &amp;quot;/etcd -name etcd0 -a&amp;quot;   7 minutes ago       Up 7 minutes        0.0.0.0:2379-2380-&amp;gt;2379-2380/tcp, 0.0.0.0:4001-&amp;gt;4001/tcp, 7001/tcp   etcd&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Our Swarm manager is up and running. We can connect to it and issue a few commands:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
@@ -358,9 +335,8 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;Name: d39c33295ef3&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;As you can see there are no nodes connected, as we would expect. Everything looks good.&lt;/p&gt;
-&lt;h2 id="step-7"&gt;Step 7: Create the Swarm Agents&lt;/h2&gt;
+&lt;h1 id="step-7"&gt;Step 7: Create the Swarm Agents&lt;/h1&gt;
 &lt;p&gt;Our Swarm manager can't do anything interesting without agent nodes. Creating new LXC containers for the agents is not much different from what we already did with the manager. To set up new agents in an automatic fashion I've created a script, so that you don't need to repeat the steps manually:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
 
@@ -405,12 +381,10 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="k"&gt;done&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Be sure to change the values for &lt;code&gt;SWARM_MANAGER_IP&lt;/code&gt;, &lt;code&gt;DOWNLOAD_DIST&lt;/code&gt;, &lt;code&gt;DOWNLOAD_RELEASE&lt;/code&gt; and &lt;code&gt;DOWNLOAD_ARCH&lt;/code&gt; to fit your needs.&lt;/p&gt;
 &lt;p&gt;Thanks to this script, creating 10 new agents is as simple as running one command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; ./swarm-agent-create swarm-agent-&lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;..9&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Here's an explanation of what the script does:&lt;/p&gt;
 &lt;ul&gt;
@@ -438,7 +412,6 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- apt-get install -y docker.io
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Our Swarm agents need to be reachable by the manager. For this reason we need to configure them so that they bind to a public interface. To do so, the script adds &lt;code&gt;DOCKER_OPTS="-H 0.0.0.0:2375"&lt;/code&gt; and restarts Docker.&lt;/p&gt;
@@ -446,7 +419,6 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 sed -i -e &lt;span class="s1"&gt;&amp;#39;s/^#DOCKER_OPTS=.*$/DOCKER_OPTS=&amp;quot;-H 0.0.0.0:2375&amp;quot;/&amp;#39;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_ROOTFS&lt;/span&gt;&lt;span class="s2"&gt;/etc/default/docker&amp;quot;&lt;/span&gt;
 lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; -- systemctl restart docker
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;/li&gt;
 &lt;li&gt;
@@ -457,10 +429,9 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
     swarm join --addr&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_AGENT_IP&lt;/span&gt;&lt;span class="s2"&gt;:2375&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;etcd://&lt;/span&gt;&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="s2"&gt;:2379&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="step-8"&gt;Step 8: Play with the Swarm&lt;/h2&gt;
+&lt;h1 id="step-8"&gt;Step 8: Play with the Swarm&lt;/h1&gt;
 &lt;p&gt;Now, if we check &lt;code&gt;docker info&lt;/code&gt; on the Swarm manager, we should see 10 healthy nodes:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
 &lt;span class="go"&gt;Containers: 10&lt;/span&gt;
@@ -564,7 +535,6 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;span class="go"&gt;Name: d39c33295ef3&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Let's try running a command on the Swarm:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 run -i --rm docker/whalesay cowsay &lt;span class="s1"&gt;&amp;#39;It works!&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt; ___________&lt;/span&gt;
@@ -583,8 +553,7 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;span class="go"&gt;          \____\______/&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;We created a Swarm cluster consisting of one manager and 10 agents, and we kept memory and disk usage low thanks to LXC containers. We also succeeded in confining our Docker containers with AppArmor. Overall, this setup is probably not ideal for use in a production environment, but very useful for simulating clusters on your laptop.&lt;/p&gt;
 &lt;p&gt;I hope you enjoyed the tutorial. Feel free to leave a comment if you have questions!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Wed, 13 Apr 2016 18:00:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2016-04-13:/2016/04/13/docker-swarm-inside-lxc/</guid><category>information-technology</category><category>docker</category><category>swarm</category><category>lxc</category><category>containers</category><category>distributed-computing</category></item><item><title>When bureaucracy hits the web: the cookie law</title><link>https://andrea.corbellini.name/2015/09/22/cookie-law/</link><description>&lt;p&gt;For a few years now, every first of April I hoped to read between the news something on the lines of "the cookie law was a joke, sorry for that". You know, bureaucracy is slow, and it's reasonable to think that it takes time for them to reveal jokes. Yet, many firsts of April have passed, and no such announcement has been made. Many missed opportunities for Europe to show their love for progress and their competence with the web.&lt;/p&gt;
 &lt;p&gt;Being compliant with the EU cookie law is hard to do. It's not just a matter of showing a boring banner, it's a matter of defacing your web pages, writing long privacy policies that nobody will read, implementing ways to prevent certain cookies from being set.&lt;/p&gt;
@@ -598,17 +567,17 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;p&gt;End of rant, let's move on.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Tue, 22 Sep 2015 18:35:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-09-22:/2015/09/22/cookie-law/</guid><category>misc</category><category>blog</category><category>cookie-law</category></item><item><title>Hello Pelican!</title><link>https://andrea.corbellini.name/2015/08/02/hello-pelican/</link><description>&lt;p&gt;Today I switched from WordPress.com to &lt;a href="http://getpelican.com/"&gt;Pelican&lt;/a&gt; and &lt;a href="https://pages.github.com/"&gt;GitHub Pages&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;First off, let me say: almost all URLs that were previously working should still work. Only the feed URLs are broken, and this is not something I can fix. If you were following my blog via a feed reader, you should update to the new feed. Sorry for the inconvenience.&lt;/p&gt;
 &lt;p&gt;Having said that, I'd like to share with you the motivation that made me move and the details of the migration.&lt;/p&gt;
-&lt;h2&gt;The bad things of WordPress&lt;/h2&gt;
+&lt;h1&gt;The bad things of WordPress&lt;/h1&gt;
 &lt;p&gt;Now, this doesn't want to be a rant, so I'll be pretty concise. WordPress, the content management system, is an excellent platform for blogging. Easy to start with, easy to maintain, easy to use. WordPress.com makes things even easier. It also comes with many useful features, like comments and social networks integration.&lt;/p&gt;
 &lt;p&gt;The problem is: you can't customize things or add features without paying. Of course, this is business, and I do not want to discuss business decisions made at WordPress.com. Not only that, but I could live fine with most of the major limitations. Also, I was perfectly conscious of this kind of problems with WordPress.com when I started (after all, this is not &lt;a href="https://andrea.corbellini.name/2015/02/15/new-blog-again/"&gt;the first blog I started&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;I actually become upset of WordPress.com when writing the series of blog posts about &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;Elliptic Curve Cryptography&lt;/a&gt;. When writing these articles, I spent a lot of time employing workarounds to overcome WordPress.com limitations. Being used to Vim and its advanced features, I also found the editors (both the old and the new one) as a great obstacle for getting things done quickly. I do not want to enter the details of the problems I'm referring to, what matters is that, eventually, I gave up and I realized it was time to move on and seek for an alternative.&lt;/p&gt;
-&lt;h2&gt;Why Pelican&lt;/h2&gt;
+&lt;h1&gt;Why Pelican&lt;/h1&gt;
 &lt;p&gt;Pelican is a static site generator. I've always thought that a static site had too many limitations for me. But while seeking an alternative to WordPress.com, I realized that many of those limitations were not affecting me in any way. Actually, with a static site I can do everything I want: edit my articles with Vim, render my equations with MathJax, customize my theme, version control my content, write scripts to post process my content.&lt;/p&gt;
 &lt;p&gt;The only bad thing about Pelican is that it does not come with any theme I truly like. I decided to make my own. I'm not entirely satisfied with it, as I feel it is too "anonymous", but I believe it is fully responsive, fast, readable and offers all the features I want. Perhaps I'll tweak it a little more to make it more "personal".&lt;/p&gt;
 &lt;p&gt;Setting up Pelican and migrating everything required some time, but at least this time I worked on true solutions, not on ugly hacks and workarounds like I did with WordPress. This implies that when writing articles I will be able to focus more on content than other details.&lt;/p&gt;
-&lt;h2&gt;Why not other static site generators&lt;/h2&gt;
+&lt;h1&gt;Why not other static site generators&lt;/h1&gt;
 &lt;p&gt;In short: Pelican is written in Python and to my eyes it looked better than the other Python static site generators. I'll be honest and say that I did not truly evaluate all of the alternatives: I knew &lt;a href="..."&gt;list.org&lt;/a&gt; switched to Pelican and that made me try Pelican before all other solutions.&lt;/p&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;In the end I decided to leave WordPress for Pelican hosted on GitHub Pages. I'm pretty satisfied with the result I got. The nature of GitHub Pages prevents me from using HTTP redirects (and therefore the old feed links are broken), however in exchange I've got much more freedom, and this is what matters to me.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sun, 02 Aug 2015 18:55:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-08-02:/2015/08/02/hello-pelican/</guid><category>misc</category><category>blog</category><category>pelican</category><category>wordpress</category></item><item><title>Let's Encrypt is going to start soon</title><link>https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/</link><description>&lt;p&gt;&lt;a href="https://letsencrypt.org/"&gt;Let's Encrypt&lt;/a&gt; (the free, automated and open certificate authority) has just &lt;a href="https://letsencrypt.org/2015/06/16/lets-encrypt-launch-schedule.html"&gt;announced its launch schedule&lt;/a&gt;. According to it, certificates will be released to the public starting from the &lt;strong&gt;week of September 14, 2015&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Their intermediate certificates, which &lt;a href="https://letsencrypt.org/2015/06/04/isrg-ca-certs.html"&gt;were generated a few days ago&lt;/a&gt;, will be signed by &lt;a href="https://www.identrustssl.com/"&gt;IdenTrust&lt;/a&gt;. What this means is that if you browse a web page secured by Let's Encrypt, you won't get any scary message, but the usual green lock.&lt;/p&gt;
 &lt;figure&gt;
@@ -633,12 +602,12 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;h2&gt;Baby-step, giant-step&lt;/h2&gt;
 &lt;p&gt;Before entering the details of the algorithm, a quick consideration: we can always write any integer $x$ as &lt;strong&gt;$x = am + b$&lt;/strong&gt;, where $a$, $m$ and $b$ are three arbitrary integers. For example, we can write $10 = 2 \cdot 3 + 4$.&lt;/p&gt;
 &lt;p&gt;With this in mind, we can rewrite the equation for the discrete logarithm problem as follows:
-$$\begin{array}{rl}
+$$\begin{align*}
   Q &amp;amp; = xP \\
   Q &amp;amp; = (am + b) P \\
   Q &amp;amp; = am P + b P \\
   Q - am P &amp;amp; = b P
-\end{array}$$&lt;/p&gt;
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;The baby-step giant-step is a "meet in the middle" algorithm. Contrary to the brute-force attack (which forces us to calculate all the points $xP$ for every $x$ until we find $Q$), we will calculate "few" values for $bP$ and "few" values for $Q - amP$ until we find a correspondence. The algorithm works as follows:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Calculate $m = \left\lceil{\sqrt{n}}\right\rceil$&lt;/li&gt;
@@ -683,26 +652,23 @@ log(p, q) = 325
 Took 105 steps
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;Pollard's &amp;rho;&lt;/h2&gt;
 &lt;p&gt;Pollard's rho is another algorithm for computing discrete logarithms. It has the same asymptotic time complexity $O(\sqrt{n})$ of the baby-step giant-step algorithm, but its space complexity is just $O(1)$. If baby-step giant-step can't solve discrete logarithms because of the huge memory requirements, will Pollard's rho make it? Let's see...&lt;/p&gt;
 &lt;p&gt;First of all, another reminder of the discrete logarithm problem: given $P$ and $Q$ find $x$ such that $Q = xP$. With Pollard's rho, we will solve a sightly different problem: given $P$ and $Q$, &lt;strong&gt;find the integers $a$, $b$, $A$ and $B$ such that $aP + bQ = AP + BQ$&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Once the four integers are found, we can use the equation $Q = xP$ to find out $x$:
-$$\begin{array}{rl}
+$$\begin{align*}
   aP + bQ &amp;amp; = AP + BQ \\
   aP + bxP &amp;amp; = AP + BxP \\
   (a + bx) P &amp;amp; = (A + Bx) P \\
   (a - A) P &amp;amp; = (B - b) xP
-\end{array}$$&lt;/p&gt;
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;Now we can get rid of $P$. But before doing so, remember that our subgroup is cyclic with order $n$, therefore the coefficients used in point multiplication are modulo $n$:
-$$\begin{array}{rl}
+$$\begin{align*}
   a - A &amp;amp; \equiv (B - b) x \pmod{n} \\
   x &amp;amp; = (a - A)(B - b)^{-1} \bmod{n}
-\end{array}$$&lt;/p&gt;
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;The principle of operation of Pollard's rho is simple: &lt;strong&gt;we generate a pseudo-random sequence of points $X_1$, $X_2$, ... where each $X = a_i P + b_i Q$&lt;/strong&gt;. The sequence can be generated using a pseudo-random function $f$ like this:
-$$\begin{array}{rl}
-  (a_{i + 1}, b_{i + 1}) = f(X_i)
-\end{array}$$&lt;/p&gt;
+$$(a_{i + 1}, b_{i + 1}) = f(X_i)$$&lt;/p&gt;
 &lt;p&gt;That is: the pseudo-random function $f$ takes the latest point $X_i$ in the sequence as the input, and gives the coefficients $a_{i + 1}$ and $b_{i + 1}$ as the output. From there, we can calculate $X_{i + 1} = a_{i + 1} P + b_{i + 1} Q$; we can then input $X_{i + 1}$ into $f$ again and repeat.&lt;/p&gt;
 &lt;p&gt;It doesn't really matter how $f$ works internally (although certain functions may yield results faster than others), what matters is that $f$ determines the next point in the sequence based on the previous one, and that all the $a_i$ and $b_i$ coefficients are known by us.&lt;/p&gt;
 &lt;p&gt;By using such $f$, sooner or later we will see a loop in our sequence. That is, we will see a point $X_j = X_i$.&lt;/p&gt;
@@ -749,7 +715,6 @@ Using pollardsrho
 Computing all logarithms: 100.00% done
 Took 0m 21s (138 steps on average)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;As we could expect, the brute-force method is tremendously slow if compared to the others two. Baby-step giant-step is the faster, while Pollard's rho is more than three times slower than baby-step giant-step (although it uses far less memory and fewer number of steps on average).&lt;/p&gt;
 &lt;p&gt;Also look at the number of steps: brute force used 5193 steps on average for computing each logarithm. 5193 is very near to 10331 / 2 (half the curve order). Baby-step giant-steps and Pollard's rho used 152 steps and 138 steps respectively, two numbers very close to the square root of 10331 (101.64).&lt;/p&gt;
@@ -818,7 +783,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;Thanks for reading and see you next time!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Mon, 08 Jun 2015 13:28:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-06-08:/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/</guid><category>cryptography</category><category>dh</category><category>dsa</category><category>ecc</category><category>ecdh</category><category>ecdhe</category><category>ecdsa</category><category>rsa</category><category>security</category></item><item><title>Elliptic Curve Cryptography: ECDH and ECDSA</title><link>https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/</link><description>&lt;p&gt;&lt;strong&gt;This post is the third in the series &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;ECC: a gentle introduction&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;In the previous posts, we have seen &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves"&gt;what an elliptic curve is&lt;/a&gt; and we have defined a &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law"&gt;group law&lt;/a&gt; in order to do some math with the points of elliptic curves. Then we have &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/"&gt;restricted elliptic curves to finite fields of integers modulo a prime&lt;/a&gt;. With this restriction, we have seen that the points of elliptic curves generate &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication"&gt;cyclic subgroups&lt;/a&gt; and we have introduced the terms &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#base-point"&gt;base point&lt;/a&gt;, &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#subgroup-order"&gt;order&lt;/a&gt; and &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#cofactor"&gt;cofactor&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Finally, we have seen that &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication"&gt;scalar multiplication in finite fields&lt;/a&gt; is an "easy" problem, while the &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm"&gt;discrete logarithm problem&lt;/a&gt; seems to be "hard". Now we'll see how all of this applies to cryptography.&lt;/p&gt;
-&lt;h2&gt;Domain parameters&lt;/h2&gt;
+&lt;h1&gt;Domain parameters&lt;/h1&gt;
 &lt;p&gt;Our elliptic curve algorithms will work in a cyclic subgroup of an elliptic curve over a finite field. Therefore, our algorithms will need the following parameters:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;The &lt;strong&gt;prime $p$&lt;/strong&gt; that specifies the size of the finite field.&lt;/li&gt;
@@ -828,7 +793,7 @@ Took 0m 21s (138 steps on average)
 &lt;li&gt;The &lt;strong&gt;cofactor $h$&lt;/strong&gt; of the subgroup.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;In conclusion, the &lt;strong&gt;domain parameters&lt;/strong&gt; for our algorithms are the &lt;strong&gt;sextuple $(p, a, b, G, n, h)$&lt;/strong&gt;.&lt;/p&gt;
-&lt;h3 id="random-curves"&gt;Random curves&lt;/h3&gt;
+&lt;h2 id="random-curves"&gt;Random curves&lt;/h2&gt;
 &lt;p&gt;When I said that the discrete logarithm problem was "hard", I wasn't entirely right. There are &lt;strong&gt;some classes of elliptic curves that are particularly weak&lt;/strong&gt; and allow the use of special purpose algorithms to solve the discrete logarithm problem efficiently. For example, all the curves that have $p = hn$ (that is, the order of the finite field is equal to the order of the elliptic curve) are vulnerable to &lt;a href="http://interact.sagemath.org/edu/2010/414/projects/novotney.pdf"&gt;Smart's attack&lt;/a&gt;, which can be used to solve discrete logarithms in polynomial time on a classical computer.&lt;/p&gt;
 &lt;p&gt;Now, suppose that I give you the domain parameters of a curve. There's the possibility that I've discovered a new class of weak curves that nobody knows, and probably I have built a "fast" algorithm for computing discrete logarithms on the curve I gave you. How can I convince you of the contrary, i.e. that I'm not aware of any vulnerability? &lt;strong&gt;How can I assure you that the curve is "safe" (in the sense that it can't be used for special purpose attacks by me)?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;In an attempt to solve this kind of problem, sometimes we have an additional domain parameter: the &lt;strong&gt;seed $S$&lt;/strong&gt;. This is a random number used to generate the coefficients $a$ and $b$, or the base point $G$, or both. These parameters are generated by computing the hash of the seed $S$. Hashes, as we know, are "easy" to compute, but "hard" to reverse.&lt;/p&gt;
@@ -846,7 +811,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;This trick should give some sort of assurance that &lt;strong&gt;the curve has not been specially crafted to expose vulnerabilities known to the author&lt;/strong&gt;. In fact, if I give you a curve together with a seed, it means I was not free to arbitrarily choose the parameters $a$ and $b$, and you should be relatively sure that the curve cannot be used for special purpose attacks by me. The reason why I say "relatively" will be explained in the next post.&lt;/p&gt;
 &lt;p&gt;A standardized algorithm for generating and checking random curves is described in ANSI X9.62 and is based on &lt;a href="https://en.wikipedia.org/wiki/SHA-1"&gt;SHA-1&lt;/a&gt;. If you are curious, you can read the algorithms for generating verifiable random curves on &lt;a href="http://www.secg.org/sec1-v2.pdf"&gt;a specification by SECG&lt;/a&gt; (look for "Verifiably Random Curves and Base Point Generators").&lt;/p&gt;
 &lt;p&gt;I've created a &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/verifyrandom.py"&gt;tiny Python script&lt;/a&gt; that verifies all the random curves currently &lt;a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c"&gt;shipped with OpenSSL&lt;/a&gt;&lt;/strong&gt;. I strongly recommend you to check it out!&lt;/p&gt;
-&lt;h2&gt;Elliptic Curve Cryptography&lt;/h2&gt;
+&lt;h1&gt;Elliptic Curve Cryptography&lt;/h1&gt;
 &lt;p&gt;It took us a long time, but finally here we are! Therefore, pure and simple:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;The &lt;strong&gt;private key&lt;/strong&gt; is a random integer $d$ chosen from $\{1, \dots, n - 1\}$ (where $n$ is the order of the subgroup).&lt;/li&gt;
@@ -854,7 +819,7 @@ Took 0m 21s (138 steps on average)
 &lt;/ol&gt;
 &lt;p&gt;You see? If we know $d$ and $G$ (along with the other domain parameters), finding $H$ is "easy". But if we know $H$ and $G$, &lt;strong&gt;finding the private key $d$ is "hard", because it requires us to solve the discrete logarithm problem&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Now we are going to describe two public-key algorithms based on that: ECDH (Elliptic curve Diffie-Hellman), which is used for encryption, and ECDSA (Elliptic Curve Digital Signature Algorithm), used for digital signing.&lt;/p&gt;
-&lt;h3&gt;Encryption with ECDH&lt;/h3&gt;
+&lt;h2&gt;Encryption with ECDH&lt;/h2&gt;
 &lt;p&gt;ECDH is a variant of the &lt;a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange"&gt;Diffie-Hellman algorithm&lt;/a&gt; for elliptic curves. It is actually a &lt;a href="https://en.wikipedia.org/wiki/Key-agreement_protocol"&gt;key-agreement protocol&lt;/a&gt;, more than an encryption algorithm. This basically means that ECDH defines (to some extent) how keys should be generated and exchanged between parties. How to actually encrypt data using such keys is up to us.&lt;/p&gt;
 &lt;p&gt;The problem it solves is the following: two parties (the usual &lt;a href="http://en.wikipedia.org/wiki/Alice_and_Bob"&gt;Alice and Bob&lt;/a&gt;) want to exchange information securely, so that a third party (the &lt;a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack"&gt;Man In the Middle&lt;/a&gt;) may intercept them, but may not decode them. This is one of the principles behind TLS, just to give you an example.&lt;/p&gt;
 &lt;p&gt;Here's how it works:&lt;/p&gt;
@@ -888,7 +853,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;The Diffie-Hellman problem for elliptic curves is assumed to be a "hard" problem. It is believed to be as "hard" as the discrete logarithm problem, although no mathematical proofs are available. What we can tell for sure is that it can't be "harder", because solving the logarithm problem is a way of solving the Diffie-Hellman problem.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Now that Alice and Bob have obtained the shared secret, they can exchange data with symmetric encryption.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;For example, they can use the $x$ coordinate of $S$ as the key to encrypt messages using secure ciphers like &lt;a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"&gt;AES&lt;/a&gt; or &lt;a href="https://en.wikipedia.org/wiki/Triple_DES"&gt;3DES&lt;/a&gt;. This is more or less what TLS does, the difference is that TLS concatenates the $x$ coordinate with other numbers relative to the connection and then computes a hash of the resulting byte string.&lt;/p&gt;
-&lt;h4&gt;Playing with ECDH&lt;/h4&gt;
+&lt;h3&gt;Playing with ECDH&lt;/h3&gt;
 &lt;p&gt;I've created &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdhe.py"&gt;another Python script&lt;/a&gt; for computing public/private keys and shared secrets over an elliptic curve&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Unlike all the examples we have seen till now, this script makes use of a standardized curve, rather than a simple curve on a small field. The curve I've chosen is &lt;code&gt;secp256k1&lt;/code&gt;, from &lt;a href="http://www.secg.org/"&gt;SECG&lt;/a&gt; (the "Standards for Efficient Cryptography Group", founded by &lt;a href="https://www.certicom.com/"&gt;Certicom&lt;/a&gt;). &lt;a href="https://en.bitcoin.it/wiki/Secp256k1"&gt;This same curve is also used by Bitcoin&lt;/a&gt; for digital signatures. Here are the domain parameters:&lt;/p&gt;
 &lt;ul&gt;
@@ -911,11 +876,10 @@ Bob&amp;#39;s public key: (0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8
 Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd, 0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;h4&gt;Ephemeral ECDH&lt;/h4&gt;
+&lt;h3&gt;Ephemeral ECDH&lt;/h3&gt;
 &lt;p&gt;Some of you may have heard of ECDHE instead of ECDH. The "E" in ECDHE stands for "Ephemeral" and refers to the fact that the &lt;strong&gt;keys exchanged are temporary&lt;/strong&gt;, rather than static.&lt;/p&gt;
 &lt;p&gt;ECDHE is used, for example, in TLS, where both the client and the server generate their public-private key pair on the fly, when the connection is established. The keys are then signed with the TLS certificate (for authentication) and exchanged between the parties.&lt;/p&gt;
-&lt;h3&gt;Signing with ECDSA&lt;/h3&gt;
+&lt;h2&gt;Signing with ECDSA&lt;/h2&gt;
 &lt;p&gt;The scenario is the following: &lt;strong&gt;Alice wants to sign a message with her private key&lt;/strong&gt; ($d_A$), and &lt;strong&gt;Bob wants to validate the signature using Alice's public key&lt;/strong&gt; ($H_A$). Nobody but Alice should be able to produce valid signatures. Everyone should be able to check signatures.&lt;/p&gt;
 &lt;p&gt;Again, Alice and Bob are using the same domain parameters. The algorithm we are going to see is ECDSA, a variant of the &lt;a href="https://en.wikipedia.org/wiki/Digital_Signature_Algorithm"&gt;Digital Signature Algorithm&lt;/a&gt; applied to elliptic curves.&lt;/p&gt;
 &lt;p&gt;ECDSA works on the hash of the message, rather than on the message itself. The choice of the hash function is up to us, but it should be obvious that a &lt;a href="http://en.wikipedia.org/wiki/Cryptographic_hash_function"&gt;cryptographically-secure hash function&lt;/a&gt; should be chosen. &lt;strong&gt;The hash of the message ought to be truncated&lt;/strong&gt; so that the bit length of the hash is the same as the bit length of $n$ (the order of the subgroup). &lt;strong&gt;The truncated hash is an integer and will be denoted as $z$.&lt;/strong&gt;&lt;/p&gt;
@@ -936,7 +900,7 @@ Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3
 
 &lt;p&gt;In plain words, this algorithm first generates a secret ($k$). This secret is hidden in $r$ thanks to point multiplication (that, as we know, is "easy" one way, and "hard" the other way round). $r$ is then bound to the message hash by the equation $s = k^{-1} (z + rd_A) \bmod{n}$.&lt;/p&gt;
 &lt;p&gt;Note that in order to calculate $s$, we have computed the inverse of $k$ modulo $n$. We have &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#p-must-be-prime"&gt;already said in the previous post&lt;/a&gt; that this is guaranteed to work only if $n$ is a prime number. &lt;strong&gt;If a subgroup has a non-prime order, ECDSA can't be used.&lt;/strong&gt; It's not by chance that almost all standardized curves have a prime order, and those that have a non-prime order are unsuitable for ECDSA.&lt;/p&gt;
-&lt;h4&gt;Verifying signatures&lt;/h4&gt;
+&lt;h3&gt;Verifying signatures&lt;/h3&gt;
 &lt;p&gt;In order to verify the signature we'll need Alice's public key $H_A$, the (truncated) hash $z$ and, obviously, the signature $(r, s)$.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Calculate the integer $u_1 = s^{-1} z \bmod{n}$.&lt;/li&gt;
@@ -944,28 +908,28 @@ Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3
 &lt;li&gt;Calculate the point $P = u_1 G + u_2 H_A$.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;The signature is valid only if $r = x_P \bmod{n}$.&lt;/p&gt;
-&lt;h3&gt;Correctness of the algorithm&lt;/h3&gt;
+&lt;h2&gt;Correctness of the algorithm&lt;/h2&gt;
 &lt;p&gt;The logic behind this algorithm may not seem obvious at a first sight, however if we put together all the equations we have written so far, things will be clearer.&lt;/p&gt;
 &lt;p&gt;Let's start from $P = u_1 G + u_2 H_A$. We know, from the definition of public key, that $H_A = d_A G$ (where $d_A$ is the private key). We can write:
-$$\begin{array}{rl}
+$$\begin{align*}
   P &amp;amp; = u_1 G + u_2 H_A \\
-  &amp;amp; = u_1 G + u_2 d_A G \\
-  &amp;amp; = (u_1 + u_2 d_A) G
-\end{array}$$&lt;/p&gt;
+    &amp;amp; = u_1 G + u_2 d_A G \\
+    &amp;amp; = (u_1 + u_2 d_A) G
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;Using the definitions of $u_1$ and $u_2$, we can write:
-$$\begin{array}{rl}
+$$\begin{align*}
   P &amp;amp; = (u_1 + u_2 d_A) G \\
-  &amp;amp; = (s^{-1} z + s^{-1} r d_A) G \\
-  &amp;amp; = s^{-1} (z + r d_A) G
-\end{array}$$&lt;/p&gt;
+    &amp;amp; = (s^{-1} z + s^{-1} r d_A) G \\
+    &amp;amp; = s^{-1} (z + r d_A) G
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;Here we have omitted "$\text{mod}\ n$" both for brevity, and because the cyclic subgroup generated by $G$ has order $n$, hence "$\text{mod}\ n$" is superfluous.&lt;/p&gt;
 &lt;p&gt;Previously, we defined $s = k^{-1} (z + rd_A) \bmod{n}$. Multiplying each side of the equation by $k$ and dividing by $s$, we get: $k = s^{-1} (z + rd_A) \bmod{n}$. Substituting this result in our equation for $P$, we get:
-$$\begin{array}{rl}
+$$\begin{align*}
   P &amp;amp; = s^{-1} (z + r d_A) G \\
-  &amp;amp; = k G
-\end{array}$$&lt;/p&gt;
+    &amp;amp; = k G
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;This is the same equation for $P$ we had at step 2 of the signature generation algorithm!&lt;/strong&gt; When generating signatures and when verifying them, we are calculating the same point $P$, just with a different set of equations. This is why the algorithm works.&lt;/p&gt;
-&lt;h4&gt;Playing with ECDSA&lt;/h4&gt;
+&lt;h3&gt;Playing with ECDSA&lt;/h3&gt;
 &lt;p&gt;Of course, I've created &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdsa.py"&gt;a Python script&lt;/a&gt; for signature generation and verification&lt;/strong&gt;. The code shares some parts with the ECDH script, in particular the domain parameters and the public/private key pair generation algorithm.&lt;/p&gt;
 &lt;p&gt;Here is the kind of output produced by the script:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve: secp256k1
@@ -984,9 +948,8 @@ Public key: (0xc40572bb38dec72b82b3efb1efc8552588b8774149a32e546fb703021cf3b78a,
 Verification: invalid signature
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;As you can see, the script first signs a message (the byte string "Hello!"), then verifies the signature. Afterwards, it tries to verify the same signature against another message ("Hi there!") and verification fails. Lastly, it tries to verify the signature against the correct message, but using another random public key and verification fails again.&lt;/p&gt;
-&lt;h3 id="ecdsa-k"&gt;The importance of &lt;em&gt;k&lt;/em&gt;&lt;/h3&gt;
+&lt;h2 id="ecdsa-k"&gt;The importance of &lt;em&gt;k&lt;/em&gt;&lt;/h2&gt;
 &lt;p&gt;When generating ECDSA signatures, it is important to keep the secret $k$ really secret. If we used the same $k$ for all signatures, or if our random number generator were somewhat predictable, &lt;strong&gt;an attacker would be able to find out the private key&lt;/strong&gt;!&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://www.bbc.com/news/technology-12116051"&gt;This is the kind of mistake made by Sony a few years ago.&lt;/a&gt; Basically, the PlayStation 3 game console can run only games signed by Sony with ECDSA. This way, if I wanted to create a new game for PlayStation 3, I couldn't distribute it to the public without a signature from Sony. The problem is: all the signatures made by Sony were generated using a static $k$.&lt;/p&gt;
 &lt;p&gt;(Apparently, Sony's random number generator was inspired by either &lt;a href="http://xkcd.com/221/"&gt;XKCD&lt;/a&gt; or &lt;a href="http://dilbert.com/strip/2001-10-25"&gt;Dilbert&lt;/a&gt;.)&lt;/p&gt;
@@ -1000,14 +963,14 @@ Verification: invalid signature
 &lt;p&gt;The last equation lets us calculate $k$ using only two hashes and their corresponding signatures. Now we can extract the private key using the equation for $s$:
 $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}$$&lt;/p&gt;
 &lt;p&gt;Similar techniques may be employed if $k$ is not static but predictable in some way.&lt;/p&gt;
-&lt;h2&gt;Have a great weekend&lt;/h2&gt;
+&lt;h1&gt;Have a great weekend&lt;/h1&gt;
 &lt;p&gt;I really hope you enjoyed what I've written here. As usual, don't hesitate to leave a comment or send me a poke if you need help with something.&lt;/p&gt;
 &lt;p&gt;Next week I'll publish the fourth and last article of this series. It'll be about techniques for solving discrete logarithms, some important problems of Elliptic Curve cryptography, and how ECC compares with RSA. Don't miss it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/"&gt;Read the next post of the series &amp;raquo;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sat, 30 May 2015 19:23:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-05-30:/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/</guid><category>cryptography</category><category>dh</category><category>dsa</category><category>ecc</category><category>ecdh</category><category>ecdhe</category><category>ecdsa</category><category>security</category><category>tls</category></item><item><title>Elliptic Curve Cryptography: finite fields and discrete logarithms</title><link>https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/</link><description>&lt;p&gt;&lt;strong&gt;This post is the second in the series &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;ECC: a gentle introduction&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;In the &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;previous post&lt;/a&gt;, we have seen how elliptic curves over the real numbers can be used to define a group. Specifically, we have defined a rule for &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law"&gt;point addition&lt;/a&gt;: given three aligned points, their sum is zero ($P + Q + R = 0$). We have derived a &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#geometric-addition"&gt;geometric method&lt;/a&gt; and an &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#algebraic-addition"&gt;algebraic method&lt;/a&gt; for computing point additions.&lt;/p&gt;
 &lt;p&gt;We then introduced &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#scalar-multiplication"&gt;scalar multiplication&lt;/a&gt; ($nP = P + P + \cdots + P$) and we found out an "easy" algorithm for computing scalar multiplication: &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add"&gt;double and add&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Now we will restrict our elliptic curves to finite fields&lt;/strong&gt;, rather than the set of real numbers, and see how things change.&lt;/p&gt;
-&lt;h2&gt;The field of integers modulo &lt;em&gt;p&lt;/em&gt;&lt;/h2&gt;
+&lt;h1&gt;The field of integers modulo &lt;em&gt;p&lt;/em&gt;&lt;/h1&gt;
 &lt;p&gt;A finite field is, first of all, a set with a finite number of elements. An example of finite field is the set of integers modulo $p$, where $p$ is a prime number. It is generally denoted as $\mathbb{Z}/p$, $GF(p)$ or $\mathbb{F}_p$. We will use the latter notation.&lt;/p&gt;
 &lt;p&gt;In fields we have two binary operations: addition (+) and multiplication (&amp;middot;). Both are closed, associative and commutative. For both operations, there exist a unique identity element, and for every element there's a unique inverse element. Finally, multiplication is distributive over the addition: $x \cdot (y + z) = x \cdot y + x \cdot z$.&lt;/p&gt;
 &lt;p&gt;The set of &lt;strong&gt;integers modulo $p$ consists of all the integers from 0 to $p - 1$&lt;/strong&gt;. Addition and multiplication work as in &lt;a href="http://en.wikipedia.org/wiki/Modular_arithmetic"&gt;modular arithmetic&lt;/a&gt; (also known as "clock arithmetic"). Here are a few examples of operations in $\mathbb{F}_{23}$:&lt;/p&gt;
@@ -1026,7 +989,7 @@ $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}
 &lt;/ul&gt;
 &lt;p&gt;If these equations don't look familiar to you and you need a primer on modular arithmetic, check out &lt;a href="https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/what-is-modular-arithmetic"&gt;Khan Academy&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;As we already said, the integers modulo $p$ are a field, and therefore all the properties listed above hold. &lt;span id="p-must-be-prime"&gt;Note that the requirement for $p$ to be prime is important!&lt;/span&gt; The set of integers modulo 4 is not a field: 2 has no multiplicative inverse (i.e. the equation $2 \cdot x \bmod{4} = 1$ has no solutions).&lt;/p&gt;
-&lt;h3&gt;Division modulo &lt;em&gt;p&lt;/em&gt;&lt;/h3&gt;
+&lt;h2&gt;Division modulo &lt;em&gt;p&lt;/em&gt;&lt;/h2&gt;
 &lt;p&gt;We will soon define elliptic curves over $\mathbb{F}_p$, but before doing so we need a clear idea of what $x / y$ means in $\mathbb{F}_p$. Simply put: $x / y = x \cdot y^{-1}$, or, in plain words, $x$ over $y$ is equal to $x$ times the multiplicative inverse of $y$. This fact is not surprising, but gives us a basic method to perform division: &lt;strong&gt;find the multiplicative inverse of a number and then perform a single multiplication&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Computing the multiplicative inverse can be "easily" done with the &lt;strong&gt;&lt;a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm"&gt;extended Euclidean algorithm&lt;/a&gt;&lt;/strong&gt;, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.&lt;/p&gt;
 &lt;p&gt;We won't enter the details of the extended Euclidean algorithm, as it is off-topic, however here's a working Python implementation:&lt;/p&gt;
@@ -1072,8 +1035,7 @@ $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;h2&gt;Elliptic curves in $\mathbb{F}_p$&lt;/h2&gt;
+&lt;h1&gt;Elliptic curves in $\mathbb{F}_p$&lt;/h1&gt;
 &lt;p&gt;Now we have all the necessary elements to restrict elliptic curves over $\mathbb{F}_p$. The set of points, that in the &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves"&gt;previous post&lt;/a&gt; was:
 $$\begin{array}{rcl}
   \left\{(x, y) \in \mathbb{R}^2 \right. &amp;amp; \left. | \right. &amp;amp; \left. y^2 = x^3 + ax + b, \right. \\
@@ -1096,7 +1058,7 @@ $$\begin{array}{rcl}
 &lt;/figure&gt;
 
 &lt;p&gt;What previously was a continuous curve is now a set of disjoint points in the $xy$-plane. But we can prove that, even if we have restricted our domain, &lt;strong&gt;elliptic curves in $\mathbb{F}_p$ still form an abelian group&lt;/strong&gt;.&lt;/p&gt;
-&lt;h2&gt;Point addition&lt;/h2&gt;
+&lt;h1&gt;Point addition&lt;/h1&gt;
 &lt;p&gt;Clearly, we need to change a bit our definition of addition in order to make it work in $\mathbb{F}_p$. With reals, we said that the sum of three aligned points was zero ($P + Q + R = 0$). We can keep this definition, but what does it mean for three points to be aligned in $\mathbb{F}_p$?&lt;/p&gt;
 &lt;p&gt;We can say that &lt;strong&gt;three points are aligned if there's a line that connects all of them&lt;/strong&gt;. Now, of course, lines in $\mathbb{F}_p$ are not the same as lines in $\mathbb{R}$. We can say, informally, that a line in $\mathbb{F}_p$ is the set of points $(x, y)$ that satisfy the equation $ax + by + c \equiv 0 \pmod{p}$ (this is the standard line equation, with the addition of "$(\text{mod}\ p)$").&lt;/p&gt;
 &lt;figure&gt;
@@ -1111,13 +1073,13 @@ $$\begin{array}{rcl}
   For example, if a curve in $\mathbb{F}_{29}$ has a point $Q = (2, 5)$, the inverse is $-Q = (2, -5 \bmod{29}) = (2, 24)$.&lt;/li&gt;
 &lt;li&gt;Also, $P + (-P) = 0$ (from the definition of inverse element).&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Algebraic sum&lt;/h2&gt;
+&lt;h1&gt;Algebraic sum&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;The equations for calculating point additions are exactly the same as in the previous post&lt;/strong&gt;, except for the fact that we need to add "$\text{mod}\ p$" at the end of every expression. Therefore, given $P = (x_P, y_P)$, $Q = (x_Q, y_Q)$ and $R = (x_R, y_R)$, we can calculate $P + Q = -R$ as follows:
-$$\begin{array}{rcl}
-  x_R &amp;amp; = &amp;amp; (m^2 - x_P - x_Q) \bmod{p} \\
-  y_R &amp;amp; = &amp;amp; [y_P + m(x_R - x_P)] \bmod{p} \\
-  &amp;amp; = &amp;amp; [y_Q + m(x_R - x_Q)] \bmod{p}
-\end{array}$$&lt;/p&gt;
+$$\begin{align*}
+  x_R &amp;amp; = (m^2 - x_P - x_Q) \bmod{p} \\
+  y_R &amp;amp; = [y_P + m(x_R - x_P)] \bmod{p} \\
+      &amp;amp; = [y_Q + m(x_R - x_Q)] \bmod{p}
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;If $P \ne Q$, the the slope $m$ assumes the form:
 $$m = (y_P - y_Q)(x_P - x_Q)^{-1} \bmod{p}$$&lt;/p&gt;
 &lt;p&gt;Else, if $P = Q$, we have:
@@ -1125,12 +1087,12 @@ $$m = (3 x_P^2 + a)(2 y_P)^{-1} \bmod{p}$$&lt;/p&gt;
 &lt;p&gt;It's not a coincidence that the equations have not changed: in fact, these equations work in every field, finite or infinite (with the exception of $\mathbb{F}_2$ and $\mathbb{F}_3$, which are special cased). Now I feel I have to provide a justification for this fact. The problem is: proofs for the group law generally involve complex mathematical concepts. However, I found out a &lt;a href="http://math.rice.edu/~friedl/papers/AAELLIPTIC.PDF"&gt;proof from Stefan Friedl&lt;/a&gt; that uses only elementary concepts. Read it if you are interested in why these equations work in (almost) every field.&lt;/p&gt;
 &lt;p&gt;Back to us — we won't define a geometric method: in fact, there are a few problems with that. For example, in the previous post, we said that to compute $P + P$ we needed to take the tangent to the curve in $P$. But without continuity, the word "tangent" does not make any sense. We can workaround this and other problems, however a pure geometric method would just be too complicated and not practical at all.&lt;/p&gt;
 &lt;p&gt;Instead, you can play with the &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-add.html"&gt;interactive tool&lt;/a&gt; I've written for computing point additions&lt;/strong&gt;.&lt;/p&gt;
-&lt;h2&gt;The order of an elliptic curve group&lt;/h2&gt;
+&lt;h1&gt;The order of an elliptic curve group&lt;/h1&gt;
 &lt;p&gt;We said that an elliptic curve defined over a finite field has a finite number of points. An important question that we need to answer is: &lt;strong&gt;how many points are there exactly?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Firstly, let's say that the number of points in a group is called the &lt;strong&gt;order of the group&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Trying all the possible values for $x$ from 0 to $p - 1$ is not a feasible way to count the points, as it would require $O(p)$ steps, and this is "hard" if $p$ is a large prime.&lt;/p&gt;
 &lt;p&gt;Luckily, there's a faster algorithm for computing the order: &lt;a href="https://en.wikipedia.org/wiki/Schoof%27s_algorithm"&gt;Schoof's algorithm&lt;/a&gt;. I won't enter the details of the algorithm — what matters is that it runs in polynomial time, and this is what we need.&lt;/p&gt;
-&lt;h2 id="scalar-multiplication"&gt;Scalar multiplication and cyclic subgroups&lt;/h2&gt;
+&lt;h1 id="scalar-multiplication"&gt;Scalar multiplication and cyclic subgroups&lt;/h1&gt;
 &lt;p&gt;As with reals, multiplication can be defined as:
 $$n P = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$&lt;/p&gt;
 &lt;p&gt;And, again, we can use the &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add"&gt;double and add algorithm&lt;/a&gt; to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I've written an &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html"&gt;interactive tool&lt;/a&gt; for scalar multiplication&lt;/strong&gt; too.&lt;/p&gt;
@@ -1168,7 +1130,7 @@ $$nP + mP = \underbrace{P + \cdots + P}_{n\ \text{times}} + \underbrace{P + \cdo
 &lt;p&gt;Which means: &lt;strong&gt;if we add two multiples of $P$, we obtain a multiple of $P$&lt;/strong&gt; (i.e. multiples of $P$ are closed under addition). This is enough to &lt;a href="https://en.wikipedia.org/wiki/Subgroup#Basic_properties_of_subgroups"&gt;prove&lt;/a&gt; that &lt;strong&gt;the set of the multiples of $P$ is a cyclic subgroup&lt;/strong&gt; of the group formed by the elliptic curve.&lt;/p&gt;
 &lt;p&gt;A "subgroup" is a group which is a subset of another group. A "cyclic subgroup" is a subgroup which elements are repeating cyclically, like we have shown in the previous example. &lt;span id="base-point"&gt;The point $P$ is called &lt;strong&gt;generator&lt;/strong&gt; or &lt;strong&gt;base point&lt;/strong&gt; of the cyclic subgroup&lt;/span&gt;.&lt;/p&gt;
 &lt;p&gt;Cyclic subgroups are the foundations of ECC and other cryptosystems. We will see why in the next post.&lt;/p&gt;
-&lt;h3 id="subgroup-order"&gt;Subgroup order&lt;/h3&gt;
+&lt;h2 id="subgroup-order"&gt;Subgroup order&lt;/h2&gt;
 &lt;p&gt;We can ask ourselves &lt;strong&gt;what the order of a subgroup generated by a point $P$ is&lt;/strong&gt; (or, equivalently, what the order of $P$ is). To answer this question we can't use Schoof's algorithm, because that algorithm only works on whole elliptic curves, not on subgroups. Before approaching the problem, we need a few more bits:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;So far, we have the defined the order as the number of points of a group. This definition is still valid, but within a cyclic subgroup we can give a new, equivalent definition: &lt;strong&gt;the order of $P$ is the smallest positive integer $n$ such that $nP = 0$&lt;/strong&gt;.
@@ -1186,7 +1148,7 @@ $$nP + mP = \underbrace{P + \cdots + P}_{n\ \text{times}} + \underbrace{P + \cdo
 &lt;p&gt;For example, the curve $y^2 = x^3 - x + 3$ over the field $\mathbb{F}_{37}$ has order $N = 42$. Its subgroups may have order $n = 1$, $2$, $3$, $6$, $7$, $14$, $21$ or $42$. If &lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html?a=-1&amp;amp;b=3&amp;amp;p=37&amp;amp;px=2&amp;amp;py=3"&gt;we try $P = (2, 3)$&lt;/a&gt; we can see that $P \ne 0$, $2P \ne 0$, ..., $7P = 0$, hence the order of $P$ is $n = 7$.&lt;/p&gt;
 &lt;p&gt;Note that &lt;strong&gt;it's important to take the smallest divisor, not a random one&lt;/strong&gt;. If we proceeded randomly, we could have taken $n = 14$, which is not the order of the subgroup, but one of its multiples.&lt;/p&gt;
 &lt;p&gt;Another example: the elliptic curve defined by the equation $y^2 = x^3 - x + 1$ over the field $\mathbb{F}_{29}$ has order $N = 37$, which is a prime. Its subgroups may only have order $n = 1$ or $37$. As you can easily guess, when $n = 1$, the subgroup contains only the point at infinity; when $n = N$, the subgroup contains all the points of the elliptic curve.&lt;/p&gt;
-&lt;h3&gt;Finding a base point&lt;/h3&gt;
+&lt;h2&gt;Finding a base point&lt;/h2&gt;
 &lt;p&gt;For our ECC algorithms, we want subgroups with a high order. So in general we will choose an elliptic curve, calculate its order ($N$), choose a high divisor as the subgroup order ($n$) and eventually find a suitable base point. That is: we won't choose a base point and then calculate its order, but we'll do the opposite: we will first choose an order that looks good enough and then we will hunt for a suitable base point. How do we do that?&lt;/p&gt;
 &lt;p&gt;&lt;span id="cofactor"&gt;Firstly, we need to introduce one more term. Lagrange's theorem implies that the number &lt;strong&gt;$h = N / n$ is always an integer&lt;/strong&gt; (because $n$ is a divisor of $N$). The number $h$ has a name: it's the &lt;strong&gt;cofactor of the subgroup&lt;/strong&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;Now consider that for every point of an elliptic curve we have $NP = 0$. This happens because $N$ is a multiple of any candidate $n$. Using the definition of cofactor, we can write:
@@ -1202,13 +1164,13 @@ $$n(hP) = 0$$&lt;/p&gt;
 &lt;li&gt;If $G$ is 0, then go back to step 4. Otherwise we have found a generator of a subgroup with order $n$ and cofactor $h$.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Note that this algorithm only works if $n$ is a prime. If $n$ wasn't a prime, then the order of $G$ could be one of the divisors of $n$.&lt;/p&gt;
-&lt;h2 id="discrete-logarithm"&gt;Discrete logarithm&lt;/h2&gt;
+&lt;h1 id="discrete-logarithm"&gt;Discrete logarithm&lt;/h1&gt;
 &lt;p&gt;As we did when working with continuous elliptic curves, we are now going to discuss the question: &lt;strong&gt;if we know $P$ and $Q$, what is $k$ such that $Q = kP$?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;This problem, which is known as the &lt;strong&gt;discrete logarithm problem&lt;/strong&gt; for elliptic curves, is believed to be a "hard" problem, in that there is no known polynomial time algorithm that can run on a classical computer. There are, however, no mathematical proofs for this belief.&lt;/p&gt;
 &lt;p&gt;This problem is also analogous to the discrete logarithm problem used with other cryptosystems such as the Digital Signature Algorithm (DSA), the Diffie-Hellman key exchange (D-H) and the ElGamal algorithm — it's not a coincidence that they have the same name. The difference is that, with those algorithms, we use modulo exponentiation instead of scalar multiplication. Their discrete logarithm problem can be stated as follows: if we know $a$ and $b$, what's $k$ such that $b = a^k \bmod{p}$?&lt;/p&gt;
 &lt;p&gt;Both these problems are "discrete" because they involve finite sets (more precisely, cyclic subgroups). And they are "logarithms" because they are analogous to ordinary logarithms.&lt;/p&gt;
 &lt;p&gt;What makes ECC interesting is that, as of today, the discrete logarithm problem for elliptic curves seems to be "harder" if compared to other similar problems used in cryptography. This implies that we need fewer bits for the integer $k$ in order to achieve the same level of security as with other cryptosystems, as we will see in details in the fourth and last post of this series.&lt;/p&gt;
-&lt;h2&gt;More next week!&lt;/h2&gt;
+&lt;h1&gt;More next week!&lt;/h1&gt;
 &lt;p&gt;Enough for today! I really hope you enjoyed this post. Leave a comment if you didn't.&lt;/p&gt;
 &lt;p&gt;Next week's post will be the third in this series and will be about ECC algorithms: key pair generation, ECDH and ECDSA. That will be one of the most interesting parts of this series. Don't miss it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/"&gt;Read the next post of the series &amp;raquo;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sat, 23 May 2015 14:08:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-05-23:/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/</guid><category>cryptography</category><category>ecc</category><category>math</category><category>security</category></item><item><title>Elliptic Curve Cryptography: a gentle introduction</title><link>https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/</link><description>&lt;p&gt;Those of you who know what public-key cryptography is may have already heard of &lt;strong&gt;ECC&lt;/strong&gt;, &lt;strong&gt;ECDH&lt;/strong&gt; or &lt;strong&gt;ECDSA&lt;/strong&gt;. The first is an acronym for Elliptic Curve Cryptography, the others are names for algorithms based on it.&lt;/p&gt;
@@ -1224,7 +1186,7 @@ $$n(hP) = 0$$&lt;/p&gt;
 &lt;/ol&gt;
 &lt;p&gt;In order to understand what's written here, you'll need to know some basic stuff of set theory, geometry and modular arithmetic, and have familiarity with symmetric and asymmetric cryptography. Lastly, you need to have a clear idea of what an "easy" problem is, what a "hard" problem is, and their roles in cryptography.&lt;/p&gt;
 &lt;p&gt;Ready? Let's start!&lt;/p&gt;
-&lt;h2 id="elliptic-curves"&gt;Elliptic Curves&lt;/h2&gt;
+&lt;h1 id="elliptic-curves"&gt;Elliptic Curves&lt;/h1&gt;
 &lt;p&gt;First of all: what is an elliptic curve? Wolfram MathWorld gives an excellent and complete &lt;a href="http://mathworld.wolfram.com/EllipticCurve.html"&gt;definition&lt;/a&gt;. But for our aims, an elliptic curve will simply be &lt;strong&gt;the set of points described by the equation&lt;/strong&gt;:
 $$y^2 = x^3 + ax + b$$&lt;/p&gt;
 &lt;p&gt;where $4a^3 + 27b^2 \ne 0$ (this is required to exclude &lt;a href="https://en.wikipedia.org/wiki/Singularity_(mathematics)"&gt;singular curves&lt;/a&gt;). The equation above is what is called &lt;em&gt;Weierstrass normal form&lt;/em&gt; for elliptic curves.&lt;/p&gt;
@@ -1242,7 +1204,7 @@ $$y^2 = x^3 + ax + b$$&lt;/p&gt;
 &lt;p&gt;For our aims, &lt;strong&gt;we will also need a &lt;a href="https://en.wikipedia.org/wiki/Point_at_infinity"&gt;point at infinity&lt;/a&gt;&lt;/strong&gt; (also known as ideal point) to be part of our curve. From now on, we will denote our point at infinity with the symbol 0 (zero).&lt;/p&gt;
 &lt;p&gt;If we want to explicitly take into account the point at infinity, we can refine our definition of elliptic curve as follows:
 $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 \right\}\ \cup\ \left\{ 0 \right\}$$&lt;/p&gt;
-&lt;h2&gt;Groups&lt;/h2&gt;
+&lt;h1&gt;Groups&lt;/h1&gt;
 &lt;p&gt;A group in mathematics is a set for which we have defined a binary operation that we call "addition" and indicate with the symbol +. In order for the set $\mathbb{G}$ to be a group, addition must defined so that it respects the following four properties:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;closure:&lt;/strong&gt; if $a$ and $b$ are members of $\mathbb{G}$, then $a + b$ is a member of $\mathbb{G}$;&lt;/li&gt;
@@ -1258,7 +1220,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 &lt;p&gt;then the group is called &lt;em&gt;abelian group&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;With the usual notion of addition, the set of integer numbers $\mathbb{Z}$ is a group (moreover, it's an abelian group). The set of natural numbers $\mathbb{N}$ however is not a group, as the fourth property can't be satisfied.&lt;/p&gt;
 &lt;p&gt;Groups are nice because, if we can demonstrate that those four properties hold, we get some other properties for free. For example: &lt;strong&gt;the identity element is unique&lt;/strong&gt;; also the &lt;strong&gt;inverses are unique&lt;/strong&gt;, that is: for every $a$ there exists only one $b$ such that $a + b = 0$ (and we can write $b$ as $-a$). Either directly or indirectly, these and other facts about groups will be very important for us later.&lt;/p&gt;
-&lt;h2 id="group-law"&gt;The group law for elliptic curves&lt;/h2&gt;
+&lt;h1 id="group-law"&gt;The group law for elliptic curves&lt;/h1&gt;
 &lt;p&gt;We can define a group over elliptic curves. Specifically:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;the elements of the group are the points of an elliptic curve;&lt;/li&gt;
@@ -1273,7 +1235,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 
 &lt;p&gt;Note that with the last rule, we only require three aligned points, and three points are aligned without respect to order. This means that, if $P$, $Q$ and $R$ are aligned, then $P + (Q + R) = Q + (P + R) = R + (P + Q) = \cdots = 0$. This way, we have intuitively proved that &lt;strong&gt;our + operator is both associative and commutative: we are in an abelian group&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;So far, so great. But how do we actually compute the sum of two arbitrary points?&lt;/p&gt;
-&lt;h2 id="geometric-addition"&gt;Geometric addition&lt;/h2&gt;
+&lt;h1 id="geometric-addition"&gt;Geometric addition&lt;/h1&gt;
 &lt;p&gt;Thanks to the fact that we are in an abelian group, we can write $P + Q + R = 0$ as $P + Q = -R$. This equation, in this form, lets us derive a geometric method to compute the sum between two points $P$ and $Q$: &lt;strong&gt;if we draw a line passing through $P$ and $Q$, this line will intersect a third point on the curve, $R$&lt;/strong&gt; (this is implied by the fact that $P$, $Q$ and $R$ are aligned). &lt;strong&gt;If we take the inverse of this point, $-R$, we have found the result of $P + Q$&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;
   &lt;img src="https://andrea.corbellini.name/images/point-addition.png" alt="Point addition" width="287" height="300"&gt;
@@ -1285,70 +1247,72 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 &lt;li&gt;&lt;strong&gt;What if $P = 0$ or $Q = 0$?&lt;/strong&gt; Certainly, we can't draw any line (0 is not on the $xy$-plane). But given that we have defined 0 as the identity element, $P + 0 = P$ and $0 + Q = Q$, for any $P$ and for any $Q$.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;What if $P = -Q$?&lt;/strong&gt; In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;What if $P = Q$?&lt;/strong&gt; In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q' \ne P$. What happens if we make $Q'$ approach $P$, getting closer and closer to it?
-   &lt;figure&gt;
+ &lt;br /&gt;
+&lt;figure&gt;
      &lt;img src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P"&gt;
      &lt;figcaption&gt;As the two points become closer together, the line passing through them becomes tangent to the curve.&lt;/figcaption&gt;
-   &lt;/figure&gt;
-   As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;What if $P \ne Q$, but there is no third point $R$?&lt;/strong&gt; We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
-   &lt;figure&gt;
+   &lt;/figure&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.
+* &lt;strong&gt;What if $P \ne Q$, but there is no third point $R$?&lt;/strong&gt; We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
+ &lt;br /&gt;
+&lt;figure&gt;
      &lt;img src="https://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300"&gt;
      &lt;figcaption&gt;If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.&lt;/figcaption&gt;
-   &lt;/figure&gt;
-   Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.&lt;/li&gt;
-&lt;/ul&gt;
+   &lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.&lt;/p&gt;
 &lt;p&gt;The geometric method is now complete and covers all cases. With a pencil and a ruler we are able to perform addition involving every point of any elliptic curve. If you want to try, &lt;strong&gt;take a look at the &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html"&gt;HTML5/JavaScript visual tool&lt;/a&gt; I've built for computing sums on elliptic curves!&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id="algebraic-addition"&gt;Algebraic addition&lt;/h2&gt;
+&lt;h1 id="algebraic-addition"&gt;Algebraic addition&lt;/h1&gt;
 &lt;p&gt;If we want a computer to perform point addition, we need to turn the geometric method into an algebraic method. Transforming the rules described above into a set of equations may seem straightforward, but actually it can be really tedious because it requires solving cubic equations. For this reason, here I will report only the results.&lt;/p&gt;
 &lt;p&gt;First, let's get get rid of the most annoying corner cases. We already know that $P + (-P) = 0$, and we also know that $P + 0 = 0 + P = P$. So, in our equations, we will avoid these two cases and we will only consider &lt;strong&gt;two non-zero, non-symmetric points $P = (x_P, y_P)$ and $Q = (x_Q, y_Q)$&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;If $P$ and $Q$ are distinct&lt;/strong&gt; ($x_P \ne x_Q$), the line through them has &lt;strong&gt;slope&lt;/strong&gt;:
 $$m = \frac{y_P - y_Q}{x_P - x_Q}$$&lt;/p&gt;
 &lt;p&gt;The &lt;strong&gt;intersection&lt;/strong&gt; of this line with the elliptic curve is a third point $R = (x_R, y_R)$:
-$$\begin{array}{rcl}
-    x_R &amp;amp; = &amp;amp; m^2 - x_P - x_Q \\
-    y_R &amp;amp; = &amp;amp; y_P + m(x_R - x_P)
-\end{array}$$&lt;/p&gt;
+$$\begin{align*}
+    x_R &amp;amp; = m^2 - x_P - x_Q \\
+    y_R &amp;amp; = y_P + m(x_R - x_P)
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;or, equivalently:
 $$y_R = y_Q + m(x_R - x_Q)$$&lt;/p&gt;
 &lt;p&gt;Hence $(x_P, y_P) + (x_Q, y_Q) = (x_R, -y_R)$ (pay attention at the signs and remember that $P + Q = -R$).&lt;/p&gt;
 &lt;p&gt;If we wanted to check whether this result is right, we would have had to check whether $R$ belongs to the curve and whether $P$, $Q$ and $R$ are aligned. Checking whether the points are aligned is trivial, checking that $R$ belongs to the curve is not, as we would need to solve a cubic equation, which is not fun at all.&lt;/p&gt;
 &lt;p&gt;Instead, let's play with an example: according to our &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html"&gt;visual tool&lt;/a&gt;, given $P = (1, 2)$ and $Q = (3, 4)$ over the curve $y^2 = x^3 - 7x + 10$, their sum is $P + Q = -R = (-3, 2)$. Let's see if our equations agree:
-$$\begin{array}{rcl}
-    m &amp;amp; = &amp;amp; \frac{y_P - y_Q}{x_P - x_Q} = \frac{2 - 4}{1 - 3} = 1 \\
-    x_R &amp;amp; = &amp;amp; m^2 - x_P - x_Q = 1^2 - 1 - 3 = -3 \\
-    y_R &amp;amp; = &amp;amp; y_P + m(x_R - x_P) = 2 + 1 \cdot (-3 - 1) = -2 \\
-    &amp;amp; = &amp;amp; y_Q + m(x_R - x_Q) = 4 + 1 \cdot (-3 - 3) = -2
-\end{array}$$&lt;/p&gt;
+$$\begin{align*}
+    m &amp;amp; = \frac{y_P - y_Q}{x_P - x_Q} = \frac{2 - 4}{1 - 3} = 1 \\
+    x_R &amp;amp; = m^2 - x_P - x_Q = 1^2 - 1 - 3 = -3 \\
+    y_R &amp;amp; = y_P + m(x_R - x_P) = 2 + 1 \cdot (-3 - 1) = -2 \\
+        &amp;amp; = y_Q + m(x_R - x_Q) = 4 + 1 \cdot (-3 - 3) = -2
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;Yes, this is correct!&lt;/p&gt;
 &lt;p&gt;Note that these equations work even if &lt;strong&gt;one of $P$ or $Q$ is a tangency point&lt;/strong&gt;. Let's try with $P = (-1, 4)$ and $Q = (1, 2)$.
-$$\begin{array}{rcl}
-    m &amp;amp; = &amp;amp; \frac{y_P - y_Q}{x_P - x_Q} = \frac{4 - 2}{-1 - 1} = -1 \\
-    x_R &amp;amp; = &amp;amp; m^2 - x_P - x_Q = (-1)^2 - (-1) - 1 = 1 \\
-    y_R &amp;amp; = &amp;amp; y_P + m(x_R - x_P) = 4 + -1 \cdot (1 - (-1)) = 2
-\end{array}$$&lt;/p&gt;
+$$\begin{align*}
+    m &amp;amp; = \frac{y_P - y_Q}{x_P - x_Q} = \frac{4 - 2}{-1 - 1} = -1 \\
+    x_R &amp;amp; = m^2 - x_P - x_Q = (-1)^2 - (-1) - 1 = 1 \\
+    y_R &amp;amp; = y_P + m(x_R - x_P) = 4 + -1 \cdot (1 - (-1)) = 2
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;We get the result $P + Q = (1, -2)$, which is the same result given by the &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html?px=-1&amp;amp;py=4&amp;amp;qx=1&amp;amp;qy=2"&gt;visual tool&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;The case $P = Q$ needs to be treated a bit differently&lt;/strong&gt;: the equations for $x_R$ and $y_R$ are the same, but given that $x_P = x_Q$, we must use a different equation for the &lt;strong&gt;slope&lt;/strong&gt;:
 $$m = \frac{3 x_P^2 + a}{2 y_P}$$&lt;/p&gt;
 &lt;p&gt;Note that, as we would expect, this expression for $m$ is the first derivative of:
 $$y_P = \pm \sqrt{x_P^3 + ax_P + b}$$&lt;/p&gt;
 &lt;p&gt;To prove the validity of this result it is enough to check that $R$ belongs to the curve and that the line passing through $P$ and $R$ has only two intersections with the curve. But again, we don't prove this fact, and instead try with an example: $P = Q = (1, 2)$.
-$$\begin{array}{rcl}
-    m &amp;amp; = &amp;amp; \frac{3x_P^2 + a}{2 y_P} = \frac{3 \cdot 1^2 - 7}{2 \cdot 2} = -1 \\
-    x_R &amp;amp; = &amp;amp; m^2 - x_P - x_Q = (-1)^2 - 1 - 1 = -1 \\
-    y_R &amp;amp; = &amp;amp; y_P + m(x_R - x_P) = 2 + (-1) \cdot (-1 - 1) = 4
-\end{array}$$&lt;/p&gt;
+$$\begin{align*}
+    m &amp;amp; = \frac{3x_P^2 + a}{2 y_P} = \frac{3 \cdot 1^2 - 7}{2 \cdot 2} = -1 \\
+    x_R &amp;amp; = m^2 - x_P - x_Q = (-1)^2 - 1 - 1 = -1 \\
+    y_R &amp;amp; = y_P + m(x_R - x_P) = 2 + (-1) \cdot (-1 - 1) = 4
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;Which gives us $P + P = -R = (-1, -4)$. &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html?px=1&amp;amp;py=2&amp;amp;qx=1&amp;amp;qy=2"&gt;Correct&lt;/a&gt;!&lt;/p&gt;
 &lt;p&gt;Although the procedure to derive them can be really tedious, our equations are pretty compact. This is thanks to Weierstrass normal form: without it, these equations could have been really long and complicated!&lt;/p&gt;
-&lt;h2 id="scalar-multiplication"&gt;Scalar multiplication&lt;/h2&gt;
+&lt;h1 id="scalar-multiplication"&gt;Scalar multiplication&lt;/h1&gt;
 &lt;p&gt;Other than addition, we can define another operation: &lt;strong&gt;scalar multiplication&lt;/strong&gt;, that is:
 $$nP = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$&lt;/p&gt;
 &lt;p&gt;where $n$ is a natural number. I've written a &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html"&gt;visual tool&lt;/a&gt; for scalar multiplication&lt;/strong&gt; too, if you want to play with that.&lt;/p&gt;
 &lt;p&gt;Written in that form, it may seem that computing $nP$ requires $n$ additions. If $n$ has $k$ binary digits, then our algorithm would be $O(2^k)$, which is not really good. But there exist faster algorithms.&lt;/p&gt;
 &lt;p&gt;One of them is the &lt;span id="double-and-add"&gt;&lt;strong&gt;double and add&lt;/strong&gt;&lt;/span&gt; algorithm. Its principle of operation can be better explained with an example. Take $n = 151$. Its binary representation is $10010111_2$. This binary representation can be turned into a sum of powers of two:
-$$\begin{array}{rcl}
-    151 &amp;amp; = &amp;amp; 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 0 \cdot 2^3 + 1 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0 \\
-    &amp;amp; = &amp;amp; 2^7 + 2^4 + 2^2 + 2^1 + 2^0
-\end{array}$$&lt;/p&gt;
+$$\begin{align*}
+    151 &amp;amp; = 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 0 \cdot 2^3 + 1 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0 \\
+        &amp;amp; = 2^7 + 2^4 + 2^2 + 2^1 + 2^0
+\end{align*}$$&lt;/p&gt;
 &lt;p&gt;(We have taken each binary digit of $n$ and multiplied it by a power of two.)&lt;/p&gt;
 &lt;p&gt;In view of this, we can write:
 $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
@@ -1394,18 +1358,17 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;If doubling and adding are both $O(1)$ operations, then &lt;strong&gt;this algorithm is $O(\log n)$&lt;/strong&gt; (or $O(k)$ if we consider the bit length), which is pretty good. Surely much better than the initial $O(n)$ algorithm!&lt;/p&gt;
-&lt;h2&gt;Logarithm&lt;/h2&gt;
+&lt;h1&gt;Logarithm&lt;/h1&gt;
 &lt;p&gt;Given $n$ and $P$, we now have at least one polynomial time algorithm for computing $Q = nP$. But what about the other way round? &lt;strong&gt;What if we know $Q$ and $P$ and need to find out $n$&lt;/strong&gt;? This problem is known as the &lt;strong&gt;logarithm problem&lt;/strong&gt;. We call it "logarithm" instead of "division" for conformity with other cryptosystems (where instead of multiplication we have exponentiation).&lt;/p&gt;
 &lt;p&gt;I don't know of any "easy" algorithm for the logarithm problem, however &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html?a=-3&amp;amp;b=1&amp;amp;px=0&amp;amp;py=1"&gt;playing with multiplication&lt;/a&gt; it's easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.&lt;/p&gt;
 &lt;p&gt;But there's a variant of the logarithm problem: the &lt;em&gt;discrete&lt;/em&gt; logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, &lt;strong&gt;scalar multiplication remains "easy", while the discrete logarithm becomes a "hard" problem&lt;/strong&gt;. This duality is the key brick of elliptic curve cryptography.&lt;/p&gt;
-&lt;h2&gt;See you next week&lt;/h2&gt;
+&lt;h1&gt;See you next week&lt;/h1&gt;
 &lt;p&gt;That's all for today, I hope you enjoyed this post! Next week we will discover &lt;strong&gt;finite fields&lt;/strong&gt; and the &lt;strong&gt;&lt;em&gt;discrete&lt;/em&gt; logarithm problem&lt;/strong&gt;, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/"&gt;Read the next post of the series &amp;raquo;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sun, 17 May 2015 11:24:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-05-17:/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/</guid><category>cryptography</category><category>bitcoin</category><category>dh</category><category>dsa</category><category>ecc</category><category>math</category><category>pgp</category><category>rsa</category><category>security</category><category>ssh</category><category>tls</category><category>web</category></item><item><title>Let's Encrypt: the road towards a better web?</title><link>https://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/</link><description>&lt;p&gt;I've always dreamed of a encrypted web, where HTTPS is the standard and plain HTTP is no more. A web where eavesdropping or manipulating information is not possible, or at least much harder than today.&lt;/p&gt;
 &lt;p&gt;I remember that I got excited when I first heard of &lt;strong&gt;&lt;a href="http://www.cacert.org/"&gt;CAcert&lt;/a&gt;: "a community-driven Certificate Authority that issues certificates to the public at large for free"&lt;/strong&gt;. Unfortunately, CAcert's root certificate never made it into the major web browsers and operating systems. Whatever the reasons, the result is that visiting a HTTPS website with a certificate released by CAcert produces nothing but a &lt;a href="https://cacert.org/"&gt;scary warning with a call to leave the site&lt;/a&gt;, making CAcert unsuitable for most.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.startssl.com/"&gt;StarCom&lt;/a&gt;, on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom &lt;a href="https://news.ycombinator.com/item?id=7557764"&gt;has&lt;/a&gt; &lt;a href="https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml"&gt;been&lt;/a&gt; &lt;a href="https://twitter.com/startssl/status/453631038883758080"&gt;heavily&lt;/a&gt; &lt;a href="https://bugzilla.mozilla.org/show_bug.cgi?id=994033"&gt;criticized&lt;/a&gt; for how the Heartbleed vulnerability was handled, and AFAIK this has led many customers away.&lt;/p&gt;
-&lt;h2&gt;Let's Encrypt&lt;/h2&gt;
+&lt;h1&gt;Let's Encrypt&lt;/h1&gt;
 &lt;p&gt;Recently, I learned about &lt;strong&gt;&lt;a href="https://letsencrypt.org/"&gt;Let's Encrypt&lt;/a&gt;: a "free, automated, and open" Certificate Authority&lt;/strong&gt; arriving in mid-2015. There are many important facts that make Let's Encrypt different and better from all the other Certificate Authorities out there. I'll let you discover all of them. Probably, the most important fact is that Let's Encrypt has &lt;strong&gt;&lt;a href="https://letsencrypt.org/sponsors/"&gt;important sponsors&lt;/a&gt;, including Mozilla&lt;/strong&gt;. And this is what matters today, because it gives Let's Encrypt a chance to be included in at least one major browser.&lt;/p&gt;
 &lt;figure&gt;
   &lt;a href="https://letsencrypt.org/"&gt;&lt;img src="https://andrea.corbellini.name/images/letsencrypt-logo-horizontal.png" alt="Let&amp;#039;s Encrypt" width="519" height="124"&gt;&lt;/a&gt;
@@ -1422,45 +1385,39 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;I do not have an answer to these questions, time will tell. However I really hope my dream to become a reality soon. If you, like me, want Let's Encrypt to be a success, then please &lt;strong&gt;share and discuss&lt;/strong&gt; about it. Perhaps, one day, we will find ourselves teaching juniors that HTTPS has not always been the standard... :)&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sun, 12 Apr 2015 16:07:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-04-12:/2015/04/12/lets-encrypt-the-road-towards-a-better-web/</guid><category>information-technology</category><category>security</category><category>tls</category><category>web</category><category>let's encrypt</category></item><item><title>Running Ubuntu Snappy inside Docker</title><link>https://andrea.corbellini.name/2015/03/25/running-ubuntu-snappy-inside-docker/</link><description>&lt;p&gt;Many of you may have already heard of &lt;a href="https://developer.ubuntu.com/en/snappy/"&gt;Ubuntu Core&lt;/a&gt;. For those who haven't, it's a minimal Ubuntu version, running only a few essential services and ships with a new package manager (snappy) that provides &lt;em&gt;transactional&lt;/em&gt; updates. Ubuntu Core provides a lightweight base operating system which is fast to deploy and easy to maintain up to date. It also uses a nice &lt;a href="https://wiki.ubuntu.com/SecurityTeam/Specifications/SnappyConfinement"&gt;security model&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;All these characteristics make it particularly appealing for the cloud. And, in fact, people are starting considering it for building their (micro)services architectures. Some weeks ago, a user on Ask Ubuntu asked: &lt;a href="http://askubuntu.com/questions/566736/can-i-run-snappy-ubuntu-core-as-a-guest-inside-docker/577248"&gt;Can I run Snappy Ubuntu Core as a guest inside Docker?&lt;/a&gt; The problem is that Ubuntu Core does not ship with an official Docker image that we can pull, so we are forced to set it up manually. Here's how.&lt;/p&gt;
-&lt;h2&gt;Creating the Docker image&lt;/h2&gt;
-&lt;h3&gt;Step 1: get the latest Ubuntu Core&lt;/h3&gt;
+&lt;h1&gt;Creating the Docker image&lt;/h1&gt;
+&lt;h2&gt;Step 1: get the latest Ubuntu Core&lt;/h2&gt;
 &lt;p&gt;As of writing, the latest Ubuntu Core image is alpha 3 and can be downloaded with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;(If you browse to &lt;a href="http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/"&gt;cdimage.ubuntu.com&lt;/a&gt;, you can also find the signed hashsums.)&lt;/p&gt;
 &lt;p&gt;The downloaded image is XZ-compressed and we need to extract it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;h3&gt;Step 2: connect the image using qemu-nbd&lt;/h3&gt;
+&lt;h2&gt;Step 2: connect the image using qemu-nbd&lt;/h2&gt;
 &lt;p&gt;The file we have just downloaded and extracted is a filesystem dump. The previous version of the image (Alpha 2) was a QCOW2 image (the format used by QEMU). In order to access its contents, we have a few options. Here I'll show one that works with both filesystem dumps and QCOW2 images. The trick consists in using &lt;code&gt;qemu-nbd&lt;/code&gt; (a tool from the &lt;a href="https://apps.ubuntu.com/cat/applications/qemu-utils/"&gt;qemu-utils&lt;/a&gt; package):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This command will create a virtual device named &lt;code&gt;/dev/nbd0&lt;/code&gt;, with virtual partitions named &lt;code&gt;/dev/nbd0p1&lt;/code&gt;, &lt;code&gt;/dev/nbd0p2&lt;/code&gt;, ... Use &lt;code&gt;fdisk -l /dev/nbd0&lt;/code&gt; to get an idea of what partitions are inside the QCOW2 image.&lt;/p&gt;
-&lt;h3&gt;Step 3: mount the filesystem&lt;/h3&gt;
+&lt;h2&gt;Step 3: mount the filesystem&lt;/h2&gt;
 &lt;p&gt;The partition we are interested in is &lt;code&gt;/dev/nbd0p3&lt;/code&gt;, so we need to mount it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mkdir nbd0p3
 &lt;span class="gp"&gt;#&lt;/span&gt; mount -r /dev/nbd0p3 nbd0p3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;h3&gt;Step 4: create a base Docker image&lt;/h3&gt;
+&lt;h2&gt;Step 4: create a base Docker image&lt;/h2&gt;
 &lt;p&gt;As suggested on the &lt;a href="https://docs.docker.com/articles/baseimages/"&gt;Docker documentation&lt;/a&gt;, creating a base Docker image from a directory is pretty straightforward:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; tar -C nbd0p3 -c . &lt;span class="p"&gt;|&lt;/span&gt; docker import - ubuntu-core alpha-3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Our newly created image will now appear when running &lt;code&gt;docker images&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
 &lt;span class="go"&gt;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&lt;/span&gt;
 &lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        5 seconds ago       543.5 MB&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Let's verify if we did a good job:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run ubuntu-core:alpha-3 snappy
@@ -1469,9 +1426,8 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;span class="go"&gt;             ...&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Yes! We have successfully added Ubuntu Core to the available Docker images and we have run our first snappy container!&lt;/p&gt;
-&lt;h2&gt;Installing and running software&lt;/h2&gt;
+&lt;h1&gt;Installing and running software&lt;/h1&gt;
 &lt;p&gt;Without wasting too many words, here's how to install and run the &lt;code&gt;xkcd-webserver&lt;/code&gt; snappy package inside docker:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run -p &lt;span class="m"&gt;8000&lt;/span&gt;:80 ubuntu-core:alpha-3 /bin/sh -c &lt;span class="s1"&gt;&amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;WARN: AppArmor not available when processing AppArmor hook&lt;/span&gt;
@@ -1485,10 +1441,9 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;span class="go"&gt;xkcd-webserver  edge  0.3.1      -          3a9152b8bff494  *&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Now, if you visit http://localhost:8000/ you should see a random XKCD comic.&lt;/p&gt;
 &lt;p&gt;If you have payed attention, you may have noticed a few warnings about AppArmor, DBus and logind. The reason why you are seeing these warnings is pretty simple: we did not start neither AppArmor nor DBus nor logind. Now, generally speaking, we could run init inside Docker and fix these and other warnings. However that's not what Docker is meant for. So if you want to run AppArmor or similar stuff &lt;em&gt;from inside&lt;/em&gt; Docker or LXC, then probably you should consider virtualization.&lt;/p&gt;
-&lt;h2&gt;Dockerfile&lt;/h2&gt;
+&lt;h1&gt;Dockerfile&lt;/h1&gt;
 &lt;p&gt;Once you have created the base Docker image, you can start creating some &lt;code&gt;Dockerfile&lt;/code&gt;s, if you need to. Here's an example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="s"&gt;ubuntu-core:alpha-3&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; snappy install xkcd-webserver
@@ -1496,11 +1451,9 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;span class="k"&gt;CMD&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /apps/xkcd-webserver/0.3.1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./bin/xkcd-webserver
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This &lt;code&gt;Dockerfile&lt;/code&gt; does the same job as the previous command: it installs and runs &lt;code&gt;xkcd-webserver&lt;/code&gt; on port 8000. In order to use it, first build it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker build -t xkcd-webserver .
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Check that it has been correctly installed:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
@@ -1509,14 +1462,12 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        About an hour ago   543.5 MB&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Then run it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run xkcd-webserver
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Again, you should see a random XKCD comic on &lt;a href="http://localhost:8000/"&gt;http://localhost:8000/&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;That's all folks! I hope you enjoyed this tiny guide, and if you need help, please ask a question on Ask Ubuntu with the &lt;a href="http://askubuntu.com/questions/tagged/ubuntu-core"&gt;ubuntu-core tag&lt;/a&gt;, which I'm subscribed to.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Wed, 25 Mar 2015 20:46:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-03-25:/2015/03/25/running-ubuntu-snappy-inside-docker/</guid><category>cloud</category><category>docker</category><category>snappy</category><category>ubuntu</category><category>ubuntu core</category><category>xkcd</category></item><item><title>Are LXC and Docker secure?</title><link>https://andrea.corbellini.name/2015/02/20/are-lxc-and-docker-secure/</link><description>&lt;p&gt;Since its initial release in 2008, LXC has become widespread among servers. Today, it is becoming the preferred deployment strategy in many contexts, also thanks to Docker and, more recently, LXD.&lt;/p&gt;
 &lt;p&gt;LXC and Docker are used not only to achieve modular architecture design, but also as a way to run untrusted code in an isolated environment.&lt;/p&gt;
 &lt;p&gt;We can agree that the LXC and Docker ecosystems are great and work well, but there's an important question that I believe everyone should ask, but too few people are asking: &lt;strong&gt;are LXC and Docker secure?&lt;/strong&gt;&lt;/p&gt;
@@ -1526,7 +1477,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In order to answer this question, I won't go deep into the details of what LXC and Docker are. The web is full of information on &lt;a href="http://en.wikipedia.org/wiki/Cgroups#NAMESPACE-ISOLATION"&gt;namespaces&lt;/a&gt; and &lt;a href="http://en.wikipedia.org/wiki/Cgroups"&gt;cgroups&lt;/a&gt;. Rather, I'd like to show what LXC and Docker can do, what they cannot do, and what their default configuration allows them to do. My hope is to provide a quick checklist for those who want to go with LXC/Docker, but are unsure on what they need to pay attention to.&lt;/p&gt;
-&lt;h2&gt;What LXC and Docker can do&lt;/h2&gt;
+&lt;h1&gt;What LXC and Docker can do&lt;/h1&gt;
 &lt;p&gt;As we all know, LXC confines processes mainly thanks to two Linux kernel features: namespaces and cgroups. These provide ways to control and limit access to resource such as memory or filesystem. So, for example, you can limit the bandwidth used by processes inside a container, you can limit the priority of the CPU scheduler, and so on.&lt;/p&gt;
 &lt;p&gt;As it is well known, processes inside a LXC guest cannot:&lt;/p&gt;
 &lt;ul&gt;
@@ -1539,12 +1490,12 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;And at the same time, processes inside an LXC guest can find an environment that is perfectly suitable to run a working operating system: I can run init, I can read from &lt;code&gt;/proc&lt;/code&gt;, I can access the internet.&lt;/p&gt;
 &lt;p&gt;This is most of what LXC can do, and it's also what you get by default. Docker (when used with the LXC backend) is a wrapper around LXC that provides utilities for easy deployment and management of the containers, so &lt;strong&gt;everything that applies to LXC, applies to Docker too&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;If this sounds great, then beware that there are the things you should know...&lt;/p&gt;
-&lt;h2&gt;You need a security context&lt;/h2&gt;
+&lt;h1&gt;You need a security context&lt;/h1&gt;
 &lt;p&gt;LXC is somewhat incomplete. What I mean is that some parts of special filesystems like procfs or sysfs are not faked. For example, as of now, I can successfully change the value of host's &lt;code&gt;/proc/sys/kernel/panic&lt;/code&gt; or &lt;code&gt;/sys/class/thermal/cooling_device0/cur_state&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The reason why LXC is "incomplete" doesn't really matter (it's actually the kernel to be incomplete, but anyhow...). What matters is that certain nasty actions can be forbade, not by LXC itself, but by an AppArmor/SELinux profile that blocks read and write access certain &lt;code&gt;/proc&lt;/code&gt; and &lt;code&gt;/sys&lt;/code&gt; components. The AppArmor rules were shipped in Ubuntu since 12.10 (Quantal), and have been included upstream since early 2014, together with the SELinux rules.&lt;/p&gt;
 &lt;p&gt;Therefore, &lt;strong&gt;a security context like AppArmor or SELinux is required to run LXC safely&lt;/strong&gt;. Without it, the root user inside a guest can take control of the host.&lt;/p&gt;
 &lt;p&gt;Check that AppArmor or SELinux are running and are configured properly. If you want to go with Grsecurity, then remember to configure it manually.&lt;/p&gt;
-&lt;h2&gt;Limit resource consumption&lt;/h2&gt;
+&lt;h1&gt;Limit resource consumption&lt;/h1&gt;
 &lt;p&gt;LXC offers ways to limit resource usage, but no special restrictions are put in place by default. &lt;strong&gt;You have to configure them by yourself.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;With the default configuration, I can run fork-bombs, request huge memory maps, keep all CPUs busy, doing high loads of I/O. All of this without special privileges. Remember this when running untrusted code.&lt;/p&gt;
 &lt;figure&gt;
@@ -1555,22 +1506,22 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;For example, if you want to limit the container memory usage to 512 MiB, set &lt;code&gt;lxc.cgroup.memory.limit_in_bytes = 512M&lt;/code&gt;. Note that the container with that option, once it exceeds the 512 MiB cap, will start using the swap without limits. If this is not what you want, then set &lt;code&gt;lxc.cgroup.memory.memsw.max_usage_in_bytes = 512M&lt;/code&gt;. Note that to use both options you may need to add &lt;code&gt;cgroup_enable=memory&lt;/code&gt; and &lt;code&gt;swapaccount=1&lt;/code&gt; to the kernel command line.&lt;/p&gt;
 &lt;p&gt;To have an overview of all possible options, check out &lt;a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/ch-Subsystems_and_Tunable_Parameters.html"&gt;Red Hat's documentation&lt;/a&gt; or the &lt;a href="https://www.kernel.org/doc/Documentation/cgroups/"&gt;Kernel documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;With Docker, the story is similar: just use &lt;code&gt;--lxc-conf&lt;/code&gt; from the command line to set LXC's options.&lt;/p&gt;
-&lt;h2&gt;Limit disk usage&lt;/h2&gt;
+&lt;h1&gt;Limit disk usage&lt;/h1&gt;
 &lt;p&gt;Something that LXC cannot do is limiting mass storage usage. Luckily, &lt;strong&gt;&lt;a href="https://www.stgraber.org/2013/12/27/lxc-1-0-container-storage/"&gt;LXC integrates nicely with LVM&lt;/a&gt;&lt;/strong&gt; (and brtfs, and zfs, and overlayfs), and you can use that for easily limiting disk usage. You can, for example, create a logical volume for each of your guests, and give that volume a limited size, so that space usage inside a guest cannot grow indefinitely.&lt;/p&gt;
 &lt;p&gt;The same &lt;a href="http://developerblog.redhat.com/2014/09/30/overview-storage-scalability-docker/"&gt;holds for Docker&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;Pay attention at &lt;code&gt;/dev/random&lt;/code&gt;&lt;/h2&gt;
+&lt;h1&gt;Pay attention at &lt;code&gt;/dev/random&lt;/code&gt;&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;Processes inside LXC guests&lt;/strong&gt;, by default, can read from &lt;code&gt;/dev/random&lt;/code&gt; and &lt;strong&gt;can consume the entropy of the host&lt;/strong&gt;. This may cause troubles if you need big amounts of randomness (to generate keys or whatever).&lt;/p&gt;
 &lt;p&gt;If this is something that you don't want, then configure LXC so that it &lt;a href="https://wiki.archlinux.org/index.php/Linux_Containers#Cgroups_device_configuration"&gt;denies access to the character devices&lt;/a&gt; &lt;code&gt;1:8&lt;/code&gt; (random) and &lt;code&gt;1:9&lt;/code&gt; (urandom). Denying access to the path &lt;code&gt;/dev/random&lt;/code&gt; is not enough, as &lt;code&gt;mknod&lt;/code&gt; is allowed inside guests.&lt;/p&gt;
 &lt;p&gt;Note however that doing so may break many applications inside the LXC guest that need randomness. Maybe consider using a different machine for processes that require randomness for security purposes.&lt;/p&gt;
-&lt;h2&gt;Use unprivileged containers&lt;/h2&gt;
+&lt;h1&gt;Use unprivileged containers&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;Containers can be &lt;a href="https://www.stgraber.org/2014/01/17/lxc-1-0-unprivileged-containers/"&gt;run from an unprivileged user&lt;/a&gt;&lt;/strong&gt;. This means UID 0 of the guest can't match UID 0 of the host, and many potential security holes can't simply be exploited. Unfortunately, &lt;a href="https://github.com/docker/docker/issues/2918"&gt;Docker has not support for unprivileged containers&lt;/a&gt; yet.&lt;/p&gt;
 &lt;p&gt;However, if Docker is not a requirement and you can do well with LXC, start experimenting with unprivileged containers and consider using them in production.&lt;/p&gt;
 &lt;p&gt;Programs like Apache will complain that it's unable to change its ulimit (because setting the ulimit is a privilege of the real root user). If you need to run programs that require special privileges, either configure them so that they do not complain, or consider using &lt;a href="http://linux.die.net/man/7/capabilities"&gt;capabilities&lt;/a&gt; (but do not abuse them, and be cautious, or you risk introducing more problems than the ones your are trying to solve!)&lt;/p&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;LXC, Docker and the entire ecosystem around them can be considered quite mature and stable. They're surely production ready, and, if the right configuration is put in place, it can be pretty difficult to cause troubles to the host.&lt;/p&gt;
 &lt;p&gt;However, whether they can be considered secure or not is up to you: &lt;strong&gt;what are you using containers for? Who are you giving access to? What privileges are you giving, what actions are you restricting?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Always remember what LXC and Docker do by default, and what they do not do, especially when you use them to run untrusted code. Those that I have listed may only be a few of the problems that LXC, Docker and friends may expose. Remember to carefully review your configuration before opening the doors to others.&lt;/p&gt;
-&lt;h2&gt;Further reading&lt;/h2&gt;
+&lt;h1&gt;Further reading&lt;/h1&gt;
 &lt;p&gt;If you liked this article, you'll find these ones interesting too:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://blog.docker.com/2013/08/containers-docker-how-secure-are-they/"&gt;Containers &amp;amp; Docker: how secure are they?&lt;/a&gt;, from the Docker blog.&lt;/li&gt;
@@ -1585,14 +1536,12 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;That number corresponds to the ASCII encoding of this message:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;help!! i&amp;#39;m trapped in a universe factory!!!!!!
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Apparently, universe factory workers speak English and write ASCII. Nice coincidence, huh?&lt;/p&gt;
-&lt;h2&gt;The discovery&lt;/h2&gt;
+&lt;h1&gt;The discovery&lt;/h1&gt;
 &lt;p&gt;Yesterday I was playing with the two &lt;a href="https://en.wikipedia.org/wiki/Illegal_prime"&gt;illegal primes&lt;/a&gt; listed on Wikipedia. I was already aware of them, but I had never decoded them till yesterday. While doing so I wondered: how many prime numbers can be directly mapped to an executable file? Also, how many prime numbers can be directly mapped to plain English texts? Perhaps, while digging prime numbers, could we find something like the Iliad or a fully working operating system?&lt;/p&gt;
 &lt;p&gt;Well, while asking myself those highly philosophical questions, Randall's comic quickly came to my mind, and I decided to start looking for help requests hidden in primes. You can't imagine how many of them I found!&lt;/p&gt;
 &lt;p&gt;At first I tried looking for all prime numbers corresponding to strings starting with &lt;code&gt;HELP! I'M TRAPPED IN A UNIVERSE FACTORY!&lt;/code&gt;, with an arbitrary suffix. I found many of them, but I wasn't satisfied with the result: I wanted something that was purely English/ASCII, without any garbage. Therefore I tried appending hashtags like &lt;code&gt;#help&lt;/code&gt; or &lt;code&gt;#universe&lt;/code&gt;, but could not find any interesting combination that was also a prime number (apparently, use of Twitter is forbidden inside universe factories).&lt;/p&gt;
@@ -1618,7 +1567,6 @@ help!!!!!!!!!!!!!!!!!!!!!!!!!! i&amp;#39;m trapped in a universe factory!!!!!!!!
 help!!!!!!!!!!!!!!!!!!!!!!!!!!! i&amp;#39;m trapped in a universe factory!!!!!!!
 ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;I picked the one I liked most and verified its primality with &lt;a href="http://www.wolframalpha.com/input/?i=is+245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249+prime%3F"&gt;Wolfram|Alpha&lt;/a&gt; and &lt;a href="http://www.numberempire.com/primenumbers.php"&gt;numberempire.com&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I'm not 100% sure that all the others are primes, as I used &lt;a href="https://en.wikipedia.org/wiki/Fermat_primality_test"&gt;Fermat primality test&lt;/a&gt;. However I'm impressed by what I found. Now I can't stop wondering how much literature, physics or technology could be hidden in prime numbers, in plain English and UTF-8 encoded. :D&lt;/p&gt;

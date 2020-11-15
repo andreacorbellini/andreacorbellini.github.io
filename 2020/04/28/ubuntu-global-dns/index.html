@@ -20,7 +20,7 @@
     };
   </script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
       <meta name="tags" content="ubuntu">
@@ -74,11 +74,9 @@ DNS=1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
 #ReadEtcHosts=yes
 </code></pre></div>
 
-
 <p>Once you are done with the changes, reload systemd-resolved:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl restart systemd-resolved.service
 </code></pre></div>
-
 
 <p>You can check your changes with <code>resolvectl status</code>: you should see your DNS servers on top of the output, under the <em>Global</em> section:</p>
 <div class="highlight"><pre><span></span><code>$ resolvectl status
@@ -96,7 +94,6 @@ MulticastDNS setting: no
 ...
 </code></pre></div>
 
-
 <p>This however won't be enough to use that DNS! In fact, the <em>Global</em> DNS of systemd-resolved is just a default option that is used whenever no DNS servers are configured for an interface. When you connect to a WiFi network, NetworkManager will ask the access point for a list of DNS servers and will communicate that list to systemd-resolved, effectively overriding the settings that we just edited. If you scroll down the output of <code>resolvectl status</code>, you will see the DNS servers added by NetworkManager. We have to tell NetworkManager to stop doing that.</p>
 <h1>Step 2: Disable DNS processing in NetworkManager</h1>
 <p>In order for systemd-resolved to consider our global DNS, we need to tell NetworkManager not to provide any DNS information for new connections. Doing that is easy: just create a new file <code>/etc/NetworkManager/conf.d/dns.conf</code> (or any name you like) with this content:</p>
@@ -107,11 +104,9 @@ dns=none
 systemd-resolved=false
 </code></pre></div>
 
-
 <p>To apply the settings either run restart your computer or run:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl reload NetworkManager.service
 </code></pre></div>
-
 
 <p>Now, when you connect to a new network connection, NetworkManager won't push the list of DNS servers to systemd-resolved and only the global ones will be used. If you check <code>resolvectl status</code>, you should see that, for every interface, there is <em>no</em> DNS server specified. If you specified <code>1.1.1.1</code> as your DNS servers, then you can also head over to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify that they've been correctly set up.</p>
 <h1>DNSSEC and DNS-over-TLS</h1>
@@ -134,17 +129,14 @@ DNSOverTLS=opportunistic
 #ReadEtcHosts=yes
 </code></pre></div>
 
-
 <p>Note that I'm using <code>DNSOverTLS=opportunistic</code> because I found that some access points with captive portals don't work properly when using <code>DNSOverTLS=true</code>. Also note that <code>DNSSEC=true</code> may cause some pain because there are still many misconfigured domain records out there that will make make DNSSEC validation fail.</p>
 <p>Like before, to apply the changes, run:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl restart systemd-resolved.service
 </code></pre></div>
 
-
 <p>And to verify the changes:</p>
 <div class="highlight"><pre><span></span><code>resolvectl status
 </code></pre></div>
-
 
 <p>If you're using <code>1.1.1.1</code>, you can also go to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify DNS-over-TLS.</p>
 <h1>Random MAC address</h1>
@@ -171,11 +163,9 @@ ethernet.cloned-mac-address=random
 wifi.cloned-mac-address=random
 </code></pre></div>
 
-
 <p>To apply the settings either run restart your computer or run:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl reload NetworkManager.service
 </code></pre></div>
-
 
 <p>You can test your changes with:</p>
 <div class="highlight"><pre><span></span><code>ip link

@@ -20,7 +20,7 @@
     };
   </script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
       <meta name="tags" content="bitcoin">
@@ -74,7 +74,7 @@
 </ol>
 <p>In order to understand what's written here, you'll need to know some basic stuff of set theory, geometry and modular arithmetic, and have familiarity with symmetric and asymmetric cryptography. Lastly, you need to have a clear idea of what an "easy" problem is, what a "hard" problem is, and their roles in cryptography.</p>
 <p>Ready? Let's start!</p>
-<h2 id="elliptic-curves">Elliptic Curves</h2>
+<h1 id="elliptic-curves">Elliptic Curves</h1>
 <p>First of all: what is an elliptic curve? Wolfram MathWorld gives an excellent and complete <a href="http://mathworld.wolfram.com/EllipticCurve.html">definition</a>. But for our aims, an elliptic curve will simply be <strong>the set of points described by the equation</strong>:
 $$y^2 = x^3 + ax + b$$</p>
 <p>where $4a^3 + 27b^2 \ne 0$ (this is required to exclude <a href="https://en.wikipedia.org/wiki/Singularity_(mathematics)">singular curves</a>). The equation above is what is called <em>Weierstrass normal form</em> for elliptic curves.</p>
@@ -92,7 +92,7 @@ $$y^2 = x^3 + ax + b$$</p>
 <p>For our aims, <strong>we will also need a <a href="https://en.wikipedia.org/wiki/Point_at_infinity">point at infinity</a></strong> (also known as ideal point) to be part of our curve. From now on, we will denote our point at infinity with the symbol 0 (zero).</p>
 <p>If we want to explicitly take into account the point at infinity, we can refine our definition of elliptic curve as follows:
 $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 \right\}\ \cup\ \left\{ 0 \right\}$$</p>
-<h2>Groups</h2>
+<h1>Groups</h1>
 <p>A group in mathematics is a set for which we have defined a binary operation that we call "addition" and indicate with the symbol +. In order for the set $\mathbb{G}$ to be a group, addition must defined so that it respects the following four properties:</p>
 <ol>
 <li><strong>closure:</strong> if $a$ and $b$ are members of $\mathbb{G}$, then $a + b$ is a member of $\mathbb{G}$;</li>
@@ -108,7 +108,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <p>then the group is called <em>abelian group</em>.</p>
 <p>With the usual notion of addition, the set of integer numbers $\mathbb{Z}$ is a group (moreover, it's an abelian group). The set of natural numbers $\mathbb{N}$ however is not a group, as the fourth property can't be satisfied.</p>
 <p>Groups are nice because, if we can demonstrate that those four properties hold, we get some other properties for free. For example: <strong>the identity element is unique</strong>; also the <strong>inverses are unique</strong>, that is: for every $a$ there exists only one $b$ such that $a + b = 0$ (and we can write $b$ as $-a$). Either directly or indirectly, these and other facts about groups will be very important for us later.</p>
-<h2 id="group-law">The group law for elliptic curves</h2>
+<h1 id="group-law">The group law for elliptic curves</h1>
 <p>We can define a group over elliptic curves. Specifically:</p>
 <ul>
 <li>the elements of the group are the points of an elliptic curve;</li>
@@ -123,7 +123,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 
 <p>Note that with the last rule, we only require three aligned points, and three points are aligned without respect to order. This means that, if $P$, $Q$ and $R$ are aligned, then $P + (Q + R) = Q + (P + R) = R + (P + Q) = \cdots = 0$. This way, we have intuitively proved that <strong>our + operator is both associative and commutative: we are in an abelian group</strong>.</p>
 <p>So far, so great. But how do we actually compute the sum of two arbitrary points?</p>
-<h2 id="geometric-addition">Geometric addition</h2>
+<h1 id="geometric-addition">Geometric addition</h1>
 <p>Thanks to the fact that we are in an abelian group, we can write $P + Q + R = 0$ as $P + Q = -R$. This equation, in this form, lets us derive a geometric method to compute the sum between two points $P$ and $Q$: <strong>if we draw a line passing through $P$ and $Q$, this line will intersect a third point on the curve, $R$</strong> (this is implied by the fact that $P$, $Q$ and $R$ are aligned). <strong>If we take the inverse of this point, $-R$, we have found the result of $P + Q$</strong>.</p>
 <figure>
   <img src="https://andrea.corbellini.name/images/point-addition.png" alt="Point addition" width="287" height="300">
@@ -135,70 +135,72 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <li><strong>What if $P = 0$ or $Q = 0$?</strong> Certainly, we can't draw any line (0 is not on the $xy$-plane). But given that we have defined 0 as the identity element, $P + 0 = P$ and $0 + Q = Q$, for any $P$ and for any $Q$.</li>
 <li><strong>What if $P = -Q$?</strong> In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.</li>
 <li><strong>What if $P = Q$?</strong> In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q' \ne P$. What happens if we make $Q'$ approach $P$, getting closer and closer to it?
-   <figure>
+ <br />
+<figure>
      <img src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P">
      <figcaption>As the two points become closer together, the line passing through them becomes tangent to the curve.</figcaption>
-   </figure>
-   As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.</li>
-<li><strong>What if $P \ne Q$, but there is no third point $R$?</strong> We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
-   <figure>
+   </figure></li>
+</ul>
+<p>As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.
+* <strong>What if $P \ne Q$, but there is no third point $R$?</strong> We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
+ <br />
+<figure>
      <img src="https://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300">
      <figcaption>If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.</figcaption>
-   </figure>
-   Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.</li>
-</ul>
+   </figure></p>
+<p>Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.</p>
 <p>The geometric method is now complete and covers all cases. With a pencil and a ruler we are able to perform addition involving every point of any elliptic curve. If you want to try, <strong>take a look at the <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html">HTML5/JavaScript visual tool</a> I've built for computing sums on elliptic curves!</strong></p>
-<h2 id="algebraic-addition">Algebraic addition</h2>
+<h1 id="algebraic-addition">Algebraic addition</h1>
 <p>If we want a computer to perform point addition, we need to turn the geometric method into an algebraic method. Transforming the rules described above into a set of equations may seem straightforward, but actually it can be really tedious because it requires solving cubic equations. For this reason, here I will report only the results.</p>
 <p>First, let's get get rid of the most annoying corner cases. We already know that $P + (-P) = 0$, and we also know that $P + 0 = 0 + P = P$. So, in our equations, we will avoid these two cases and we will only consider <strong>two non-zero, non-symmetric points $P = (x_P, y_P)$ and $Q = (x_Q, y_Q)$</strong>.</p>
 <p><strong>If $P$ and $Q$ are distinct</strong> ($x_P \ne x_Q$), the line through them has <strong>slope</strong>:
 $$m = \frac{y_P - y_Q}{x_P - x_Q}$$</p>
 <p>The <strong>intersection</strong> of this line with the elliptic curve is a third point $R = (x_R, y_R)$:
-$$\begin{array}{rcl}
-    x_R &amp; = &amp; m^2 - x_P - x_Q \\
-    y_R &amp; = &amp; y_P + m(x_R - x_P)
-\end{array}$$</p>
+$$\begin{align*}
+    x_R &amp; = m^2 - x_P - x_Q \\
+    y_R &amp; = y_P + m(x_R - x_P)
+\end{align*}$$</p>
 <p>or, equivalently:
 $$y_R = y_Q + m(x_R - x_Q)$$</p>
 <p>Hence $(x_P, y_P) + (x_Q, y_Q) = (x_R, -y_R)$ (pay attention at the signs and remember that $P + Q = -R$).</p>
 <p>If we wanted to check whether this result is right, we would have had to check whether $R$ belongs to the curve and whether $P$, $Q$ and $R$ are aligned. Checking whether the points are aligned is trivial, checking that $R$ belongs to the curve is not, as we would need to solve a cubic equation, which is not fun at all.</p>
 <p>Instead, let's play with an example: according to our <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html">visual tool</a>, given $P = (1, 2)$ and $Q = (3, 4)$ over the curve $y^2 = x^3 - 7x + 10$, their sum is $P + Q = -R = (-3, 2)$. Let's see if our equations agree:
-$$\begin{array}{rcl}
-    m &amp; = &amp; \frac{y_P - y_Q}{x_P - x_Q} = \frac{2 - 4}{1 - 3} = 1 \\
-    x_R &amp; = &amp; m^2 - x_P - x_Q = 1^2 - 1 - 3 = -3 \\
-    y_R &amp; = &amp; y_P + m(x_R - x_P) = 2 + 1 \cdot (-3 - 1) = -2 \\
-    &amp; = &amp; y_Q + m(x_R - x_Q) = 4 + 1 \cdot (-3 - 3) = -2
-\end{array}$$</p>
+$$\begin{align*}
+    m &amp; = \frac{y_P - y_Q}{x_P - x_Q} = \frac{2 - 4}{1 - 3} = 1 \\
+    x_R &amp; = m^2 - x_P - x_Q = 1^2 - 1 - 3 = -3 \\
+    y_R &amp; = y_P + m(x_R - x_P) = 2 + 1 \cdot (-3 - 1) = -2 \\
+        &amp; = y_Q + m(x_R - x_Q) = 4 + 1 \cdot (-3 - 3) = -2
+\end{align*}$$</p>
 <p>Yes, this is correct!</p>
 <p>Note that these equations work even if <strong>one of $P$ or $Q$ is a tangency point</strong>. Let's try with $P = (-1, 4)$ and $Q = (1, 2)$.
-$$\begin{array}{rcl}
-    m &amp; = &amp; \frac{y_P - y_Q}{x_P - x_Q} = \frac{4 - 2}{-1 - 1} = -1 \\
-    x_R &amp; = &amp; m^2 - x_P - x_Q = (-1)^2 - (-1) - 1 = 1 \\
-    y_R &amp; = &amp; y_P + m(x_R - x_P) = 4 + -1 \cdot (1 - (-1)) = 2
-\end{array}$$</p>
+$$\begin{align*}
+    m &amp; = \frac{y_P - y_Q}{x_P - x_Q} = \frac{4 - 2}{-1 - 1} = -1 \\
+    x_R &amp; = m^2 - x_P - x_Q = (-1)^2 - (-1) - 1 = 1 \\
+    y_R &amp; = y_P + m(x_R - x_P) = 4 + -1 \cdot (1 - (-1)) = 2
+\end{align*}$$</p>
 <p>We get the result $P + Q = (1, -2)$, which is the same result given by the <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html?px=-1&amp;py=4&amp;qx=1&amp;qy=2">visual tool</a>.</p>
 <p><strong>The case $P = Q$ needs to be treated a bit differently</strong>: the equations for $x_R$ and $y_R$ are the same, but given that $x_P = x_Q$, we must use a different equation for the <strong>slope</strong>:
 $$m = \frac{3 x_P^2 + a}{2 y_P}$$</p>
 <p>Note that, as we would expect, this expression for $m$ is the first derivative of:
 $$y_P = \pm \sqrt{x_P^3 + ax_P + b}$$</p>
 <p>To prove the validity of this result it is enough to check that $R$ belongs to the curve and that the line passing through $P$ and $R$ has only two intersections with the curve. But again, we don't prove this fact, and instead try with an example: $P = Q = (1, 2)$.
-$$\begin{array}{rcl}
-    m &amp; = &amp; \frac{3x_P^2 + a}{2 y_P} = \frac{3 \cdot 1^2 - 7}{2 \cdot 2} = -1 \\
-    x_R &amp; = &amp; m^2 - x_P - x_Q = (-1)^2 - 1 - 1 = -1 \\
-    y_R &amp; = &amp; y_P + m(x_R - x_P) = 2 + (-1) \cdot (-1 - 1) = 4
-\end{array}$$</p>
+$$\begin{align*}
+    m &amp; = \frac{3x_P^2 + a}{2 y_P} = \frac{3 \cdot 1^2 - 7}{2 \cdot 2} = -1 \\
+    x_R &amp; = m^2 - x_P - x_Q = (-1)^2 - 1 - 1 = -1 \\
+    y_R &amp; = y_P + m(x_R - x_P) = 2 + (-1) \cdot (-1 - 1) = 4
+\end{align*}$$</p>
 <p>Which gives us $P + P = -R = (-1, -4)$. <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html?px=1&amp;py=2&amp;qx=1&amp;qy=2">Correct</a>!</p>
 <p>Although the procedure to derive them can be really tedious, our equations are pretty compact. This is thanks to Weierstrass normal form: without it, these equations could have been really long and complicated!</p>
-<h2 id="scalar-multiplication">Scalar multiplication</h2>
+<h1 id="scalar-multiplication">Scalar multiplication</h1>
 <p>Other than addition, we can define another operation: <strong>scalar multiplication</strong>, that is:
 $$nP = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
 <p>where $n$ is a natural number. I've written a <strong><a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html">visual tool</a> for scalar multiplication</strong> too, if you want to play with that.</p>
 <p>Written in that form, it may seem that computing $nP$ requires $n$ additions. If $n$ has $k$ binary digits, then our algorithm would be $O(2^k)$, which is not really good. But there exist faster algorithms.</p>
 <p>One of them is the <span id="double-and-add"><strong>double and add</strong></span> algorithm. Its principle of operation can be better explained with an example. Take $n = 151$. Its binary representation is $10010111_2$. This binary representation can be turned into a sum of powers of two:
-$$\begin{array}{rcl}
-    151 &amp; = &amp; 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 0 \cdot 2^3 + 1 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0 \\
-    &amp; = &amp; 2^7 + 2^4 + 2^2 + 2^1 + 2^0
-\end{array}$$</p>
+$$\begin{align*}
+    151 &amp; = 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 0 \cdot 2^3 + 1 \cdot 2^2 + 1 \cdot 2^1 + 1 \cdot 2^0 \\
+        &amp; = 2^7 + 2^4 + 2^2 + 2^1 + 2^0
+\end{align*}$$</p>
 <p>(We have taken each binary digit of $n$ and multiplied it by a power of two.)</p>
 <p>In view of this, we can write:
 $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
@@ -244,13 +246,12 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 
-
 <p>If doubling and adding are both $O(1)$ operations, then <strong>this algorithm is $O(\log n)$</strong> (or $O(k)$ if we consider the bit length), which is pretty good. Surely much better than the initial $O(n)$ algorithm!</p>
-<h2>Logarithm</h2>
+<h1>Logarithm</h1>
 <p>Given $n$ and $P$, we now have at least one polynomial time algorithm for computing $Q = nP$. But what about the other way round? <strong>What if we know $Q$ and $P$ and need to find out $n$</strong>? This problem is known as the <strong>logarithm problem</strong>. We call it "logarithm" instead of "division" for conformity with other cryptosystems (where instead of multiplication we have exponentiation).</p>
 <p>I don't know of any "easy" algorithm for the logarithm problem, however <a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html?a=-3&amp;b=1&amp;px=0&amp;py=1">playing with multiplication</a> it's easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.</p>
 <p>But there's a variant of the logarithm problem: the <em>discrete</em> logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, <strong>scalar multiplication remains "easy", while the discrete logarithm becomes a "hard" problem</strong>. This duality is the key brick of elliptic curve cryptography.</p>
-<h2>See you next week</h2>
+<h1>See you next week</h1>
 <p>That's all for today, I hope you enjoyed this post! Next week we will discover <strong>finite fields</strong> and the <strong><em>discrete</em> logarithm problem</strong>, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!</p>
 <p><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series &raquo;</a></strong></p></div>
     </article>
