@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Tue, 28 Apr 2020 06:30:00 +0000</lastBuildDate><item><title>How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)</title><link>https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/</link><description>&lt;h1&gt;Problem&lt;/h1&gt;
+<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Tue, 28 Apr 2020 06:30:00 +0000</lastBuildDate><item><title>How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)</title><link>https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/</link><description>&lt;h1 id="problem"&gt;Problem&lt;/h1&gt;
 &lt;p&gt;Currently Ubuntu does not offer an easy way to set up a "global" DNS for all network connections: whenever you connect to a new WiFi network, if you don't want to use the DNS server provided by the WiFi, you are forced to go to the network settings and manually set your preferred DNS server.&lt;/p&gt;
 &lt;p&gt;With this brief guide I want to show how you can setup a global DNS to be used for &lt;em&gt;all&lt;/em&gt; the WiFi and network connections, both old and new ones. I will also show you how to use DNSSEC, DNS-over-TLS and randomized MAC addresses for all connections.&lt;/p&gt;
 &lt;p&gt;This guide is written for Ubuntu 20.04, but in general it will work on every distribution using systemd-resolved and NetworkManager.&lt;/p&gt;
-&lt;h1&gt;Step 1: setup the Global DNS in resolved&lt;/h1&gt;
+&lt;h1 id="step-1-setup-the-global-dns-in-resolved"&gt;Step 1: setup the Global DNS in resolved&lt;/h1&gt;
 &lt;p&gt;In Ubuntu (as well as many other distributions), DNS is managed by systemd-resolved. Its configuration is in &lt;code&gt;/etc/systemd/resolved.conf&lt;/code&gt;. Open that file and add a &lt;code&gt;DNS=&lt;/code&gt; line inside the &lt;code&gt;[Resolve]&lt;/code&gt; section listing your preferred DNS servers. For example, if you want to use &lt;a href="https://1.1.1.1/"&gt;&lt;code&gt;1.1.1.1&lt;/code&gt;&lt;/a&gt;, your &lt;code&gt;resolved.conf&lt;/code&gt; should look like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[Resolve]
 DNS=1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
@@ -37,7 +37,7 @@ MulticastDNS setting: no
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This however won't be enough to use that DNS! In fact, the &lt;em&gt;Global&lt;/em&gt; DNS of systemd-resolved is just a default option that is used whenever no DNS servers are configured for an interface. When you connect to a WiFi network, NetworkManager will ask the access point for a list of DNS servers and will communicate that list to systemd-resolved, effectively overriding the settings that we just edited. If you scroll down the output of &lt;code&gt;resolvectl status&lt;/code&gt;, you will see the DNS servers added by NetworkManager. We have to tell NetworkManager to stop doing that.&lt;/p&gt;
-&lt;h1&gt;Step 2: Disable DNS processing in NetworkManager&lt;/h1&gt;
+&lt;h1 id="step-2-disable-dns-processing-in-networkmanager"&gt;Step 2: Disable DNS processing in NetworkManager&lt;/h1&gt;
 &lt;p&gt;In order for systemd-resolved to consider our global DNS, we need to tell NetworkManager not to provide any DNS information for new connections. Doing that is easy: just create a new file &lt;code&gt;/etc/NetworkManager/conf.d/dns.conf&lt;/code&gt; (or any name you like) with this content:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;[main]
 # do not use the dhcp-provided dns servers, but rather use the global
@@ -51,7 +51,7 @@ systemd-resolved=false
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now, when you connect to a new network connection, NetworkManager won't push the list of DNS servers to systemd-resolved and only the global ones will be used. If you check &lt;code&gt;resolvectl status&lt;/code&gt;, you should see that, for every interface, there is &lt;em&gt;no&lt;/em&gt; DNS server specified. If you specified &lt;code&gt;1.1.1.1&lt;/code&gt; as your DNS servers, then you can also head over to &lt;a href="https://1.1.1.1/help"&gt;https://1.1.1.1/help&lt;/a&gt; to verify that they've been correctly set up.&lt;/p&gt;
-&lt;h1&gt;DNSSEC and DNS-over-TLS&lt;/h1&gt;
+&lt;h1 id="dnssec-and-dns-over-tls"&gt;DNSSEC and DNS-over-TLS&lt;/h1&gt;
 &lt;p&gt;If you would like to enable DNSSEC and/or DNS-over-TLS, the file to edit is &lt;code&gt;/etc/systemd/resolved.conf&lt;/code&gt;. You can add the following options:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;DNSSEC=true&lt;/code&gt; if you want all queries to be DNSSEC-validated. The default is &lt;code&gt;DNSSEC=allow-downgrade&lt;/code&gt;, which attempts to use DNSSEC if it works properly, and falls back to disabling validation otherwise.&lt;/li&gt;
@@ -81,7 +81,7 @@ DNSOverTLS=opportunistic
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If you're using &lt;code&gt;1.1.1.1&lt;/code&gt;, you can also go to &lt;a href="https://1.1.1.1/help"&gt;https://1.1.1.1/help&lt;/a&gt; to verify DNS-over-TLS.&lt;/p&gt;
-&lt;h1&gt;Random MAC address&lt;/h1&gt;
+&lt;h1 id="random-mac-address"&gt;Random MAC address&lt;/h1&gt;
 &lt;p&gt;NetworkManager supports 3 options to have a random MAC address (also known as "cloned" or "spoofed" MAC address):&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;wifi.scan-rand-mac-address&lt;/code&gt; controls the MAC address used when scanning for WiFi devices. This goes into the &lt;code&gt;[device]&lt;/code&gt; section&lt;/li&gt;
@@ -553,7 +553,7 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;span class="go"&gt;          \____\______/&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id="conclusion"&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;We created a Swarm cluster consisting of one manager and 10 agents, and we kept memory and disk usage low thanks to LXC containers. We also succeeded in confining our Docker containers with AppArmor. Overall, this setup is probably not ideal for use in a production environment, but very useful for simulating clusters on your laptop.&lt;/p&gt;
 &lt;p&gt;I hope you enjoyed the tutorial. Feel free to leave a comment if you have questions!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Wed, 13 Apr 2016 18:00:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2016-04-13:/2016/04/13/docker-swarm-inside-lxc/</guid><category>information-technology</category><category>docker</category><category>swarm</category><category>lxc</category><category>containers</category><category>distributed-computing</category></item><item><title>When bureaucracy hits the web: the cookie law</title><link>https://andrea.corbellini.name/2015/09/22/cookie-law/</link><description>&lt;p&gt;For a few years now, every first of April I hoped to read between the news something on the lines of "the cookie law was a joke, sorry for that". You know, bureaucracy is slow, and it's reasonable to think that it takes time for them to reveal jokes. Yet, many firsts of April have passed, and no such announcement has been made. Many missed opportunities for Europe to show their love for progress and their competence with the web.&lt;/p&gt;
 &lt;p&gt;Being compliant with the EU cookie law is hard to do. It's not just a matter of showing a boring banner, it's a matter of defacing your web pages, writing long privacy policies that nobody will read, implementing ways to prevent certain cookies from being set.&lt;/p&gt;
@@ -567,17 +567,17 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;p&gt;End of rant, let's move on.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Tue, 22 Sep 2015 18:35:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-09-22:/2015/09/22/cookie-law/</guid><category>misc</category><category>blog</category><category>cookie-law</category></item><item><title>Hello Pelican!</title><link>https://andrea.corbellini.name/2015/08/02/hello-pelican/</link><description>&lt;p&gt;Today I switched from WordPress.com to &lt;a href="http://getpelican.com/"&gt;Pelican&lt;/a&gt; and &lt;a href="https://pages.github.com/"&gt;GitHub Pages&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;First off, let me say: almost all URLs that were previously working should still work. Only the feed URLs are broken, and this is not something I can fix. If you were following my blog via a feed reader, you should update to the new feed. Sorry for the inconvenience.&lt;/p&gt;
 &lt;p&gt;Having said that, I'd like to share with you the motivation that made me move and the details of the migration.&lt;/p&gt;
-&lt;h1&gt;The bad things of WordPress&lt;/h1&gt;
+&lt;h1 id="the-bad-things-of-wordpress"&gt;The bad things of WordPress&lt;/h1&gt;
 &lt;p&gt;Now, this doesn't want to be a rant, so I'll be pretty concise. WordPress, the content management system, is an excellent platform for blogging. Easy to start with, easy to maintain, easy to use. WordPress.com makes things even easier. It also comes with many useful features, like comments and social networks integration.&lt;/p&gt;
 &lt;p&gt;The problem is: you can't customize things or add features without paying. Of course, this is business, and I do not want to discuss business decisions made at WordPress.com. Not only that, but I could live fine with most of the major limitations. Also, I was perfectly conscious of this kind of problems with WordPress.com when I started (after all, this is not &lt;a href="https://andrea.corbellini.name/2015/02/15/new-blog-again/"&gt;the first blog I started&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;I actually become upset of WordPress.com when writing the series of blog posts about &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;Elliptic Curve Cryptography&lt;/a&gt;. When writing these articles, I spent a lot of time employing workarounds to overcome WordPress.com limitations. Being used to Vim and its advanced features, I also found the editors (both the old and the new one) as a great obstacle for getting things done quickly. I do not want to enter the details of the problems I'm referring to, what matters is that, eventually, I gave up and I realized it was time to move on and seek for an alternative.&lt;/p&gt;
-&lt;h1&gt;Why Pelican&lt;/h1&gt;
+&lt;h1 id="why-pelican"&gt;Why Pelican&lt;/h1&gt;
 &lt;p&gt;Pelican is a static site generator. I've always thought that a static site had too many limitations for me. But while seeking an alternative to WordPress.com, I realized that many of those limitations were not affecting me in any way. Actually, with a static site I can do everything I want: edit my articles with Vim, render my equations with MathJax, customize my theme, version control my content, write scripts to post process my content.&lt;/p&gt;
 &lt;p&gt;The only bad thing about Pelican is that it does not come with any theme I truly like. I decided to make my own. I'm not entirely satisfied with it, as I feel it is too "anonymous", but I believe it is fully responsive, fast, readable and offers all the features I want. Perhaps I'll tweak it a little more to make it more "personal".&lt;/p&gt;
 &lt;p&gt;Setting up Pelican and migrating everything required some time, but at least this time I worked on true solutions, not on ugly hacks and workarounds like I did with WordPress. This implies that when writing articles I will be able to focus more on content than other details.&lt;/p&gt;
-&lt;h1&gt;Why not other static site generators&lt;/h1&gt;
+&lt;h1 id="why-not-other-static-site-generators"&gt;Why not other static site generators&lt;/h1&gt;
 &lt;p&gt;In short: Pelican is written in Python and to my eyes it looked better than the other Python static site generators. I'll be honest and say that I did not truly evaluate all of the alternatives: I knew &lt;a href="..."&gt;list.org&lt;/a&gt; switched to Pelican and that made me try Pelican before all other solutions.&lt;/p&gt;
-&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id="conclusion"&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;In the end I decided to leave WordPress for Pelican hosted on GitHub Pages. I'm pretty satisfied with the result I got. The nature of GitHub Pages prevents me from using HTTP redirects (and therefore the old feed links are broken), however in exchange I've got much more freedom, and this is what matters to me.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sun, 02 Aug 2015 18:55:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-08-02:/2015/08/02/hello-pelican/</guid><category>misc</category><category>blog</category><category>pelican</category><category>wordpress</category></item><item><title>Let's Encrypt is going to start soon</title><link>https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/</link><description>&lt;p&gt;&lt;a href="https://letsencrypt.org/"&gt;Let's Encrypt&lt;/a&gt; (the free, automated and open certificate authority) has just &lt;a href="https://letsencrypt.org/2015/06/16/lets-encrypt-launch-schedule.html"&gt;announced its launch schedule&lt;/a&gt;. According to it, certificates will be released to the public starting from the &lt;strong&gt;week of September 14, 2015&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Their intermediate certificates, which &lt;a href="https://letsencrypt.org/2015/06/04/isrg-ca-certs.html"&gt;were generated a few days ago&lt;/a&gt;, will be signed by &lt;a href="https://www.identrustssl.com/"&gt;IdenTrust&lt;/a&gt;. What this means is that if you browse a web page secured by Let's Encrypt, you won't get any scary message, but the usual green lock.&lt;/p&gt;
 &lt;figure&gt;
@@ -596,10 +596,10 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;p&gt;Perhaps I'll also show a "Proudly secured by Let's Encrypt" badge.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Tue, 16 Jun 2015 18:20:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-06-16:/2015/06/16/lets-encrypt-is-going-to-start-soon/</guid><category>cryptography</category><category>ecdsa</category><category>let's encrypt</category><category>rsa</category><category>security</category><category>tls</category></item><item><title>Elliptic Curve Cryptography: breaking security and a comparison with RSA</title><link>https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/</link><description>&lt;p&gt;&lt;strong&gt;This post is the fourth and last in the series &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;ECC: a gentle introduction&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;In the &lt;a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/"&gt;last post&lt;/a&gt; we have seen two algorithms, ECDH and ECDSA, and we have seen how the discrete logarithm problem for elliptic curves plays an important role for their security. But, if you remember, we said that &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm"&gt;we have no mathematical proofs&lt;/a&gt; for the complexity of the discrete logarithm problem: we believe it to be "hard", but we can't be sure. In the first part of this post, we'll try to get an idea of how "hard" it is in practice with today's techniques.&lt;/p&gt;
 &lt;p&gt;Then, in the second part, we will try to answer the question: why do we need elliptic curve cryptography if RSA (and the other cryptosystems based on modular arithmetic) work well?&lt;/p&gt;
-&lt;h1&gt;Breaking the discrete logarithm problem&lt;/h1&gt;
+&lt;h1 id="breaking-the-discrete-logarithm-problem"&gt;Breaking the discrete logarithm problem&lt;/h1&gt;
 &lt;p&gt;We will now see the two most efficient algorithms for computing discrete logarithms on elliptic curve: the baby-step, giant-step algorithm, and Pollard's rho method.&lt;/p&gt;
 &lt;p&gt;Before starting, as a reminder, here is what the discrete logarithm problem is about: &lt;strong&gt;given two points $P$ and $Q$ find out the integer $x$ that satisfies the equation $Q = xP$&lt;/strong&gt;. The points belong to a subgroup of an elliptic curve, which has a base point $G$ and which order is $n$.&lt;/p&gt;
-&lt;h2&gt;Baby-step, giant-step&lt;/h2&gt;
+&lt;h2 id="baby-step-giant-step"&gt;Baby-step, giant-step&lt;/h2&gt;
 &lt;p&gt;Before entering the details of the algorithm, a quick consideration: we can always write any integer $x$ as &lt;strong&gt;$x = am + b$&lt;/strong&gt;, where $a$, $m$ and $b$ are three arbitrary integers. For example, we can write $10 = 2 \cdot 3 + 4$.&lt;/p&gt;
 &lt;p&gt;With this in mind, we can rewrite the equation for the discrete logarithm problem as follows:
 $$\begin{align*}
@@ -636,11 +636,11 @@ $$\begin{align*}
 &lt;/ul&gt;
 &lt;p&gt;In conclusion, &lt;strong&gt;we are checking all points from $0P$ to $nP$&lt;/strong&gt; (that is, all the possible points) &lt;strong&gt;performing at most $2m$ additions and multiplications&lt;/strong&gt; (exactly $m$ for the baby steps, at most $m$ for the giant steps).&lt;/p&gt;
 &lt;p&gt;If you consider that a lookup on a hash table takes $O(1)$ time, it's easy to see that this algorithm has both &lt;strong&gt;time and space complexity $O(\sqrt{n})$&lt;/strong&gt; (or &lt;strong&gt;$O(2^{k / 2})$&lt;/strong&gt; if you consider the bit length). It's still exponential time, but much better than a brute-force attack.&lt;/p&gt;
-&lt;h3&gt;Baby-step giant-step in practice&lt;/h3&gt;
+&lt;h3 id="baby-step-giant-step-in-practice"&gt;Baby-step giant-step in practice&lt;/h3&gt;
 &lt;p&gt;It may make sense to see what the complexity $O(\sqrt{n})$ means in practice. Let's take a standardized curve: &lt;code&gt;prime192v1&lt;/code&gt; (aka &lt;code&gt;secp192r1&lt;/code&gt;, &lt;code&gt;ansiX9p192r1&lt;/code&gt;). This curve has order $n$ = 0xffffffff ffffffff ffffffff 99def836 146bc9b1 b4d22831. The square root of $n$ is approximately 7.922816251426434 &amp;middot; 10&lt;sup&gt;28&lt;/sup&gt; (almost &lt;strong&gt;eighty octillions&lt;/strong&gt;).&lt;/p&gt;
 &lt;p&gt;Now imagine storing $\sqrt{n}$ points in a hash table. Suppose that each point requires exactly 32 bytes: &lt;strong&gt;our hash table would need approximately 2.5 &amp;middot; 10&lt;sup&gt;30&lt;/sup&gt; bytes of memory&lt;/strong&gt;. &lt;a href="http://www.csc.com/big_data/flxwd/83638-big_data_just_beginning_to_explode_interactive_infographic"&gt;Looking on the web&lt;/a&gt;, it seems that the total world storage capacity is in the order of the zettabyte (10&lt;sup&gt;21&lt;/sup&gt; bytes). This is almost &lt;strong&gt;ten orders of magnitude&lt;/strong&gt; lower than the memory required by our hash table! Even if our points took 1 byte each, we would be still very far from being able to store all of them.&lt;/p&gt;
 &lt;p&gt;This is impressive, and is even more impressive if you consider that &lt;code&gt;prime192v1&lt;/code&gt; is one of the curves with the lowest order. The order of &lt;code&gt;secp521r1&lt;/code&gt; (another standard curve from NIST) is approximately 6.9 &amp;middot; 10&lt;sup&gt;156&lt;/sup&gt;!&lt;/p&gt;
-&lt;h3&gt;Playing with baby-step giant-step&lt;/h3&gt;
+&lt;h3 id="playing-with-baby-step-giant-step"&gt;Playing with baby-step giant-step&lt;/h3&gt;
 &lt;p&gt;I made &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py"&gt;a Python script&lt;/a&gt; that computes discrete logarithms using the baby-step giant-step algorithm. Obviously it only works with curves with small orders: don't try it with &lt;code&gt;secp521r1&lt;/code&gt;, unless you want to receive a &lt;code&gt;MemoryError&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;It should produce an output like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve: y^2 = (x^3 + 1x - 1) mod 10177
@@ -652,7 +652,7 @@ log(p, q) = 325
 Took 105 steps
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2&gt;Pollard's &amp;rho;&lt;/h2&gt;
+&lt;h2 id="pollards"&gt;Pollard's &amp;rho;&lt;/h2&gt;
 &lt;p&gt;Pollard's rho is another algorithm for computing discrete logarithms. It has the same asymptotic time complexity $O(\sqrt{n})$ of the baby-step giant-step algorithm, but its space complexity is just $O(1)$. If baby-step giant-step can't solve discrete logarithms because of the huge memory requirements, will Pollard's rho make it? Let's see...&lt;/p&gt;
 &lt;p&gt;First of all, another reminder of the discrete logarithm problem: given $P$ and $Q$ find $x$ such that $Q = xP$. With Pollard's rho, we will solve a sightly different problem: given $P$ and $Q$, &lt;strong&gt;find the integers $a$, $b$, $A$ and $B$ such that $aP + bQ = AP + BQ$&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Once the four integers are found, we can use the equation $Q = xP$ to find out $x$:
@@ -679,7 +679,7 @@ $$(a_{i + 1}, b_{i + 1}) = f(X_i)$$&lt;/p&gt;
 
 &lt;p&gt;The reason why we must see the cycle is simple: the number of points is finite, hence they must repeat sooner or later. Once we see where the cycle is, we can use the equations above to figure out the discrete logarithm.&lt;/p&gt;
 &lt;p&gt;The problem now is: how do we detect the cycle in an efficient way?&lt;/p&gt;
-&lt;h3&gt;Tortoise and Hare&lt;/h3&gt;
+&lt;h3 id="tortoise-and-hare"&gt;Tortoise and Hare&lt;/h3&gt;
 &lt;p&gt;To detect cycles, we have an efficient method: the &lt;strong&gt;tortoise and hare algorithm&lt;/strong&gt; (also known as Floyd's cycle-finding algorithm). The picture below shows the principle of operation of the tortoise and hare method, which is at the core of Pollard's rho.&lt;/p&gt;
 &lt;figure&gt;
   &lt;img src="https://andrea.corbellini.name/images/tortoise-hare.gif" alt="Tortoise and Hare" width="650" height="101"&gt;
@@ -689,10 +689,10 @@ $$(a_{i + 1}, b_{i + 1}) = f(X_i)$$&lt;/p&gt;
 &lt;p&gt;We take two pets, the tortoise and the hare, and make them walk our sequence of points from left to right. &lt;strong&gt;The tortoise&lt;/strong&gt; (the green spot in the picture) is slow and &lt;strong&gt;reads each point one by one&lt;/strong&gt;; &lt;strong&gt;the hare&lt;/strong&gt; (represented in red) is fast and &lt;strong&gt;skips a point at every step&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;After some time both the tortoise and the hare will have found the same point, but with different coefficient pairs. Or, to express that with equations, the tortoise will have found a pair $(a, b)$ and the hare will have found a pair $(A, B)$ such that $aP + bQ = AP + BQ$.&lt;/p&gt;
 &lt;p&gt;It's easy to see that this algorithm requires constant memory (&lt;strong&gt;$O(1)$ space complexity&lt;/strong&gt;). Calculating the asymptotic time complexity is not that easy, but we can build a probabilistic proof that shows how &lt;strong&gt;the time complexity is $O(\sqrt{n})$&lt;/strong&gt;, as we have already said. The proof is based on the "&lt;a href="https://en.wikipedia.org/wiki/Birthday_problem"&gt;birthday paradox&lt;/a&gt;", which is about the probability of two people having the same birthday, where here we are concerned about the probability of two $(a, b)$ pairs yielding the same point.&lt;/p&gt;
-&lt;h3&gt;Playing with Pollard's &amp;rho;&lt;/h3&gt;
+&lt;h3 id="playing-with-pollards"&gt;Playing with Pollard's &amp;rho;&lt;/h3&gt;
 &lt;p&gt;I've built &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/pollardsrho.py"&gt;a Python script&lt;/a&gt; that computes discrete logarithms using Pollard's rho. It is not the implementation of the original Pollard's rho, but a slight variation of it (I've used a more efficient method for generating the pseudo-random sequence of pairs). The script contains some useful comments, so read it if you are interested in the details of the algorithm.&lt;/p&gt;
 &lt;p&gt;This script, like the baby-step giant-step one, works on a tiny curve, and produces the same kind of output.&lt;/p&gt;
-&lt;h3&gt;Pollard's &amp;rho; in practice&lt;/h3&gt;
+&lt;h3 id="pollards-in-practice"&gt;Pollard's &amp;rho; in practice&lt;/h3&gt;
 &lt;p&gt;We said that baby-step giant-step can't be used in practice, because of the huge memory requirements. Pollard's rho, on the other hand, requires very few memory. So, how practical is it?&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Certicom launched a &lt;a href="https://www.certicom.com/index.php/the-certicom-ecc-challenge"&gt;challenge&lt;/a&gt; in 1998&lt;/strong&gt; to compute discrete logarithms on elliptic curves with bit lengths ranging from 109 to 359. As of today, &lt;strong&gt;only 109-bit long curves&lt;/strong&gt; have been successfully broken. The latest successful attempt was made in 2004. Quoting &lt;a href="http://en.wikipedia.org/wiki/Discrete_logarithm_records"&gt;Wikipedia&lt;/a&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -701,7 +701,7 @@ $$(a_{i + 1}, b_{i + 1}) = f(X_i)$$&lt;/p&gt;
 &lt;p&gt;As we have already said, &lt;code&gt;prime192v1&lt;/code&gt; is one of the "smallest" elliptic curves. We also said that Pollard's rho has $O(\sqrt{n})$ time complexity. If we used the same technique as Chris Monico (the same algorithm, on the same hardware, with the same number of machines), how much would it take to compute a logarithm on &lt;code&gt;prime192v1&lt;/code&gt;?
 $$17\ \text{months}\ \times \frac{\sqrt{2^{192}}}{\sqrt{2^{109}}} \approx 5 \cdot 10^{13}\ \text{months}$$&lt;/p&gt;
 &lt;p&gt;This number is pretty self-explanatory and gives a clear idea of how hard it can be to break a discrete logarithm using such techniques.&lt;/p&gt;
-&lt;h2&gt;Pollard's &amp;rho; vs Baby-step giant-step&lt;/h2&gt;
+&lt;h2 id="pollards-vs-baby-step-giant-step"&gt;Pollard's &amp;rho; vs Baby-step giant-step&lt;/h2&gt;
 &lt;p&gt;I decided to put the &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/babygiantstep.py"&gt;baby-step giant-step script&lt;/a&gt; and the &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/pollardsrho.py"&gt;Pollard's rho script&lt;/a&gt; together with a &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/bruteforce.py"&gt;brute-force script&lt;/a&gt; into a &lt;a href="https://github.com/andreacorbellini/ecc/blob/master/logs/comparelogs.py"&gt;fourth script&lt;/a&gt; to compare their performances.&lt;/p&gt;
 &lt;p&gt;This fourth script computes all the logarithms for all the points on the "tiny" curve using different algorithms and reports how much time it did take:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve order: 10331
@@ -718,13 +718,13 @@ Took 0m 21s (138 steps on average)
 
 &lt;p&gt;As we could expect, the brute-force method is tremendously slow if compared to the others two. Baby-step giant-step is the faster, while Pollard's rho is more than three times slower than baby-step giant-step (although it uses far less memory and fewer number of steps on average).&lt;/p&gt;
 &lt;p&gt;Also look at the number of steps: brute force used 5193 steps on average for computing each logarithm. 5193 is very near to 10331 / 2 (half the curve order). Baby-step giant-steps and Pollard's rho used 152 steps and 138 steps respectively, two numbers very close to the square root of 10331 (101.64).&lt;/p&gt;
-&lt;h2&gt;Final consideration&lt;/h2&gt;
+&lt;h2 id="final-consideration"&gt;Final consideration&lt;/h2&gt;
 &lt;p&gt;While discussing these algorithms, I have presented many numbers. It's important to be cautious when reading them: algorithms can be greatly optimized in many ways. Hardware can improve. Specialized hardware can be built.&lt;/p&gt;
 &lt;p&gt;The fact that an approach today seems impractical, does not imply that the approach can't be improved. It also does not imply that other, better approaches exist (remember, once again, that we have no proofs for the complexity of the discrete logarithm problem).&lt;/p&gt;
-&lt;h1&gt;Shor's algorithm&lt;/h1&gt;
+&lt;h1 id="shors-algorithm"&gt;Shor's algorithm&lt;/h1&gt;
 &lt;p&gt;If today's techniques are unsuitable, what about tomorrow's techniques? Well, things are a bit more worrisome: there exist a &lt;strong&gt;&lt;a href="https://en.wikipedia.org/wiki/Quantum_algorithm"&gt;quantum algorithm&lt;/a&gt; capable of computing discrete logarithms in polynomial time: &lt;a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm"&gt;Shor's algorithm&lt;/a&gt;&lt;/strong&gt;, which has time complexity $O((\log n)^3)$ and space complexity $O(\log n)$.&lt;/p&gt;
 &lt;p&gt;Quantum computers are still far from becoming sophisticated enough to run algorithms like Shor's, still the need for &lt;a href="https://en.wikipedia.org/wiki/Post-quantum_cryptography"&gt;quantum-resistant algorithms&lt;/a&gt; may be something worth investigating now. What we encrypt today might not be safe tomorrow.&lt;/p&gt;
-&lt;h1&gt;ECC and RSA&lt;/h1&gt;
+&lt;h1 id="ecc-and-rsa"&gt;ECC and RSA&lt;/h1&gt;
 &lt;p&gt;Now let's forget about quantum computing, which is still far from being a serious problem. The question I'll answer now is: &lt;strong&gt;why bothering with elliptic curves if RSA works well?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;A quick answer is given by NIST, which provides with &lt;a href="https://www.nsa.gov/business/programs/elliptic_curve.shtml"&gt;a table that compares RSA and ECC key sizes&lt;/a&gt; required to achieve the same level of security.&lt;/p&gt;
 &lt;table class="table"&gt;
@@ -743,7 +743,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;Note that there is no linear relationship between the RSA key sizes and the ECC key sizes (in other words: if we double the RSA key size, we don't have to double the ECC key size). This table tells us not only that ECC uses less memory, but also that key generation and signing are considerably faster.&lt;/p&gt;
 &lt;p&gt;But why is it so? The answer is that the faster algorithms for computing discrete logarithms over elliptic curves are Pollard's rho and baby-step giant-step, while in the case of RSA we have faster algorithms. One in particular is the &lt;strong&gt;&lt;a href="https://en.wikipedia.org/wiki/General_number_field_sieve"&gt;general number field sieve&lt;/a&gt;&lt;/strong&gt;: an algorithm for integer factorization that can be used to compute discrete logarithms. The general number field sieve is the fastest algorithm for integer factorization to date.&lt;/p&gt;
 &lt;p&gt;All of this applies to other cryptosystems based on modular arithmetic as well, including DSA, D-H and ElGamal.&lt;/p&gt;
-&lt;h1&gt;Hidden threats of NSA&lt;/h1&gt;
+&lt;h1 id="hidden-threats-of-nsa"&gt;Hidden threats of NSA&lt;/h1&gt;
 &lt;p&gt;An now the hard part. So far we have discussed algorithms and mathematics. Now it's time to discuss people, and things get more complicated.&lt;/p&gt;
 &lt;p&gt;If you remember, in the last post we said that certain classes of elliptic curves are weak, and to solve the problem of trusting curves from dubious sources we added a random seed to our domain parameters. And if we look at standard curves from NIST we can see that they are all verifiably random.&lt;/p&gt;
 &lt;p&gt;If we read the Wikipedia page for "&lt;a href="http://en.wikipedia.org/wiki/Nothing_up_my_sleeve_number"&gt;nothing up my sleeve&lt;/a&gt;", we can see that:&lt;/p&gt;
@@ -757,7 +757,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;&lt;strong&gt;Is it possible that NIST has discovered a "sufficiently large" class of weak elliptic curves and has tried many possible seeds until they found a vulnerable curve?&lt;/strong&gt; I can't answer this question, but this is a legit and important question. We know that NIST has succeeded in standardizing at least a &lt;a href="http://en.wikipedia.org/wiki/Dual_EC_DRBG"&gt;vulnerable random number generator&lt;/a&gt; (a generator which, oddly enough, is based on elliptic curves). Perhaps they also succeeded in standardizing a set of weak elliptic curves. How do we know? We can't.&lt;/p&gt;
 &lt;p&gt;What's important to understand is that "verifiably random" and "secure" are not synonyms. And it doesn't matter how hard the logarithm problem is, or how long our keys are, if our algorithms are broken, there's nothing we can do.&lt;/p&gt;
 &lt;p&gt;With respect to this, RSA wins, as it does not require special domain parameters that can be tampered. RSA (as well as other modular arithmetic systems) may be a good alternative if we can't trust authorities and if we can't construct our own domain parameters. And in case you are asking: yes, TLS may use NIST curves. If you check &lt;a href="https://google.com/"&gt;https://google.com&lt;/a&gt;, you'll see that the connection is using ECDHE and ECDSA, with a certificate based on &lt;code&gt;prime256v1&lt;/code&gt; (aka &lt;code&gt;secp256p1&lt;/code&gt;).&lt;/p&gt;
-&lt;h1&gt;That's all!&lt;/h1&gt;
+&lt;h1 id="thats-all"&gt;That's all!&lt;/h1&gt;
 &lt;p&gt;I hope you have enjoyed this series. My aim was to give you the basic knowledge, terminology and conventions to understand what elliptic curve cryptography today is. If I reached my aim, you should now be able to understand existing ECC-based cryptosystems and to expand your knowledge by reading "not so gentle" documentation. When writing this series, I could have skipped over many details and use a simpler terminology, but I felt that by doing so you would have not been able to understand what the web has to offer. I believe I have found a good compromise between simplicity and completeness.&lt;/p&gt;
 &lt;p&gt;Note though that by reading just this series, you are not able to implement secure ECC cryptosystems: security requires us to know many subtle but important details. Remember the &lt;a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#random-curves"&gt;requirements for Smart's attack&lt;/a&gt; and &lt;a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#ecdsa-k"&gt;Sony's mistake&lt;/a&gt; — these are just two examples that should teach you how easy is to produce insecure algorithms and how easy it is to exploit them.&lt;/p&gt;
 &lt;p&gt;So, if you are interested in diving deeper into the world of ECC, where to go from here?&lt;/p&gt;
@@ -783,7 +783,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;Thanks for reading and see you next time!&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Mon, 08 Jun 2015 13:28:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-06-08:/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/</guid><category>cryptography</category><category>dh</category><category>dsa</category><category>ecc</category><category>ecdh</category><category>ecdhe</category><category>ecdsa</category><category>rsa</category><category>security</category></item><item><title>Elliptic Curve Cryptography: ECDH and ECDSA</title><link>https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/</link><description>&lt;p&gt;&lt;strong&gt;This post is the third in the series &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;ECC: a gentle introduction&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;In the previous posts, we have seen &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves"&gt;what an elliptic curve is&lt;/a&gt; and we have defined a &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law"&gt;group law&lt;/a&gt; in order to do some math with the points of elliptic curves. Then we have &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/"&gt;restricted elliptic curves to finite fields of integers modulo a prime&lt;/a&gt;. With this restriction, we have seen that the points of elliptic curves generate &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication"&gt;cyclic subgroups&lt;/a&gt; and we have introduced the terms &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#base-point"&gt;base point&lt;/a&gt;, &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#subgroup-order"&gt;order&lt;/a&gt; and &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#cofactor"&gt;cofactor&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Finally, we have seen that &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication"&gt;scalar multiplication in finite fields&lt;/a&gt; is an "easy" problem, while the &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm"&gt;discrete logarithm problem&lt;/a&gt; seems to be "hard". Now we'll see how all of this applies to cryptography.&lt;/p&gt;
-&lt;h1&gt;Domain parameters&lt;/h1&gt;
+&lt;h1 id="domain-parameters"&gt;Domain parameters&lt;/h1&gt;
 &lt;p&gt;Our elliptic curve algorithms will work in a cyclic subgroup of an elliptic curve over a finite field. Therefore, our algorithms will need the following parameters:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;The &lt;strong&gt;prime $p$&lt;/strong&gt; that specifies the size of the finite field.&lt;/li&gt;
@@ -811,7 +811,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;This trick should give some sort of assurance that &lt;strong&gt;the curve has not been specially crafted to expose vulnerabilities known to the author&lt;/strong&gt;. In fact, if I give you a curve together with a seed, it means I was not free to arbitrarily choose the parameters $a$ and $b$, and you should be relatively sure that the curve cannot be used for special purpose attacks by me. The reason why I say "relatively" will be explained in the next post.&lt;/p&gt;
 &lt;p&gt;A standardized algorithm for generating and checking random curves is described in ANSI X9.62 and is based on &lt;a href="https://en.wikipedia.org/wiki/SHA-1"&gt;SHA-1&lt;/a&gt;. If you are curious, you can read the algorithms for generating verifiable random curves on &lt;a href="http://www.secg.org/sec1-v2.pdf"&gt;a specification by SECG&lt;/a&gt; (look for "Verifiably Random Curves and Base Point Generators").&lt;/p&gt;
 &lt;p&gt;I've created a &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/verifyrandom.py"&gt;tiny Python script&lt;/a&gt; that verifies all the random curves currently &lt;a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c"&gt;shipped with OpenSSL&lt;/a&gt;&lt;/strong&gt;. I strongly recommend you to check it out!&lt;/p&gt;
-&lt;h1&gt;Elliptic Curve Cryptography&lt;/h1&gt;
+&lt;h1 id="elliptic-curve-cryptography"&gt;Elliptic Curve Cryptography&lt;/h1&gt;
 &lt;p&gt;It took us a long time, but finally here we are! Therefore, pure and simple:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;The &lt;strong&gt;private key&lt;/strong&gt; is a random integer $d$ chosen from $\{1, \dots, n - 1\}$ (where $n$ is the order of the subgroup).&lt;/li&gt;
@@ -819,7 +819,7 @@ Took 0m 21s (138 steps on average)
 &lt;/ol&gt;
 &lt;p&gt;You see? If we know $d$ and $G$ (along with the other domain parameters), finding $H$ is "easy". But if we know $H$ and $G$, &lt;strong&gt;finding the private key $d$ is "hard", because it requires us to solve the discrete logarithm problem&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Now we are going to describe two public-key algorithms based on that: ECDH (Elliptic curve Diffie-Hellman), which is used for encryption, and ECDSA (Elliptic Curve Digital Signature Algorithm), used for digital signing.&lt;/p&gt;
-&lt;h2&gt;Encryption with ECDH&lt;/h2&gt;
+&lt;h2 id="encryption-with-ecdh"&gt;Encryption with ECDH&lt;/h2&gt;
 &lt;p&gt;ECDH is a variant of the &lt;a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange"&gt;Diffie-Hellman algorithm&lt;/a&gt; for elliptic curves. It is actually a &lt;a href="https://en.wikipedia.org/wiki/Key-agreement_protocol"&gt;key-agreement protocol&lt;/a&gt;, more than an encryption algorithm. This basically means that ECDH defines (to some extent) how keys should be generated and exchanged between parties. How to actually encrypt data using such keys is up to us.&lt;/p&gt;
 &lt;p&gt;The problem it solves is the following: two parties (the usual &lt;a href="http://en.wikipedia.org/wiki/Alice_and_Bob"&gt;Alice and Bob&lt;/a&gt;) want to exchange information securely, so that a third party (the &lt;a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack"&gt;Man In the Middle&lt;/a&gt;) may intercept them, but may not decode them. This is one of the principles behind TLS, just to give you an example.&lt;/p&gt;
 &lt;p&gt;Here's how it works:&lt;/p&gt;
@@ -853,7 +853,7 @@ Took 0m 21s (138 steps on average)
 &lt;p&gt;The Diffie-Hellman problem for elliptic curves is assumed to be a "hard" problem. It is believed to be as "hard" as the discrete logarithm problem, although no mathematical proofs are available. What we can tell for sure is that it can't be "harder", because solving the logarithm problem is a way of solving the Diffie-Hellman problem.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Now that Alice and Bob have obtained the shared secret, they can exchange data with symmetric encryption.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;For example, they can use the $x$ coordinate of $S$ as the key to encrypt messages using secure ciphers like &lt;a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"&gt;AES&lt;/a&gt; or &lt;a href="https://en.wikipedia.org/wiki/Triple_DES"&gt;3DES&lt;/a&gt;. This is more or less what TLS does, the difference is that TLS concatenates the $x$ coordinate with other numbers relative to the connection and then computes a hash of the resulting byte string.&lt;/p&gt;
-&lt;h3&gt;Playing with ECDH&lt;/h3&gt;
+&lt;h3 id="playing-with-ecdh"&gt;Playing with ECDH&lt;/h3&gt;
 &lt;p&gt;I've created &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdhe.py"&gt;another Python script&lt;/a&gt; for computing public/private keys and shared secrets over an elliptic curve&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Unlike all the examples we have seen till now, this script makes use of a standardized curve, rather than a simple curve on a small field. The curve I've chosen is &lt;code&gt;secp256k1&lt;/code&gt;, from &lt;a href="http://www.secg.org/"&gt;SECG&lt;/a&gt; (the "Standards for Efficient Cryptography Group", founded by &lt;a href="https://www.certicom.com/"&gt;Certicom&lt;/a&gt;). &lt;a href="https://en.bitcoin.it/wiki/Secp256k1"&gt;This same curve is also used by Bitcoin&lt;/a&gt; for digital signatures. Here are the domain parameters:&lt;/p&gt;
 &lt;ul&gt;
@@ -876,10 +876,10 @@ Bob&amp;#39;s public key: (0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8
 Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd, 0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3&gt;Ephemeral ECDH&lt;/h3&gt;
+&lt;h3 id="ephemeral-ecdh"&gt;Ephemeral ECDH&lt;/h3&gt;
 &lt;p&gt;Some of you may have heard of ECDHE instead of ECDH. The "E" in ECDHE stands for "Ephemeral" and refers to the fact that the &lt;strong&gt;keys exchanged are temporary&lt;/strong&gt;, rather than static.&lt;/p&gt;
 &lt;p&gt;ECDHE is used, for example, in TLS, where both the client and the server generate their public-private key pair on the fly, when the connection is established. The keys are then signed with the TLS certificate (for authentication) and exchanged between the parties.&lt;/p&gt;
-&lt;h2&gt;Signing with ECDSA&lt;/h2&gt;
+&lt;h2 id="signing-with-ecdsa"&gt;Signing with ECDSA&lt;/h2&gt;
 &lt;p&gt;The scenario is the following: &lt;strong&gt;Alice wants to sign a message with her private key&lt;/strong&gt; ($d_A$), and &lt;strong&gt;Bob wants to validate the signature using Alice's public key&lt;/strong&gt; ($H_A$). Nobody but Alice should be able to produce valid signatures. Everyone should be able to check signatures.&lt;/p&gt;
 &lt;p&gt;Again, Alice and Bob are using the same domain parameters. The algorithm we are going to see is ECDSA, a variant of the &lt;a href="https://en.wikipedia.org/wiki/Digital_Signature_Algorithm"&gt;Digital Signature Algorithm&lt;/a&gt; applied to elliptic curves.&lt;/p&gt;
 &lt;p&gt;ECDSA works on the hash of the message, rather than on the message itself. The choice of the hash function is up to us, but it should be obvious that a &lt;a href="http://en.wikipedia.org/wiki/Cryptographic_hash_function"&gt;cryptographically-secure hash function&lt;/a&gt; should be chosen. &lt;strong&gt;The hash of the message ought to be truncated&lt;/strong&gt; so that the bit length of the hash is the same as the bit length of $n$ (the order of the subgroup). &lt;strong&gt;The truncated hash is an integer and will be denoted as $z$.&lt;/strong&gt;&lt;/p&gt;
@@ -900,7 +900,7 @@ Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3
 
 &lt;p&gt;In plain words, this algorithm first generates a secret ($k$). This secret is hidden in $r$ thanks to point multiplication (that, as we know, is "easy" one way, and "hard" the other way round). $r$ is then bound to the message hash by the equation $s = k^{-1} (z + rd_A) \bmod{n}$.&lt;/p&gt;
 &lt;p&gt;Note that in order to calculate $s$, we have computed the inverse of $k$ modulo $n$. We have &lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#p-must-be-prime"&gt;already said in the previous post&lt;/a&gt; that this is guaranteed to work only if $n$ is a prime number. &lt;strong&gt;If a subgroup has a non-prime order, ECDSA can't be used.&lt;/strong&gt; It's not by chance that almost all standardized curves have a prime order, and those that have a non-prime order are unsuitable for ECDSA.&lt;/p&gt;
-&lt;h3&gt;Verifying signatures&lt;/h3&gt;
+&lt;h3 id="verifying-signatures"&gt;Verifying signatures&lt;/h3&gt;
 &lt;p&gt;In order to verify the signature we'll need Alice's public key $H_A$, the (truncated) hash $z$ and, obviously, the signature $(r, s)$.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Calculate the integer $u_1 = s^{-1} z \bmod{n}$.&lt;/li&gt;
@@ -908,7 +908,7 @@ Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3
 &lt;li&gt;Calculate the point $P = u_1 G + u_2 H_A$.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;The signature is valid only if $r = x_P \bmod{n}$.&lt;/p&gt;
-&lt;h2&gt;Correctness of the algorithm&lt;/h2&gt;
+&lt;h2 id="correctness-of-the-algorithm"&gt;Correctness of the algorithm&lt;/h2&gt;
 &lt;p&gt;The logic behind this algorithm may not seem obvious at a first sight, however if we put together all the equations we have written so far, things will be clearer.&lt;/p&gt;
 &lt;p&gt;Let's start from $P = u_1 G + u_2 H_A$. We know, from the definition of public key, that $H_A = d_A G$ (where $d_A$ is the private key). We can write:
 $$\begin{align*}
@@ -929,7 +929,7 @@ $$\begin{align*}
     &amp;amp; = k G
 \end{align*}$$&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;This is the same equation for $P$ we had at step 2 of the signature generation algorithm!&lt;/strong&gt; When generating signatures and when verifying them, we are calculating the same point $P$, just with a different set of equations. This is why the algorithm works.&lt;/p&gt;
-&lt;h3&gt;Playing with ECDSA&lt;/h3&gt;
+&lt;h3 id="playing-with-ecdsa"&gt;Playing with ECDSA&lt;/h3&gt;
 &lt;p&gt;Of course, I've created &lt;strong&gt;&lt;a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdsa.py"&gt;a Python script&lt;/a&gt; for signature generation and verification&lt;/strong&gt;. The code shares some parts with the ECDH script, in particular the domain parameters and the public/private key pair generation algorithm.&lt;/p&gt;
 &lt;p&gt;Here is the kind of output produced by the script:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Curve: secp256k1
@@ -963,14 +963,14 @@ Verification: invalid signature
 &lt;p&gt;The last equation lets us calculate $k$ using only two hashes and their corresponding signatures. Now we can extract the private key using the equation for $s$:
 $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}$$&lt;/p&gt;
 &lt;p&gt;Similar techniques may be employed if $k$ is not static but predictable in some way.&lt;/p&gt;
-&lt;h1&gt;Have a great weekend&lt;/h1&gt;
+&lt;h1 id="have-a-great-weekend"&gt;Have a great weekend&lt;/h1&gt;
 &lt;p&gt;I really hope you enjoyed what I've written here. As usual, don't hesitate to leave a comment or send me a poke if you need help with something.&lt;/p&gt;
 &lt;p&gt;Next week I'll publish the fourth and last article of this series. It'll be about techniques for solving discrete logarithms, some important problems of Elliptic Curve cryptography, and how ECC compares with RSA. Don't miss it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/"&gt;Read the next post of the series &amp;raquo;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sat, 30 May 2015 19:23:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-05-30:/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/</guid><category>cryptography</category><category>dh</category><category>dsa</category><category>ecc</category><category>ecdh</category><category>ecdhe</category><category>ecdsa</category><category>security</category><category>tls</category></item><item><title>Elliptic Curve Cryptography: finite fields and discrete logarithms</title><link>https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/</link><description>&lt;p&gt;&lt;strong&gt;This post is the second in the series &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;ECC: a gentle introduction&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;In the &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/"&gt;previous post&lt;/a&gt;, we have seen how elliptic curves over the real numbers can be used to define a group. Specifically, we have defined a rule for &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law"&gt;point addition&lt;/a&gt;: given three aligned points, their sum is zero ($P + Q + R = 0$). We have derived a &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#geometric-addition"&gt;geometric method&lt;/a&gt; and an &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#algebraic-addition"&gt;algebraic method&lt;/a&gt; for computing point additions.&lt;/p&gt;
 &lt;p&gt;We then introduced &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#scalar-multiplication"&gt;scalar multiplication&lt;/a&gt; ($nP = P + P + \cdots + P$) and we found out an "easy" algorithm for computing scalar multiplication: &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add"&gt;double and add&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Now we will restrict our elliptic curves to finite fields&lt;/strong&gt;, rather than the set of real numbers, and see how things change.&lt;/p&gt;
-&lt;h1&gt;The field of integers modulo &lt;em&gt;p&lt;/em&gt;&lt;/h1&gt;
+&lt;h1 id="the-field-of-integers-modulo-p"&gt;The field of integers modulo &lt;em&gt;p&lt;/em&gt;&lt;/h1&gt;
 &lt;p&gt;A finite field is, first of all, a set with a finite number of elements. An example of finite field is the set of integers modulo $p$, where $p$ is a prime number. It is generally denoted as $\mathbb{Z}/p$, $GF(p)$ or $\mathbb{F}_p$. We will use the latter notation.&lt;/p&gt;
 &lt;p&gt;In fields we have two binary operations: addition (+) and multiplication (&amp;middot;). Both are closed, associative and commutative. For both operations, there exist a unique identity element, and for every element there's a unique inverse element. Finally, multiplication is distributive over the addition: $x \cdot (y + z) = x \cdot y + x \cdot z$.&lt;/p&gt;
 &lt;p&gt;The set of &lt;strong&gt;integers modulo $p$ consists of all the integers from 0 to $p - 1$&lt;/strong&gt;. Addition and multiplication work as in &lt;a href="http://en.wikipedia.org/wiki/Modular_arithmetic"&gt;modular arithmetic&lt;/a&gt; (also known as "clock arithmetic"). Here are a few examples of operations in $\mathbb{F}_{23}$:&lt;/p&gt;
@@ -989,7 +989,7 @@ $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}
 &lt;/ul&gt;
 &lt;p&gt;If these equations don't look familiar to you and you need a primer on modular arithmetic, check out &lt;a href="https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/what-is-modular-arithmetic"&gt;Khan Academy&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;As we already said, the integers modulo $p$ are a field, and therefore all the properties listed above hold. &lt;span id="p-must-be-prime"&gt;Note that the requirement for $p$ to be prime is important!&lt;/span&gt; The set of integers modulo 4 is not a field: 2 has no multiplicative inverse (i.e. the equation $2 \cdot x \bmod{4} = 1$ has no solutions).&lt;/p&gt;
-&lt;h2&gt;Division modulo &lt;em&gt;p&lt;/em&gt;&lt;/h2&gt;
+&lt;h2 id="division-modulo-p"&gt;Division modulo &lt;em&gt;p&lt;/em&gt;&lt;/h2&gt;
 &lt;p&gt;We will soon define elliptic curves over $\mathbb{F}_p$, but before doing so we need a clear idea of what $x / y$ means in $\mathbb{F}_p$. Simply put: $x / y = x \cdot y^{-1}$, or, in plain words, $x$ over $y$ is equal to $x$ times the multiplicative inverse of $y$. This fact is not surprising, but gives us a basic method to perform division: &lt;strong&gt;find the multiplicative inverse of a number and then perform a single multiplication&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Computing the multiplicative inverse can be "easily" done with the &lt;strong&gt;&lt;a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm"&gt;extended Euclidean algorithm&lt;/a&gt;&lt;/strong&gt;, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.&lt;/p&gt;
 &lt;p&gt;We won't enter the details of the extended Euclidean algorithm, as it is off-topic, however here's a working Python implementation:&lt;/p&gt;
@@ -1035,7 +1035,7 @@ $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h1&gt;Elliptic curves in $\mathbb{F}_p$&lt;/h1&gt;
+&lt;h1 id="elliptic-curves-in-mathbbf_p"&gt;Elliptic curves in $\mathbb{F}_p$&lt;/h1&gt;
 &lt;p&gt;Now we have all the necessary elements to restrict elliptic curves over $\mathbb{F}_p$. The set of points, that in the &lt;a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves"&gt;previous post&lt;/a&gt; was:
 $$\begin{array}{rcl}
   \left\{(x, y) \in \mathbb{R}^2 \right. &amp;amp; \left. | \right. &amp;amp; \left. y^2 = x^3 + ax + b, \right. \\
@@ -1058,7 +1058,7 @@ $$\begin{array}{rcl}
 &lt;/figure&gt;
 
 &lt;p&gt;What previously was a continuous curve is now a set of disjoint points in the $xy$-plane. But we can prove that, even if we have restricted our domain, &lt;strong&gt;elliptic curves in $\mathbb{F}_p$ still form an abelian group&lt;/strong&gt;.&lt;/p&gt;
-&lt;h1&gt;Point addition&lt;/h1&gt;
+&lt;h1 id="point-addition"&gt;Point addition&lt;/h1&gt;
 &lt;p&gt;Clearly, we need to change a bit our definition of addition in order to make it work in $\mathbb{F}_p$. With reals, we said that the sum of three aligned points was zero ($P + Q + R = 0$). We can keep this definition, but what does it mean for three points to be aligned in $\mathbb{F}_p$?&lt;/p&gt;
 &lt;p&gt;We can say that &lt;strong&gt;three points are aligned if there's a line that connects all of them&lt;/strong&gt;. Now, of course, lines in $\mathbb{F}_p$ are not the same as lines in $\mathbb{R}$. We can say, informally, that a line in $\mathbb{F}_p$ is the set of points $(x, y)$ that satisfy the equation $ax + by + c \equiv 0 \pmod{p}$ (this is the standard line equation, with the addition of "$(\text{mod}\ p)$").&lt;/p&gt;
 &lt;figure&gt;
@@ -1073,7 +1073,7 @@ $$\begin{array}{rcl}
   For example, if a curve in $\mathbb{F}_{29}$ has a point $Q = (2, 5)$, the inverse is $-Q = (2, -5 \bmod{29}) = (2, 24)$.&lt;/li&gt;
 &lt;li&gt;Also, $P + (-P) = 0$ (from the definition of inverse element).&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;Algebraic sum&lt;/h1&gt;
+&lt;h1 id="algebraic-sum"&gt;Algebraic sum&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;The equations for calculating point additions are exactly the same as in the previous post&lt;/strong&gt;, except for the fact that we need to add "$\text{mod}\ p$" at the end of every expression. Therefore, given $P = (x_P, y_P)$, $Q = (x_Q, y_Q)$ and $R = (x_R, y_R)$, we can calculate $P + Q = -R$ as follows:
 $$\begin{align*}
   x_R &amp;amp; = (m^2 - x_P - x_Q) \bmod{p} \\
@@ -1087,7 +1087,7 @@ $$m = (3 x_P^2 + a)(2 y_P)^{-1} \bmod{p}$$&lt;/p&gt;
 &lt;p&gt;It's not a coincidence that the equations have not changed: in fact, these equations work in every field, finite or infinite (with the exception of $\mathbb{F}_2$ and $\mathbb{F}_3$, which are special cased). Now I feel I have to provide a justification for this fact. The problem is: proofs for the group law generally involve complex mathematical concepts. However, I found out a &lt;a href="http://math.rice.edu/~friedl/papers/AAELLIPTIC.PDF"&gt;proof from Stefan Friedl&lt;/a&gt; that uses only elementary concepts. Read it if you are interested in why these equations work in (almost) every field.&lt;/p&gt;
 &lt;p&gt;Back to us — we won't define a geometric method: in fact, there are a few problems with that. For example, in the previous post, we said that to compute $P + P$ we needed to take the tangent to the curve in $P$. But without continuity, the word "tangent" does not make any sense. We can workaround this and other problems, however a pure geometric method would just be too complicated and not practical at all.&lt;/p&gt;
 &lt;p&gt;Instead, you can play with the &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-add.html"&gt;interactive tool&lt;/a&gt; I've written for computing point additions&lt;/strong&gt;.&lt;/p&gt;
-&lt;h1&gt;The order of an elliptic curve group&lt;/h1&gt;
+&lt;h1 id="the-order-of-an-elliptic-curve-group"&gt;The order of an elliptic curve group&lt;/h1&gt;
 &lt;p&gt;We said that an elliptic curve defined over a finite field has a finite number of points. An important question that we need to answer is: &lt;strong&gt;how many points are there exactly?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Firstly, let's say that the number of points in a group is called the &lt;strong&gt;order of the group&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Trying all the possible values for $x$ from 0 to $p - 1$ is not a feasible way to count the points, as it would require $O(p)$ steps, and this is "hard" if $p$ is a large prime.&lt;/p&gt;
@@ -1148,7 +1148,7 @@ $$nP + mP = \underbrace{P + \cdots + P}_{n\ \text{times}} + \underbrace{P + \cdo
 &lt;p&gt;For example, the curve $y^2 = x^3 - x + 3$ over the field $\mathbb{F}_{37}$ has order $N = 42$. Its subgroups may have order $n = 1$, $2$, $3$, $6$, $7$, $14$, $21$ or $42$. If &lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html?a=-1&amp;amp;b=3&amp;amp;p=37&amp;amp;px=2&amp;amp;py=3"&gt;we try $P = (2, 3)$&lt;/a&gt; we can see that $P \ne 0$, $2P \ne 0$, ..., $7P = 0$, hence the order of $P$ is $n = 7$.&lt;/p&gt;
 &lt;p&gt;Note that &lt;strong&gt;it's important to take the smallest divisor, not a random one&lt;/strong&gt;. If we proceeded randomly, we could have taken $n = 14$, which is not the order of the subgroup, but one of its multiples.&lt;/p&gt;
 &lt;p&gt;Another example: the elliptic curve defined by the equation $y^2 = x^3 - x + 1$ over the field $\mathbb{F}_{29}$ has order $N = 37$, which is a prime. Its subgroups may only have order $n = 1$ or $37$. As you can easily guess, when $n = 1$, the subgroup contains only the point at infinity; when $n = N$, the subgroup contains all the points of the elliptic curve.&lt;/p&gt;
-&lt;h2&gt;Finding a base point&lt;/h2&gt;
+&lt;h2 id="finding-a-base-point"&gt;Finding a base point&lt;/h2&gt;
 &lt;p&gt;For our ECC algorithms, we want subgroups with a high order. So in general we will choose an elliptic curve, calculate its order ($N$), choose a high divisor as the subgroup order ($n$) and eventually find a suitable base point. That is: we won't choose a base point and then calculate its order, but we'll do the opposite: we will first choose an order that looks good enough and then we will hunt for a suitable base point. How do we do that?&lt;/p&gt;
 &lt;p&gt;&lt;span id="cofactor"&gt;Firstly, we need to introduce one more term. Lagrange's theorem implies that the number &lt;strong&gt;$h = N / n$ is always an integer&lt;/strong&gt; (because $n$ is a divisor of $N$). The number $h$ has a name: it's the &lt;strong&gt;cofactor of the subgroup&lt;/strong&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;Now consider that for every point of an elliptic curve we have $NP = 0$. This happens because $N$ is a multiple of any candidate $n$. Using the definition of cofactor, we can write:
@@ -1170,7 +1170,7 @@ $$n(hP) = 0$$&lt;/p&gt;
 &lt;p&gt;This problem is also analogous to the discrete logarithm problem used with other cryptosystems such as the Digital Signature Algorithm (DSA), the Diffie-Hellman key exchange (D-H) and the ElGamal algorithm — it's not a coincidence that they have the same name. The difference is that, with those algorithms, we use modulo exponentiation instead of scalar multiplication. Their discrete logarithm problem can be stated as follows: if we know $a$ and $b$, what's $k$ such that $b = a^k \bmod{p}$?&lt;/p&gt;
 &lt;p&gt;Both these problems are "discrete" because they involve finite sets (more precisely, cyclic subgroups). And they are "logarithms" because they are analogous to ordinary logarithms.&lt;/p&gt;
 &lt;p&gt;What makes ECC interesting is that, as of today, the discrete logarithm problem for elliptic curves seems to be "harder" if compared to other similar problems used in cryptography. This implies that we need fewer bits for the integer $k$ in order to achieve the same level of security as with other cryptosystems, as we will see in details in the fourth and last post of this series.&lt;/p&gt;
-&lt;h1&gt;More next week!&lt;/h1&gt;
+&lt;h1 id="more-next-week"&gt;More next week!&lt;/h1&gt;
 &lt;p&gt;Enough for today! I really hope you enjoyed this post. Leave a comment if you didn't.&lt;/p&gt;
 &lt;p&gt;Next week's post will be the third in this series and will be about ECC algorithms: key pair generation, ECDH and ECDSA. That will be one of the most interesting parts of this series. Don't miss it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/"&gt;Read the next post of the series &amp;raquo;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sat, 23 May 2015 14:08:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-05-23:/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/</guid><category>cryptography</category><category>ecc</category><category>math</category><category>security</category></item><item><title>Elliptic Curve Cryptography: a gentle introduction</title><link>https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/</link><description>&lt;p&gt;Those of you who know what public-key cryptography is may have already heard of &lt;strong&gt;ECC&lt;/strong&gt;, &lt;strong&gt;ECDH&lt;/strong&gt; or &lt;strong&gt;ECDSA&lt;/strong&gt;. The first is an acronym for Elliptic Curve Cryptography, the others are names for algorithms based on it.&lt;/p&gt;
@@ -1204,7 +1204,7 @@ $$y^2 = x^3 + ax + b$$&lt;/p&gt;
 &lt;p&gt;For our aims, &lt;strong&gt;we will also need a &lt;a href="https://en.wikipedia.org/wiki/Point_at_infinity"&gt;point at infinity&lt;/a&gt;&lt;/strong&gt; (also known as ideal point) to be part of our curve. From now on, we will denote our point at infinity with the symbol 0 (zero).&lt;/p&gt;
 &lt;p&gt;If we want to explicitly take into account the point at infinity, we can refine our definition of elliptic curve as follows:
 $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 \right\}\ \cup\ \left\{ 0 \right\}$$&lt;/p&gt;
-&lt;h1&gt;Groups&lt;/h1&gt;
+&lt;h1 id="groups"&gt;Groups&lt;/h1&gt;
 &lt;p&gt;A group in mathematics is a set for which we have defined a binary operation that we call "addition" and indicate with the symbol +. In order for the set $\mathbb{G}$ to be a group, addition must defined so that it respects the following four properties:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;closure:&lt;/strong&gt; if $a$ and $b$ are members of $\mathbb{G}$, then $a + b$ is a member of $\mathbb{G}$;&lt;/li&gt;
@@ -1359,16 +1359,16 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;If doubling and adding are both $O(1)$ operations, then &lt;strong&gt;this algorithm is $O(\log n)$&lt;/strong&gt; (or $O(k)$ if we consider the bit length), which is pretty good. Surely much better than the initial $O(n)$ algorithm!&lt;/p&gt;
-&lt;h1&gt;Logarithm&lt;/h1&gt;
+&lt;h1 id="logarithm"&gt;Logarithm&lt;/h1&gt;
 &lt;p&gt;Given $n$ and $P$, we now have at least one polynomial time algorithm for computing $Q = nP$. But what about the other way round? &lt;strong&gt;What if we know $Q$ and $P$ and need to find out $n$&lt;/strong&gt;? This problem is known as the &lt;strong&gt;logarithm problem&lt;/strong&gt;. We call it "logarithm" instead of "division" for conformity with other cryptosystems (where instead of multiplication we have exponentiation).&lt;/p&gt;
 &lt;p&gt;I don't know of any "easy" algorithm for the logarithm problem, however &lt;a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html?a=-3&amp;amp;b=1&amp;amp;px=0&amp;amp;py=1"&gt;playing with multiplication&lt;/a&gt; it's easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.&lt;/p&gt;
 &lt;p&gt;But there's a variant of the logarithm problem: the &lt;em&gt;discrete&lt;/em&gt; logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, &lt;strong&gt;scalar multiplication remains "easy", while the discrete logarithm becomes a "hard" problem&lt;/strong&gt;. This duality is the key brick of elliptic curve cryptography.&lt;/p&gt;
-&lt;h1&gt;See you next week&lt;/h1&gt;
+&lt;h1 id="see-you-next-week"&gt;See you next week&lt;/h1&gt;
 &lt;p&gt;That's all for today, I hope you enjoyed this post! Next week we will discover &lt;strong&gt;finite fields&lt;/strong&gt; and the &lt;strong&gt;&lt;em&gt;discrete&lt;/em&gt; logarithm problem&lt;/strong&gt;, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/"&gt;Read the next post of the series &amp;raquo;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sun, 17 May 2015 11:24:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-05-17:/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/</guid><category>cryptography</category><category>bitcoin</category><category>dh</category><category>dsa</category><category>ecc</category><category>math</category><category>pgp</category><category>rsa</category><category>security</category><category>ssh</category><category>tls</category><category>web</category></item><item><title>Let's Encrypt: the road towards a better web?</title><link>https://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/</link><description>&lt;p&gt;I've always dreamed of a encrypted web, where HTTPS is the standard and plain HTTP is no more. A web where eavesdropping or manipulating information is not possible, or at least much harder than today.&lt;/p&gt;
 &lt;p&gt;I remember that I got excited when I first heard of &lt;strong&gt;&lt;a href="http://www.cacert.org/"&gt;CAcert&lt;/a&gt;: "a community-driven Certificate Authority that issues certificates to the public at large for free"&lt;/strong&gt;. Unfortunately, CAcert's root certificate never made it into the major web browsers and operating systems. Whatever the reasons, the result is that visiting a HTTPS website with a certificate released by CAcert produces nothing but a &lt;a href="https://cacert.org/"&gt;scary warning with a call to leave the site&lt;/a&gt;, making CAcert unsuitable for most.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.startssl.com/"&gt;StarCom&lt;/a&gt;, on the other hand, has made it into the major browsers. But despite its certificates are released for free, it has never become much widespread. Also, StarCom &lt;a href="https://news.ycombinator.com/item?id=7557764"&gt;has&lt;/a&gt; &lt;a href="https://www.techdirt.com/articles/20140409/11442426859/shameful-security-startcom-charges-people-to-revoke-ssl-certs-vulnerable-to-heartbleed.shtml"&gt;been&lt;/a&gt; &lt;a href="https://twitter.com/startssl/status/453631038883758080"&gt;heavily&lt;/a&gt; &lt;a href="https://bugzilla.mozilla.org/show_bug.cgi?id=994033"&gt;criticized&lt;/a&gt; for how the Heartbleed vulnerability was handled, and AFAIK this has led many customers away.&lt;/p&gt;
-&lt;h1&gt;Let's Encrypt&lt;/h1&gt;
+&lt;h1 id="lets-encrypt"&gt;Let's Encrypt&lt;/h1&gt;
 &lt;p&gt;Recently, I learned about &lt;strong&gt;&lt;a href="https://letsencrypt.org/"&gt;Let's Encrypt&lt;/a&gt;: a "free, automated, and open" Certificate Authority&lt;/strong&gt; arriving in mid-2015. There are many important facts that make Let's Encrypt different and better from all the other Certificate Authorities out there. I'll let you discover all of them. Probably, the most important fact is that Let's Encrypt has &lt;strong&gt;&lt;a href="https://letsencrypt.org/sponsors/"&gt;important sponsors&lt;/a&gt;, including Mozilla&lt;/strong&gt;. And this is what matters today, because it gives Let's Encrypt a chance to be included in at least one major browser.&lt;/p&gt;
 &lt;figure&gt;
   &lt;a href="https://letsencrypt.org/"&gt;&lt;img src="https://andrea.corbellini.name/images/letsencrypt-logo-horizontal.png" alt="Let&amp;#039;s Encrypt" width="519" height="124"&gt;&lt;/a&gt;
@@ -1385,8 +1385,8 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;I do not have an answer to these questions, time will tell. However I really hope my dream to become a reality soon. If you, like me, want Let's Encrypt to be a success, then please &lt;strong&gt;share and discuss&lt;/strong&gt; about it. Perhaps, one day, we will find ourselves teaching juniors that HTTPS has not always been the standard... :)&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Sun, 12 Apr 2015 16:07:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-04-12:/2015/04/12/lets-encrypt-the-road-towards-a-better-web/</guid><category>information-technology</category><category>security</category><category>tls</category><category>web</category><category>let's encrypt</category></item><item><title>Running Ubuntu Snappy inside Docker</title><link>https://andrea.corbellini.name/2015/03/25/running-ubuntu-snappy-inside-docker/</link><description>&lt;p&gt;Many of you may have already heard of &lt;a href="https://developer.ubuntu.com/en/snappy/"&gt;Ubuntu Core&lt;/a&gt;. For those who haven't, it's a minimal Ubuntu version, running only a few essential services and ships with a new package manager (snappy) that provides &lt;em&gt;transactional&lt;/em&gt; updates. Ubuntu Core provides a lightweight base operating system which is fast to deploy and easy to maintain up to date. It also uses a nice &lt;a href="https://wiki.ubuntu.com/SecurityTeam/Specifications/SnappyConfinement"&gt;security model&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;All these characteristics make it particularly appealing for the cloud. And, in fact, people are starting considering it for building their (micro)services architectures. Some weeks ago, a user on Ask Ubuntu asked: &lt;a href="http://askubuntu.com/questions/566736/can-i-run-snappy-ubuntu-core-as-a-guest-inside-docker/577248"&gt;Can I run Snappy Ubuntu Core as a guest inside Docker?&lt;/a&gt; The problem is that Ubuntu Core does not ship with an official Docker image that we can pull, so we are forced to set it up manually. Here's how.&lt;/p&gt;
-&lt;h1&gt;Creating the Docker image&lt;/h1&gt;
-&lt;h2&gt;Step 1: get the latest Ubuntu Core&lt;/h2&gt;
+&lt;h1 id="creating-the-docker-image"&gt;Creating the Docker image&lt;/h1&gt;
+&lt;h2 id="step-1-get-the-latest-ubuntu-core"&gt;Step 1: get the latest Ubuntu Core&lt;/h2&gt;
 &lt;p&gt;As of writing, the latest Ubuntu Core image is alpha 3 and can be downloaded with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -1396,19 +1396,19 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2&gt;Step 2: connect the image using qemu-nbd&lt;/h2&gt;
+&lt;h2 id="step-2-connect-the-image-using-qemu-nbd"&gt;Step 2: connect the image using qemu-nbd&lt;/h2&gt;
 &lt;p&gt;The file we have just downloaded and extracted is a filesystem dump. The previous version of the image (Alpha 2) was a QCOW2 image (the format used by QEMU). In order to access its contents, we have a few options. Here I'll show one that works with both filesystem dumps and QCOW2 images. The trick consists in using &lt;code&gt;qemu-nbd&lt;/code&gt; (a tool from the &lt;a href="https://apps.ubuntu.com/cat/applications/qemu-utils/"&gt;qemu-utils&lt;/a&gt; package):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This command will create a virtual device named &lt;code&gt;/dev/nbd0&lt;/code&gt;, with virtual partitions named &lt;code&gt;/dev/nbd0p1&lt;/code&gt;, &lt;code&gt;/dev/nbd0p2&lt;/code&gt;, ... Use &lt;code&gt;fdisk -l /dev/nbd0&lt;/code&gt; to get an idea of what partitions are inside the QCOW2 image.&lt;/p&gt;
-&lt;h2&gt;Step 3: mount the filesystem&lt;/h2&gt;
+&lt;h2 id="step-3-mount-the-filesystem"&gt;Step 3: mount the filesystem&lt;/h2&gt;
 &lt;p&gt;The partition we are interested in is &lt;code&gt;/dev/nbd0p3&lt;/code&gt;, so we need to mount it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mkdir nbd0p3
 &lt;span class="gp"&gt;#&lt;/span&gt; mount -r /dev/nbd0p3 nbd0p3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h2&gt;Step 4: create a base Docker image&lt;/h2&gt;
+&lt;h2 id="step-4-create-a-base-docker-image"&gt;Step 4: create a base Docker image&lt;/h2&gt;
 &lt;p&gt;As suggested on the &lt;a href="https://docs.docker.com/articles/baseimages/"&gt;Docker documentation&lt;/a&gt;, creating a base Docker image from a directory is pretty straightforward:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; tar -C nbd0p3 -c . &lt;span class="p"&gt;|&lt;/span&gt; docker import - ubuntu-core alpha-3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -1427,7 +1427,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Yes! We have successfully added Ubuntu Core to the available Docker images and we have run our first snappy container!&lt;/p&gt;
-&lt;h1&gt;Installing and running software&lt;/h1&gt;
+&lt;h1 id="installing-and-running-software"&gt;Installing and running software&lt;/h1&gt;
 &lt;p&gt;Without wasting too many words, here's how to install and run the &lt;code&gt;xkcd-webserver&lt;/code&gt; snappy package inside docker:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run -p &lt;span class="m"&gt;8000&lt;/span&gt;:80 ubuntu-core:alpha-3 /bin/sh -c &lt;span class="s1"&gt;&amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;WARN: AppArmor not available when processing AppArmor hook&lt;/span&gt;
@@ -1443,7 +1443,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 
 &lt;p&gt;Now, if you visit http://localhost:8000/ you should see a random XKCD comic.&lt;/p&gt;
 &lt;p&gt;If you have payed attention, you may have noticed a few warnings about AppArmor, DBus and logind. The reason why you are seeing these warnings is pretty simple: we did not start neither AppArmor nor DBus nor logind. Now, generally speaking, we could run init inside Docker and fix these and other warnings. However that's not what Docker is meant for. So if you want to run AppArmor or similar stuff &lt;em&gt;from inside&lt;/em&gt; Docker or LXC, then probably you should consider virtualization.&lt;/p&gt;
-&lt;h1&gt;Dockerfile&lt;/h1&gt;
+&lt;h1 id="dockerfile"&gt;Dockerfile&lt;/h1&gt;
 &lt;p&gt;Once you have created the base Docker image, you can start creating some &lt;code&gt;Dockerfile&lt;/code&gt;s, if you need to. Here's an example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="s"&gt;ubuntu-core:alpha-3&lt;/span&gt;
 &lt;span class="k"&gt;RUN&lt;/span&gt; snappy install xkcd-webserver
@@ -1467,7 +1467,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Again, you should see a random XKCD comic on &lt;a href="http://localhost:8000/"&gt;http://localhost:8000/&lt;/a&gt;.&lt;/p&gt;
-&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id="conclusion"&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;That's all folks! I hope you enjoyed this tiny guide, and if you need help, please ask a question on Ask Ubuntu with the &lt;a href="http://askubuntu.com/questions/tagged/ubuntu-core"&gt;ubuntu-core tag&lt;/a&gt;, which I'm subscribed to.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Wed, 25 Mar 2015 20:46:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2015-03-25:/2015/03/25/running-ubuntu-snappy-inside-docker/</guid><category>cloud</category><category>docker</category><category>snappy</category><category>ubuntu</category><category>ubuntu core</category><category>xkcd</category></item><item><title>Are LXC and Docker secure?</title><link>https://andrea.corbellini.name/2015/02/20/are-lxc-and-docker-secure/</link><description>&lt;p&gt;Since its initial release in 2008, LXC has become widespread among servers. Today, it is becoming the preferred deployment strategy in many contexts, also thanks to Docker and, more recently, LXD.&lt;/p&gt;
 &lt;p&gt;LXC and Docker are used not only to achieve modular architecture design, but also as a way to run untrusted code in an isolated environment.&lt;/p&gt;
 &lt;p&gt;We can agree that the LXC and Docker ecosystems are great and work well, but there's an important question that I believe everyone should ask, but too few people are asking: &lt;strong&gt;are LXC and Docker secure?&lt;/strong&gt;&lt;/p&gt;
@@ -1477,7 +1477,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In order to answer this question, I won't go deep into the details of what LXC and Docker are. The web is full of information on &lt;a href="http://en.wikipedia.org/wiki/Cgroups#NAMESPACE-ISOLATION"&gt;namespaces&lt;/a&gt; and &lt;a href="http://en.wikipedia.org/wiki/Cgroups"&gt;cgroups&lt;/a&gt;. Rather, I'd like to show what LXC and Docker can do, what they cannot do, and what their default configuration allows them to do. My hope is to provide a quick checklist for those who want to go with LXC/Docker, but are unsure on what they need to pay attention to.&lt;/p&gt;
-&lt;h1&gt;What LXC and Docker can do&lt;/h1&gt;
+&lt;h1 id="what-lxc-and-docker-can-do"&gt;What LXC and Docker can do&lt;/h1&gt;
 &lt;p&gt;As we all know, LXC confines processes mainly thanks to two Linux kernel features: namespaces and cgroups. These provide ways to control and limit access to resource such as memory or filesystem. So, for example, you can limit the bandwidth used by processes inside a container, you can limit the priority of the CPU scheduler, and so on.&lt;/p&gt;
 &lt;p&gt;As it is well known, processes inside a LXC guest cannot:&lt;/p&gt;
 &lt;ul&gt;
@@ -1490,12 +1490,12 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;And at the same time, processes inside an LXC guest can find an environment that is perfectly suitable to run a working operating system: I can run init, I can read from &lt;code&gt;/proc&lt;/code&gt;, I can access the internet.&lt;/p&gt;
 &lt;p&gt;This is most of what LXC can do, and it's also what you get by default. Docker (when used with the LXC backend) is a wrapper around LXC that provides utilities for easy deployment and management of the containers, so &lt;strong&gt;everything that applies to LXC, applies to Docker too&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;If this sounds great, then beware that there are the things you should know...&lt;/p&gt;
-&lt;h1&gt;You need a security context&lt;/h1&gt;
+&lt;h1 id="you-need-a-security-context"&gt;You need a security context&lt;/h1&gt;
 &lt;p&gt;LXC is somewhat incomplete. What I mean is that some parts of special filesystems like procfs or sysfs are not faked. For example, as of now, I can successfully change the value of host's &lt;code&gt;/proc/sys/kernel/panic&lt;/code&gt; or &lt;code&gt;/sys/class/thermal/cooling_device0/cur_state&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The reason why LXC is "incomplete" doesn't really matter (it's actually the kernel to be incomplete, but anyhow...). What matters is that certain nasty actions can be forbade, not by LXC itself, but by an AppArmor/SELinux profile that blocks read and write access certain &lt;code&gt;/proc&lt;/code&gt; and &lt;code&gt;/sys&lt;/code&gt; components. The AppArmor rules were shipped in Ubuntu since 12.10 (Quantal), and have been included upstream since early 2014, together with the SELinux rules.&lt;/p&gt;
 &lt;p&gt;Therefore, &lt;strong&gt;a security context like AppArmor or SELinux is required to run LXC safely&lt;/strong&gt;. Without it, the root user inside a guest can take control of the host.&lt;/p&gt;
 &lt;p&gt;Check that AppArmor or SELinux are running and are configured properly. If you want to go with Grsecurity, then remember to configure it manually.&lt;/p&gt;
-&lt;h1&gt;Limit resource consumption&lt;/h1&gt;
+&lt;h1 id="limit-resource-consumption"&gt;Limit resource consumption&lt;/h1&gt;
 &lt;p&gt;LXC offers ways to limit resource usage, but no special restrictions are put in place by default. &lt;strong&gt;You have to configure them by yourself.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;With the default configuration, I can run fork-bombs, request huge memory maps, keep all CPUs busy, doing high loads of I/O. All of this without special privileges. Remember this when running untrusted code.&lt;/p&gt;
 &lt;figure&gt;
@@ -1506,22 +1506,22 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;For example, if you want to limit the container memory usage to 512 MiB, set &lt;code&gt;lxc.cgroup.memory.limit_in_bytes = 512M&lt;/code&gt;. Note that the container with that option, once it exceeds the 512 MiB cap, will start using the swap without limits. If this is not what you want, then set &lt;code&gt;lxc.cgroup.memory.memsw.max_usage_in_bytes = 512M&lt;/code&gt;. Note that to use both options you may need to add &lt;code&gt;cgroup_enable=memory&lt;/code&gt; and &lt;code&gt;swapaccount=1&lt;/code&gt; to the kernel command line.&lt;/p&gt;
 &lt;p&gt;To have an overview of all possible options, check out &lt;a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/ch-Subsystems_and_Tunable_Parameters.html"&gt;Red Hat's documentation&lt;/a&gt; or the &lt;a href="https://www.kernel.org/doc/Documentation/cgroups/"&gt;Kernel documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;With Docker, the story is similar: just use &lt;code&gt;--lxc-conf&lt;/code&gt; from the command line to set LXC's options.&lt;/p&gt;
-&lt;h1&gt;Limit disk usage&lt;/h1&gt;
+&lt;h1 id="limit-disk-usage"&gt;Limit disk usage&lt;/h1&gt;
 &lt;p&gt;Something that LXC cannot do is limiting mass storage usage. Luckily, &lt;strong&gt;&lt;a href="https://www.stgraber.org/2013/12/27/lxc-1-0-container-storage/"&gt;LXC integrates nicely with LVM&lt;/a&gt;&lt;/strong&gt; (and brtfs, and zfs, and overlayfs), and you can use that for easily limiting disk usage. You can, for example, create a logical volume for each of your guests, and give that volume a limited size, so that space usage inside a guest cannot grow indefinitely.&lt;/p&gt;
 &lt;p&gt;The same &lt;a href="http://developerblog.redhat.com/2014/09/30/overview-storage-scalability-docker/"&gt;holds for Docker&lt;/a&gt;.&lt;/p&gt;
-&lt;h1&gt;Pay attention at &lt;code&gt;/dev/random&lt;/code&gt;&lt;/h1&gt;
+&lt;h1 id="pay-attention-at-devrandom"&gt;Pay attention at &lt;code&gt;/dev/random&lt;/code&gt;&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;Processes inside LXC guests&lt;/strong&gt;, by default, can read from &lt;code&gt;/dev/random&lt;/code&gt; and &lt;strong&gt;can consume the entropy of the host&lt;/strong&gt;. This may cause troubles if you need big amounts of randomness (to generate keys or whatever).&lt;/p&gt;
 &lt;p&gt;If this is something that you don't want, then configure LXC so that it &lt;a href="https://wiki.archlinux.org/index.php/Linux_Containers#Cgroups_device_configuration"&gt;denies access to the character devices&lt;/a&gt; &lt;code&gt;1:8&lt;/code&gt; (random) and &lt;code&gt;1:9&lt;/code&gt; (urandom). Denying access to the path &lt;code&gt;/dev/random&lt;/code&gt; is not enough, as &lt;code&gt;mknod&lt;/code&gt; is allowed inside guests.&lt;/p&gt;
 &lt;p&gt;Note however that doing so may break many applications inside the LXC guest that need randomness. Maybe consider using a different machine for processes that require randomness for security purposes.&lt;/p&gt;
-&lt;h1&gt;Use unprivileged containers&lt;/h1&gt;
+&lt;h1 id="use-unprivileged-containers"&gt;Use unprivileged containers&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;Containers can be &lt;a href="https://www.stgraber.org/2014/01/17/lxc-1-0-unprivileged-containers/"&gt;run from an unprivileged user&lt;/a&gt;&lt;/strong&gt;. This means UID 0 of the guest can't match UID 0 of the host, and many potential security holes can't simply be exploited. Unfortunately, &lt;a href="https://github.com/docker/docker/issues/2918"&gt;Docker has not support for unprivileged containers&lt;/a&gt; yet.&lt;/p&gt;
 &lt;p&gt;However, if Docker is not a requirement and you can do well with LXC, start experimenting with unprivileged containers and consider using them in production.&lt;/p&gt;
 &lt;p&gt;Programs like Apache will complain that it's unable to change its ulimit (because setting the ulimit is a privilege of the real root user). If you need to run programs that require special privileges, either configure them so that they do not complain, or consider using &lt;a href="http://linux.die.net/man/7/capabilities"&gt;capabilities&lt;/a&gt; (but do not abuse them, and be cautious, or you risk introducing more problems than the ones your are trying to solve!)&lt;/p&gt;
-&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;h1 id="conclusion"&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;LXC, Docker and the entire ecosystem around them can be considered quite mature and stable. They're surely production ready, and, if the right configuration is put in place, it can be pretty difficult to cause troubles to the host.&lt;/p&gt;
 &lt;p&gt;However, whether they can be considered secure or not is up to you: &lt;strong&gt;what are you using containers for? Who are you giving access to? What privileges are you giving, what actions are you restricting?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Always remember what LXC and Docker do by default, and what they do not do, especially when you use them to run untrusted code. Those that I have listed may only be a few of the problems that LXC, Docker and friends may expose. Remember to carefully review your configuration before opening the doors to others.&lt;/p&gt;
-&lt;h1&gt;Further reading&lt;/h1&gt;
+&lt;h1 id="further-reading"&gt;Further reading&lt;/h1&gt;
 &lt;p&gt;If you liked this article, you'll find these ones interesting too:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://blog.docker.com/2013/08/containers-docker-how-secure-are-they/"&gt;Containers &amp;amp; Docker: how secure are they?&lt;/a&gt;, from the Docker blog.&lt;/li&gt;
@@ -1541,7 +1541,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Apparently, universe factory workers speak English and write ASCII. Nice coincidence, huh?&lt;/p&gt;
-&lt;h1&gt;The discovery&lt;/h1&gt;
+&lt;h1 id="the-discovery"&gt;The discovery&lt;/h1&gt;
 &lt;p&gt;Yesterday I was playing with the two &lt;a href="https://en.wikipedia.org/wiki/Illegal_prime"&gt;illegal primes&lt;/a&gt; listed on Wikipedia. I was already aware of them, but I had never decoded them till yesterday. While doing so I wondered: how many prime numbers can be directly mapped to an executable file? Also, how many prime numbers can be directly mapped to plain English texts? Perhaps, while digging prime numbers, could we find something like the Iliad or a fully working operating system?&lt;/p&gt;
 &lt;p&gt;Well, while asking myself those highly philosophical questions, Randall's comic quickly came to my mind, and I decided to start looking for help requests hidden in primes. You can't imagine how many of them I found!&lt;/p&gt;
 &lt;p&gt;At first I tried looking for all prime numbers corresponding to strings starting with &lt;code&gt;HELP! I'M TRAPPED IN A UNIVERSE FACTORY!&lt;/code&gt;, with an arbitrary suffix. I found many of them, but I wasn't satisfied with the result: I wanted something that was purely English/ASCII, without any garbage. Therefore I tried appending hashtags like &lt;code&gt;#help&lt;/code&gt; or &lt;code&gt;#universe&lt;/code&gt;, but could not find any interesting combination that was also a prime number (apparently, use of Twitter is forbidden inside universe factories).&lt;/p&gt;

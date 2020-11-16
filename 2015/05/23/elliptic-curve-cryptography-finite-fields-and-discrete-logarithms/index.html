@@ -19,11 +19,21 @@
       },
     };
   </script>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
-    <script src="//andreacorbellini.disqus.com/count.js" async></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
+    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        tocbot.init({
+          tocSelector: '#toc nav',
+          contentSelector: 'article .body',
+          headingSelector: 'h1, h2, h3, h4, h5, h6',
+          activeLinkClass: 'active',
+        });
+      });
+    </script>
       <meta name="tags" content="ecc">
       <meta name="tags" content="math">
       <meta name="tags" content="security">
@@ -281,21 +291,13 @@ $$n(hP) = 0$$</p>
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
-  <script>
-    tocbot.init({
-      tocSelector: '#toc nav',
-      contentSelector: 'article .body',
-      headingSelector: 'h1, h2, h3, h4, h5, h6',
-      activeLinkClass: 'active',
-    });
-  </script>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "elliptic-curve-cryptography-finite-fields-and-discrete-logarithms";
       var disqus_title = "Elliptic Curve Cryptography: finite fields and discrete logarithms";
       var disqus_url = "https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/";
     </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" async defer></script>
+    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
 </footer>
   </body>
 </html>
