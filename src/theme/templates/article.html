@@ -3,6 +3,17 @@
 {% block head %}
   {% autoescape true %}
     {{ super() }}
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        tocbot.init({
+          tocSelector: '#toc nav',
+          contentSelector: 'article .body',
+          headingSelector: 'h1, h2, h3, h4, h5, h6',
+          activeLinkClass: 'active',
+        });
+      });
+    </script>
     {% for keyword in article.keywords %}
       <meta name="keywords" content="{{ keyword }}">
     {% endfor %}
@@ -25,7 +36,12 @@
         <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
         {% include "_includes/article-details.html" %}
       </header>
-      <div class="body">{{ article.content|safe }}</div>
+      <div class="wrapper">
+        <aside id="toc">
+          <nav></nav>
+        </aside>
+        <div class="body">{{ article.content|safe }}</div>
+      </div>
     </article>
     {% if DISQUS_SITENAME %}
       <section>
@@ -47,6 +63,6 @@
       var disqus_title = {{ article.title|tojson }};
       var disqus_url = {{ (SITEURL + '/' + article.url)|tojson }};
     </script>
-    <script src="//{{ DISQUS_SITENAME }}.disqus.com/embed.js" async defer></script>
+    <script src="//{{ DISQUS_SITENAME }}.disqus.com/embed.js" defer></script>
   {% endif %}
 {% endblock %}

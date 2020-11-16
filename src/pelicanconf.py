@@ -97,6 +97,7 @@ MARKDOWN = {
         },
         'markdown.extensions.extra': {},
         'markdown.extensions.meta': {},
+        'markdown.extensions.toc': {},
     },
 }
 
