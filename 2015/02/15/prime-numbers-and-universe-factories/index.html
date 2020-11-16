@@ -7,8 +7,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?e32ebe92">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
@@ -23,6 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js"></script>
       <meta name="tags" content="fun">
       <meta name="tags" content="math">
     <link rel="canonical" href="https://andrea.corbellini.name/2015/02/15/prime-numbers-and-universe-factories/">
@@ -52,7 +53,11 @@
   <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-02-15T16:54:00+00:00">February 15, 2015</time></span>
   <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/02/15/prime-numbers-and-universe-factories/#disqus_thread" title="Comments" data-disqus-identifier="prime-numbers-and-universe-factories">Comments</a></span>
 </div>      </header>
-      <div class="body"><p>I'm a XKCD fan, and I look it up regularly. There's a comic that I particularly enjoyed: <a href="http://xkcd.com/10/">Pi Equals</a>.</p>
+      <div class="wrapper">
+        <aside id="toc">
+          <nav></nav>
+        </aside>
+        <div class="body"><p>I'm a XKCD fan, and I look it up regularly. There's a comic that I particularly enjoyed: <a href="http://xkcd.com/10/">Pi Equals</a>.</p>
 <figure>
   <a href="http://xkcd.com/10/"><img src="http://imgs.xkcd.com/comics/pi.jpg" width="469" height="247" alt="Pi Equals"></a>
   <figcaption>The comic <a href="http://xkcd.com/10/" title="Pi Equals">Pi Equals</a>, from XKCD.com (CC-BY-NC 2.5).</figcaption>
@@ -67,7 +72,7 @@
 </code></pre></div>
 
 <p>Apparently, universe factory workers speak English and write ASCII. Nice coincidence, huh?</p>
-<h1>The discovery</h1>
+<h1 id="the-discovery">The discovery</h1>
 <p>Yesterday I was playing with the two <a href="https://en.wikipedia.org/wiki/Illegal_prime">illegal primes</a> listed on Wikipedia. I was already aware of them, but I had never decoded them till yesterday. While doing so I wondered: how many prime numbers can be directly mapped to an executable file? Also, how many prime numbers can be directly mapped to plain English texts? Perhaps, while digging prime numbers, could we find something like the Iliad or a fully working operating system?</p>
 <p>Well, while asking myself those highly philosophical questions, Randall's comic quickly came to my mind, and I decided to start looking for help requests hidden in primes. You can't imagine how many of them I found!</p>
 <p>At first I tried looking for all prime numbers corresponding to strings starting with <code>HELP! I'M TRAPPED IN A UNIVERSE FACTORY!</code>, with an arbitrary suffix. I found many of them, but I wasn't satisfied with the result: I wanted something that was purely English/ASCII, without any garbage. Therefore I tried appending hashtags like <code>#help</code> or <code>#universe</code>, but could not find any interesting combination that was also a prime number (apparently, use of Twitter is forbidden inside universe factories).</p>
@@ -98,6 +103,7 @@ help!!!!!!!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!
 <p>I'm not 100% sure that all the others are primes, as I used <a href="https://en.wikipedia.org/wiki/Fermat_primality_test">Fermat primality test</a>. However I'm impressed by what I found. Now I can't stop wondering how much literature, physics or technology could be hidden in prime numbers, in plain English and UTF-8 encoded. :D</p>
 <p>(Obviously, I'm perfectly conscious on what's happening here, but I though this was a nice fact to share. It could also be a nice number to print on a shirt.)</p>
 <p><strong>Dear universe factory worker, I'm going to rescue you, sooner or later. Just tell me how.</strong></p></div>
+      </div>
     </article>
       <section>
         <div class="comments">
@@ -112,6 +118,14 @@ help!!!!!!!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
+  <script>
+    tocbot.init({
+      tocSelector: '#toc nav',
+      contentSelector: 'article .body',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      activeLinkClass: 'active',
+    });
+  </script>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "prime-numbers-and-universe-factories";

@@ -7,8 +7,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?e32ebe92">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
@@ -23,6 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js"></script>
       <meta name="tags" content="ecdsa">
       <meta name="tags" content="let&#39;s encrypt">
       <meta name="tags" content="rsa">
@@ -55,7 +56,11 @@
   <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-06-16T18:20:00+00:00">June 16, 2015</time></span>
   <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/#disqus_thread" title="Comments" data-disqus-identifier="lets-encrypt-is-going-to-start-soon">Comments</a></span>
 </div>      </header>
-      <div class="body"><p><a href="https://letsencrypt.org/">Let's Encrypt</a> (the free, automated and open certificate authority) has just <a href="https://letsencrypt.org/2015/06/16/lets-encrypt-launch-schedule.html">announced its launch schedule</a>. According to it, certificates will be released to the public starting from the <strong>week of September 14, 2015</strong>.</p>
+      <div class="wrapper">
+        <aside id="toc">
+          <nav></nav>
+        </aside>
+        <div class="body"><p><a href="https://letsencrypt.org/">Let's Encrypt</a> (the free, automated and open certificate authority) has just <a href="https://letsencrypt.org/2015/06/16/lets-encrypt-launch-schedule.html">announced its launch schedule</a>. According to it, certificates will be released to the public starting from the <strong>week of September 14, 2015</strong>.</p>
 <p>Their intermediate certificates, which <a href="https://letsencrypt.org/2015/06/04/isrg-ca-certs.html">were generated a few days ago</a>, will be signed by <a href="https://www.identrustssl.com/">IdenTrust</a>. What this means is that if you browse a web page secured by Let's Encrypt, you won't get any scary message, but the usual green lock.</p>
 <figure>
   <img src="https://andrea.corbellini.name/images/green-lock.png" alt="Green lock" width="612" height="188">
@@ -71,6 +76,7 @@
 <p>Technical aspects aside, this will be a great opportunity for the entire web. As I have <a href="https://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/">already written</a>, I always dreamed of an encrypted web, and I truly believe that Let's Encrypt — or at least its approach to the problem — is the way to go.</p>
 <p>So, will you get a Let's Encrypt certificate when the time comes? I will do. Not for this blog (I can't put a certificate without paying), but for other websites I manage.</p>
 <p>Perhaps I'll also show a "Proudly secured by Let's Encrypt" badge.</p></div>
+      </div>
     </article>
       <section>
         <div class="comments">
@@ -85,6 +91,14 @@
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
+  <script>
+    tocbot.init({
+      tocSelector: '#toc nav',
+      contentSelector: 'article .body',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      activeLinkClass: 'active',
+    });
+  </script>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "lets-encrypt-is-going-to-start-soon";

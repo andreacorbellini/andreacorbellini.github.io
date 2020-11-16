@@ -7,8 +7,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?e32ebe92">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
@@ -23,6 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js"></script>
       <meta name="tags" content="ubuntu">
     <link rel="canonical" href="https://andrea.corbellini.name/2018/05/12/11-years-of-ubuntu-membership/">
     <title>11 years of Ubuntu membership - Andrea Corbellini</title>
@@ -51,9 +52,14 @@
   <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2018-05-12T21:30:00+00:00">May 12, 2018</time></span>
   <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2018/05/12/11-years-of-ubuntu-membership/#disqus_thread" title="Comments" data-disqus-identifier="11-years-of-ubuntu-membership">Comments</a></span>
 </div>      </header>
-      <div class="body"><p>It's been 11 years and 1 month since I was awarded with <a href="https://wiki.ubuntu.com/Membership">official Ubuntu membership</a>. I will never forget that day: as a kid I had to write about myself on <a href="https://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a>, in front of the Community Council members and answer their questions in a language that was not my primary one. I must confess that I was a bit scared that evening, but once I made it, it felt <em>so</em> good. It felt good not just because of the award itself, but rather because that was the recognition that I did <em>something</em> that <em>mattered</em>. I did something useful that other people could benefit from. And for me, that meant a lot.</p>
+      <div class="wrapper">
+        <aside id="toc">
+          <nav></nav>
+        </aside>
+        <div class="body"><p>It's been 11 years and 1 month since I was awarded with <a href="https://wiki.ubuntu.com/Membership">official Ubuntu membership</a>. I will never forget that day: as a kid I had to write about myself on <a href="https://en.wikipedia.org/wiki/Internet_Relay_Chat">IRC</a>, in front of the Community Council members and answer their questions in a language that was not my primary one. I must confess that I was a bit scared that evening, but once I made it, it felt <em>so</em> good. It felt good not just because of the award itself, but rather because that was the recognition that I did <em>something</em> that <em>mattered</em>. I did something useful that other people could benefit from. And for me, that meant a lot.</p>
 <p>So much time has passed since then. So many things have changed both in my life and around me, for better or worse. So many that I cannot even <a href="https://en.wikipedia.org/wiki/Cantor%27s_diagonal_argument">enumerate</a> all of them. Nonetheless, deep inside of me, I still feel like that young kid: curious, always ready to experiment, full of hopes and uncertain (but never scared) about the future.</p>
 <p>Through the years I received the support of a bunch of people who believed in me, and I thank them all. But if today I feel so hopeful it's undoubtedly thanks to one person in particular, a person who holds a special place in my life. A big thank you goes to you.</p></div>
+      </div>
     </article>
       <section>
         <div class="comments">
@@ -68,6 +74,14 @@
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
+  <script>
+    tocbot.init({
+      tocSelector: '#toc nav',
+      contentSelector: 'article .body',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      activeLinkClass: 'active',
+    });
+  </script>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "11-years-of-ubuntu-membership";

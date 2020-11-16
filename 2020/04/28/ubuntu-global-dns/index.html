@@ -7,8 +7,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?e32ebe92">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700|Open+Sans:400,700">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
@@ -23,6 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" async></script>
     <script src="//andreacorbellini.disqus.com/count.js" async></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js"></script>
       <meta name="tags" content="ubuntu">
       <meta name="tags" content="systemd">
       <meta name="tags" content="resolved">
@@ -57,11 +58,15 @@
   <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2020-04-28T06:30:00+00:00">April 28, 2020</time></span>
   <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/#disqus_thread" title="Comments" data-disqus-identifier="ubuntu-global-dns">Comments</a></span>
 </div>      </header>
-      <div class="body"><h1>Problem</h1>
+      <div class="wrapper">
+        <aside id="toc">
+          <nav></nav>
+        </aside>
+        <div class="body"><h1 id="problem">Problem</h1>
 <p>Currently Ubuntu does not offer an easy way to set up a "global" DNS for all network connections: whenever you connect to a new WiFi network, if you don't want to use the DNS server provided by the WiFi, you are forced to go to the network settings and manually set your preferred DNS server.</p>
 <p>With this brief guide I want to show how you can setup a global DNS to be used for <em>all</em> the WiFi and network connections, both old and new ones. I will also show you how to use DNSSEC, DNS-over-TLS and randomized MAC addresses for all connections.</p>
 <p>This guide is written for Ubuntu 20.04, but in general it will work on every distribution using systemd-resolved and NetworkManager.</p>
-<h1>Step 1: setup the Global DNS in resolved</h1>
+<h1 id="step-1-setup-the-global-dns-in-resolved">Step 1: setup the Global DNS in resolved</h1>
 <p>In Ubuntu (as well as many other distributions), DNS is managed by systemd-resolved. Its configuration is in <code>/etc/systemd/resolved.conf</code>. Open that file and add a <code>DNS=</code> line inside the <code>[Resolve]</code> section listing your preferred DNS servers. For example, if you want to use <a href="https://1.1.1.1/"><code>1.1.1.1</code></a>, your <code>resolved.conf</code> should look like this:</p>
 <div class="highlight"><pre><span></span><code>[Resolve]
 DNS=1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
@@ -95,7 +100,7 @@ MulticastDNS setting: no
 </code></pre></div>
 
 <p>This however won't be enough to use that DNS! In fact, the <em>Global</em> DNS of systemd-resolved is just a default option that is used whenever no DNS servers are configured for an interface. When you connect to a WiFi network, NetworkManager will ask the access point for a list of DNS servers and will communicate that list to systemd-resolved, effectively overriding the settings that we just edited. If you scroll down the output of <code>resolvectl status</code>, you will see the DNS servers added by NetworkManager. We have to tell NetworkManager to stop doing that.</p>
-<h1>Step 2: Disable DNS processing in NetworkManager</h1>
+<h1 id="step-2-disable-dns-processing-in-networkmanager">Step 2: Disable DNS processing in NetworkManager</h1>
 <p>In order for systemd-resolved to consider our global DNS, we need to tell NetworkManager not to provide any DNS information for new connections. Doing that is easy: just create a new file <code>/etc/NetworkManager/conf.d/dns.conf</code> (or any name you like) with this content:</p>
 <div class="highlight"><pre><span></span><code>[main]
 # do not use the dhcp-provided dns servers, but rather use the global
@@ -109,7 +114,7 @@ systemd-resolved=false
 </code></pre></div>
 
 <p>Now, when you connect to a new network connection, NetworkManager won't push the list of DNS servers to systemd-resolved and only the global ones will be used. If you check <code>resolvectl status</code>, you should see that, for every interface, there is <em>no</em> DNS server specified. If you specified <code>1.1.1.1</code> as your DNS servers, then you can also head over to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify that they've been correctly set up.</p>
-<h1>DNSSEC and DNS-over-TLS</h1>
+<h1 id="dnssec-and-dns-over-tls">DNSSEC and DNS-over-TLS</h1>
 <p>If you would like to enable DNSSEC and/or DNS-over-TLS, the file to edit is <code>/etc/systemd/resolved.conf</code>. You can add the following options:</p>
 <ul>
 <li><code>DNSSEC=true</code> if you want all queries to be DNSSEC-validated. The default is <code>DNSSEC=allow-downgrade</code>, which attempts to use DNSSEC if it works properly, and falls back to disabling validation otherwise.</li>
@@ -139,7 +144,7 @@ DNSOverTLS=opportunistic
 </code></pre></div>
 
 <p>If you're using <code>1.1.1.1</code>, you can also go to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify DNS-over-TLS.</p>
-<h1>Random MAC address</h1>
+<h1 id="random-mac-address">Random MAC address</h1>
 <p>NetworkManager supports 3 options to have a random MAC address (also known as "cloned" or "spoofed" MAC address):</p>
 <ol>
 <li><code>wifi.scan-rand-mac-address</code> controls the MAC address used when scanning for WiFi devices. This goes into the <code>[device]</code> section</li>
@@ -170,6 +175,7 @@ wifi.cloned-mac-address=random
 <p>You can test your changes with:</p>
 <div class="highlight"><pre><span></span><code>ip link
 </code></pre></div></div>
+      </div>
     </article>
       <section>
         <div class="comments">
@@ -184,6 +190,14 @@ wifi.cloned-mac-address=random
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
+  <script>
+    tocbot.init({
+      tocSelector: '#toc nav',
+      contentSelector: 'article .body',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      activeLinkClass: 'active',
+    });
+  </script>
     <script>
       var disqus_shortname = "andreacorbellini";
       var disqus_identifier = "ubuntu-global-dns";
