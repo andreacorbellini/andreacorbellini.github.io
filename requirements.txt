@@ -4,5 +4,4 @@ markdown
 
 -e git://github.com/getpelican/pelican.git#egg=pelican
 
-# For pelican-plugins/assets
-webassets
+pelican-webassets

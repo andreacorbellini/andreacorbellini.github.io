@@ -2,7 +2,6 @@ import os
 import socket
 import sys
 from datetime import date
-from flask.json import tojson_filter
 
 
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -83,10 +82,10 @@ PLUGIN_PATHS = [
 ]
 
 PLUGINS = [
-    'assets',
+    'pelican.plugins.webassets',
     'redirects',
-    'ubuntuplanet',
     'spellcheck',
+    'ubuntuplanet',
 ]
 
 MARKDOWN = {
@@ -104,7 +103,6 @@ MARKDOWN = {
 
 # Templates.
 JINJA_FILTERS = {
-    'tojson': tojson_filter,
 }
 
 JINJA_ENVIRONMENT = {
