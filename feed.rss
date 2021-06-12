@@ -46,7 +46,7 @@ dns=none
 systemd-resolved=false
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;To apply the settings either run restart your computer or run:&lt;/p&gt;
+&lt;p&gt;To apply the settings either restart your computer or run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;sudo systemctl reload NetworkManager.service
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 

@@ -60,7 +60,7 @@ In order for systemd-resolved to consider our global DNS, we need to tell Networ
     dns=none
     systemd-resolved=false
 
-To apply the settings either run restart your computer or run:
+To apply the settings either restart your computer or run:
 
     sudo systemctl reload NetworkManager.service
 
