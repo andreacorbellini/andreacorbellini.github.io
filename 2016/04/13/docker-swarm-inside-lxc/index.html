@@ -96,7 +96,7 @@
 <p>This tutorial has been successfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.</p>
 <h1 id="step-1">Step 1: Create the Swarm Manager container</h1>
 <p>Create a new LXC container with:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> lxc-create -t download -n swarm-manager
+<div class="highlight"><pre><span></span><code><span class="gp">root@host:~# </span>lxc-create -t download -n swarm-manager
 </code></pre></div>
 
 <p>When prompted, choose your favorite distribution and architecture. I chose <code>ubuntu</code> / <code>xenial</code> / <code>amd64</code>.</p>
@@ -122,20 +122,20 @@ lxc.cap.drop <span class="o">=</span>
 <p>So, while Docker itself won't be confined, <strong>Docker containers will be confined</strong>, and this is an encouraging fact.</p>
 <h1 id="step-3">Step 3: Load the OverlayFS module</h1>
 <p>OverlayFS is shipped with Ubuntu, but not enabled by default. To enable it:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> modprobe overlay
+<div class="highlight"><pre><span></span><code><span class="gp">root@host:~# </span>modprobe overlay
 </code></pre></div>
 
 <p>It is important to do this step before installing Docker. Docker supports various storage drivers and when Docker is installed for the first time it tries to detect the most appropriate one for the system. If Docker detects that OverlayFS is not loaded, it'll fall back to the device mapper. There's nothing wrong with the device mapper, we can make it work, however, as I said at the beginning, in this tutorial I'm focusing only on OverlayFS.</p>
 <p>If you want to load OverlayFS at boot, instead of doing it manually after every reboot, add it to <code>/etc/modules-load.d/modules.conf</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> <span class="nb">echo</span> overlay &gt;&gt; /etc/modules-load.d/modules.conf
+<div class="highlight"><pre><span></span><code><span class="gp">root@host:~# </span><span class="nb">echo</span> overlay &gt;&gt; /etc/modules-load.d/modules.conf
 </code></pre></div>
 
 <h1 id="step-4">Step 4: Start the container and install Docker</h1>
 <p>It's time to see if we did everything right!</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> lxc-start -n swarm-manager
-<span class="gp">root@host:~#</span> lxc-attach -n swarm-manager
-<span class="gp">root@swarm-manager:~#</span> apt update
-<span class="gp">root@swarm-manager:~#</span> apt install docker.io
+<div class="highlight"><pre><span></span><code><span class="gp">root@host:~# </span>lxc-start -n swarm-manager
+<span class="gp">root@host:~# </span>lxc-attach -n swarm-manager
+<span class="gp">root@swarm-manager:~# </span>apt update
+<span class="gp">root@swarm-manager:~# </span>apt install docker.io
 </code></pre></div>
 
 <p>Installation should complete without any problem. If you get an error like this:</p>
@@ -146,7 +146,7 @@ dpkg: error processing package docker.io (--configure):
 </code></pre></div>
 
 <p>It means that Docker failed to start. Try checking <code>systemctl status docker</code> as suggested, or run <code>docker daemon</code> manually. You might get an error like this:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker daemon
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker daemon
 <span class="go">WARN[0000] devmapper: Udev sync is not supported. This will lead to unexpected behavior, data loss and errors. For more information, see https://docs.docker.com/reference/commandline/daemon/#daemon-storage-driver-option</span>
 <span class="go">ERRO[0000] There are no more loopback devices available.</span>
 <span class="go">ERRO[0000] [graphdriver] prior storage driver &quot;devicemapper&quot; failed: loopback attach failed</span>
@@ -155,7 +155,7 @@ dpkg: error processing package docker.io (--configure):
 
 <p>In this case, Docker is using the devicemapper storage driver and is complaining about the lack of loopback devices. If that's the case, check whether OverlayFS is loaded and reinstall Docker.</p>
 <p>Or you might get an error like this:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker daemon
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker daemon
 <span class="go">...</span>
 <span class="go">FATA[0000] Error starting daemon: AppArmor enabled on system but the docker-default profile could not be loaded.</span>
 </code></pre></div>
@@ -163,7 +163,7 @@ dpkg: error processing package docker.io (--configure):
 <p>It this other case, Docker is complaining about the fact that it can't talk to AppArmor. Check the configuration for the LXC container.</p>
 <h1 id="step-5">Step 5: Check if Docker is working</h1>
 <p>Once you are all set, you should be able to use Docker: try running <code>docker info</code>, <code>docker ps</code> or launch a container:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker run --rm docker/whalesay cowsay burp!
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker run --rm docker/whalesay cowsay burp!
 <span class="go">Unable to find image &#39;docker/whalesay:latest&#39; locally</span>
 <span class="go">latest: Pulling from docker/whalesay</span>
 <span class="go">...</span>
@@ -185,11 +185,11 @@ dpkg: error processing package docker.io (--configure):
 </code></pre></div>
 
 <p>It appears to be working. By the way, we can check whether Docker is correctly confining containers. Try running a Docker container and check on the host the output of <code>aa-status</code>: you should see a process running with the <code>docker-default</code> profile. For example:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker run --rm ubuntu bash -c <span class="s1">&#39;while true; do sleep 1; echo -n zZ; done&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker run --rm ubuntu bash -c <span class="s1">&#39;while true; do sleep 1; echo -n zZ; done&#39;</span>
 <span class="go">zZzZzZzZzZzZzZzZ...</span>
 
-<span class="gp">#</span> On another shell
-<span class="gp">root@host:~#</span> aa-status
+<span class="gp"># </span>On another shell
+<span class="gp">root@host:~# </span>aa-status
 <span class="go">apparmor module is loaded.</span>
 <span class="go">5 profiles are loaded.</span>
 <span class="go">5 profiles are in enforce mode.</span>
@@ -208,7 +208,7 @@ dpkg: error processing package docker.io (--configure):
 <span class="go">0 processes are in complain mode.</span>
 <span class="go">0 processes are unconfined but have a profile defined.</span>
 
-<span class="gp">root@host:~#</span> ps -ef <span class="p">|</span> grep <span class="m">6956</span>
+<span class="gp">root@host:~# </span>ps -ef <span class="p">|</span> grep <span class="m">6956</span>
 <span class="go">root      6956  4982  0 17:17 ?        00:00:00 bash -c while true; do sleep 1; echo -n zZ; done</span>
 <span class="go">root      6973  6956  0 17:17 ?        00:00:00 sleep 1</span>
 <span class="go">root      6982  6808  0 17:17 pts/3    00:00:00 grep --color=auto 6956</span>
@@ -218,7 +218,7 @@ dpkg: error processing package docker.io (--configure):
 <h1 id="step-6">Step 6: Set up the Swarm Manager</h1>
 <p>That was the hardest part. Now we can proceed setting up Swarm as we would usually do.</p>
 <p>As I said at the beginning, Swarm can be configured in many ways. In this tutorial I'll show how to set it up with etcd discovery. First of all, we need the IP address of the LXC container:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> ifconfig eth0
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>ifconfig eth0
 <span class="go">eth0      Link encap:Ethernet  HWaddr 00:16:3e:8e:cb:43</span>
 <span class="go">          inet addr:10.0.3.154  Bcast:10.0.3.255  Mask:255.255.255.0</span>
 <span class="go">          inet6 addr: fe80::216:3eff:fe8e:cb43/64 Scope:Link</span>
@@ -230,24 +230,24 @@ dpkg: error processing package docker.io (--configure):
 </code></pre></div>
 
 <p><code>10.0.3.154</code> is my IP address. Let's start etcd:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> <span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span><span class="m">10</span>.0.3.154
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span><span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span><span class="m">10</span>.0.3.154
 
-<span class="gp">root@swarm-manager:~#</span> docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>etcd -p <span class="m">4001</span>:4001 -p <span class="m">2380</span>:2380 -p <span class="m">2379</span>:2379 <span class="se">\</span>
-                            quay.io/coreos/etcd -name etcd0 <span class="se">\</span>
-                            -advertise-client-urls http://<span class="nv">$SWARM_MANAGER_IP</span>:2379,http://<span class="nv">$SWARM_MANAGER_IP</span>:4001 <span class="se">\</span>
-                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 <span class="se">\</span>
-                            -initial-advertise-peer-urls http://<span class="nv">$SWARM_MANAGER_IP</span>:2380 <span class="se">\</span>
-                            -listen-peer-urls http://0.0.0.0:2380 <span class="se">\</span>
-                            -initial-cluster-token etcd-cluster-1 <span class="se">\</span>
-                            -initial-cluster <span class="nv">etcd0</span><span class="o">=</span>http://<span class="nv">$SWARM_MANAGER_IP</span>:2380 <span class="se">\</span>
-                            -initial-cluster-state new
+<span class="gp">root@swarm-manager:~# </span>docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>etcd -p <span class="m">4001</span>:4001 -p <span class="m">2380</span>:2380 -p <span class="m">2379</span>:2379 <span class="se">\</span>
+<span class="go">                            quay.io/coreos/etcd -name etcd0 \</span>
+<span class="go">                            -advertise-client-urls http://$SWARM_MANAGER_IP:2379,http://$SWARM_MANAGER_IP:4001 \</span>
+<span class="go">                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \</span>
+<span class="go">                            -initial-advertise-peer-urls http://$SWARM_MANAGER_IP:2380 \</span>
+<span class="go">                            -listen-peer-urls http://0.0.0.0:2380 \</span>
+<span class="go">                            -initial-cluster-token etcd-cluster-1 \</span>
+<span class="go">                            -initial-cluster etcd0=http://$SWARM_MANAGER_IP:2380 \</span>
+<span class="go">                            -initial-cluster-state new</span>
 <span class="go">Unable to find image &#39;quay.io/coreos/etcd:latest&#39; locally</span>
 <span class="go">latest: Pulling from coreos/etcd</span>
 <span class="go">...</span>
 <span class="go">Status: Downloaded newer image for quay.io/coreos/etcd:latest</span>
 <span class="go">e742278a97d2ad3f88658aa871903d20b4094e551969a03aa8332d3876fe5d0d</span>
 
-<span class="gp">root@swarm-manager:~#</span> docker ps
+<span class="gp">root@swarm-manager:~# </span>docker ps
 <span class="go">CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                                NAMES</span>
 <span class="go">e742278a97d2        quay.io/coreos/etcd   &quot;/etcd -name etcd0 -a&quot;   32 seconds ago      Up 31 seconds       0.0.0.0:2379-2380-&gt;2379-2380/tcp, 0.0.0.0:4001-&gt;4001/tcp, 7001/tcp   etcd</span>
 </code></pre></div>
@@ -255,22 +255,22 @@ dpkg: error processing package docker.io (--configure):
 <p>Replace <code>10.0.3.154</code> with the IP address of your LXC container.</p>
 <p>Note that I've started etcd with <code>--restart=always</code>, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop <code>--restart=always</code> if that's not what you want.</p>
 <p>Now we can start the Swarm manager:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>swarm -p <span class="m">3375</span>:3375 <span class="se">\</span>
-                            swarm manage -H <span class="m">0</span>.0.0.0:3375 etcd://<span class="nv">$SWARM_MANAGER_IP</span>:2379
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>swarm -p <span class="m">3375</span>:3375 <span class="se">\</span>
+<span class="go">                            swarm manage -H 0.0.0.0:3375 etcd://$SWARM_MANAGER_IP:2379</span>
 <span class="go">Unable to find image &#39;swarm:latest&#39; locally</span>
 <span class="go">latest: Pulling from library/swarm</span>
 <span class="go">...</span>
 <span class="go">Status: Downloaded newer image for swarm:latest</span>
 <span class="go">8080c93c544ff92cc2cf682ff0bbc82e0d2dfb01e1f98f202c3a0801d3427330</span>
 
-<span class="gp">root@swarm-manager:~#</span> docker ps
+<span class="gp">root@swarm-manager:~# </span>docker ps
 <span class="go">CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                                NAMES</span>
 <span class="go">46b556e73e87        swarm                 &quot;/swarm manage -H 0.0&quot;   3 seconds ago       Up 2 seconds        2375/tcp, 0.0.0.0:3375-&gt;3375/tcp                                     swarm</span>
 <span class="go">e742278a97d2        quay.io/coreos/etcd   &quot;/etcd -name etcd0 -a&quot;   7 minutes ago       Up 7 minutes        0.0.0.0:2379-2380-&gt;2379-2380/tcp, 0.0.0.0:4001-&gt;4001/tcp, 7001/tcp   etcd</span>
 </code></pre></div>
 
 <p>Our Swarm manager is up and running. We can connect to it and issue a few commands:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker -H localhost:3375 info
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker -H localhost:3375 info
 <span class="go">Containers: 0</span>
 <span class="go"> Running: 0</span>
 <span class="go"> Paused: 0</span>
@@ -304,7 +304,7 @@ dpkg: error processing package docker.io (--configure):
 <span class="nv">DOWNLOAD_RELEASE</span><span class="o">=</span>xenial
 <span class="nv">DOWNLOAD_ARCH</span><span class="o">=</span>amd64
 
-<span class="k">for</span> LXC_NAME in <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="k">for</span> LXC_NAME <span class="k">in</span> <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 <span class="k">do</span>
     <span class="nv">LXC_PATH</span><span class="o">=</span><span class="s2">&quot;/var/lib/lxc/</span><span class="nv">$LXC_NAME</span><span class="s2">&quot;</span>
     <span class="nv">LXC_ROOTFS</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$LXC_PATH</span><span class="s2">/rootfs&quot;</span>
@@ -340,7 +340,7 @@ dpkg: error processing package docker.io (--configure):
 
 <p>Be sure to change the values for <code>SWARM_MANAGER_IP</code>, <code>DOWNLOAD_DIST</code>, <code>DOWNLOAD_RELEASE</code> and <code>DOWNLOAD_ARCH</code> to fit your needs.</p>
 <p>Thanks to this script, creating 10 new agents is as simple as running one command:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@host:~#</span> ./swarm-agent-create swarm-agent-<span class="o">{</span><span class="m">0</span>..9<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><span class="gp">root@host:~# </span>./swarm-agent-create swarm-agent-<span class="o">{</span><span class="m">0</span>..9<span class="o">}</span>
 </code></pre></div>
 
 <p>Here's an explanation of what the script does:</p>
@@ -390,7 +390,7 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 </ul>
 <h1 id="step-8">Step 8: Play with the Swarm</h1>
 <p>Now, if we check <code>docker info</code> on the Swarm manager, we should see 10 healthy nodes:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker -H localhost:3375 info
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker -H localhost:3375 info
 <span class="go">Containers: 10</span>
 <span class="go"> Running: 10</span>
 <span class="go"> Paused: 0</span>
@@ -493,7 +493,7 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 </code></pre></div>
 
 <p>Let's try running a command on the Swarm:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~#</span> docker -H localhost:3375 run -i --rm docker/whalesay cowsay <span class="s1">&#39;It works!&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker -H localhost:3375 run -i --rm docker/whalesay cowsay <span class="s1">&#39;It works!&#39;</span>
 <span class="go"> ___________</span>
 <span class="go">&lt; It works! &gt;</span>
 <span class="go"> -----------</span>
@@ -524,7 +524,7 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2020 Andrea Corbellini</p>
+  <p>Copyright &copy; 2015-2021 Andrea Corbellini</p>
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>

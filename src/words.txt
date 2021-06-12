@@ -60,6 +60,7 @@ cpu
 cpus
 cryptocurrencies
 cryptocurrency
+cryptographic
 cryptographically
 cryptosystems
 dbus
@@ -80,6 +81,7 @@ filesystem
 filesystems
 fp
 grsecurity
+hyperelliptic
 img
 init
 kB
@@ -98,6 +100,8 @@ numberempire
 octillions
 overlayfs
 parallelized
+parametrization
+parametrizations
 plaintext
 primality
 proc

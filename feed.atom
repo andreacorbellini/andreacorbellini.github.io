@@ -142,7 +142,7 @@ wifi.cloned-mac-address=random
 &lt;p&gt;This tutorial has been successfully tested on Ubuntu 15.10 (that ships with Docker 1.6) and Ubuntu 16.04 LTS (Docker 1.10), but it may work on other distributions and Docker versions as well.&lt;/p&gt;
 &lt;h1 id="step-1"&gt;Step 1: Create the Swarm Manager container&lt;/h1&gt;
 &lt;p&gt;Create a new LXC container with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-create -t download -n swarm-manager
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;lxc-create -t download -n swarm-manager
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;When prompted, choose your favorite distribution and architecture. I chose &lt;code&gt;ubuntu&lt;/code&gt; / &lt;code&gt;xenial&lt;/code&gt; / &lt;code&gt;amd64&lt;/code&gt;.&lt;/p&gt;
@@ -168,20 +168,20 @@ lxc.cap.drop &lt;span class="o"&gt;=&lt;/span&gt;
 &lt;p&gt;So, while Docker itself won't be confined, &lt;strong&gt;Docker containers will be confined&lt;/strong&gt;, and this is an encouraging fact.&lt;/p&gt;
 &lt;h1 id="step-3"&gt;Step 3: Load the OverlayFS module&lt;/h1&gt;
 &lt;p&gt;OverlayFS is shipped with Ubuntu, but not enabled by default. To enable it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; modprobe overlay
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;modprobe overlay
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;It is important to do this step before installing Docker. Docker supports various storage drivers and when Docker is installed for the first time it tries to detect the most appropriate one for the system. If Docker detects that OverlayFS is not loaded, it'll fall back to the device mapper. There's nothing wrong with the device mapper, we can make it work, however, as I said at the beginning, in this tutorial I'm focusing only on OverlayFS.&lt;/p&gt;
 &lt;p&gt;If you want to load OverlayFS at boot, instead of doing it manually after every reboot, add it to &lt;code&gt;/etc/modules-load.d/modules.conf&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; &lt;span class="nb"&gt;echo&lt;/span&gt; overlay &amp;gt;&amp;gt; /etc/modules-load.d/modules.conf
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; overlay &amp;gt;&amp;gt; /etc/modules-load.d/modules.conf
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h1 id="step-4"&gt;Step 4: Start the container and install Docker&lt;/h1&gt;
 &lt;p&gt;It's time to see if we did everything right!&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-start -n swarm-manager
-&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; lxc-attach -n swarm-manager
-&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; apt update
-&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; apt install docker.io
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;lxc-start -n swarm-manager
+&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;lxc-attach -n swarm-manager
+&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;apt update
+&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;apt install docker.io
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Installation should complete without any problem. If you get an error like this:&lt;/p&gt;
@@ -192,7 +192,7 @@ dpkg: error processing package docker.io (--configure):
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;It means that Docker failed to start. Try checking &lt;code&gt;systemctl status docker&lt;/code&gt; as suggested, or run &lt;code&gt;docker daemon&lt;/code&gt; manually. You might get an error like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker daemon
 &lt;span class="go"&gt;WARN[0000] devmapper: Udev sync is not supported. This will lead to unexpected behavior, data loss and errors. For more information, see https://docs.docker.com/reference/commandline/daemon/#daemon-storage-driver-option&lt;/span&gt;
 &lt;span class="go"&gt;ERRO[0000] There are no more loopback devices available.&lt;/span&gt;
 &lt;span class="go"&gt;ERRO[0000] [graphdriver] prior storage driver &amp;quot;devicemapper&amp;quot; failed: loopback attach failed&lt;/span&gt;
@@ -201,7 +201,7 @@ dpkg: error processing package docker.io (--configure):
 
 &lt;p&gt;In this case, Docker is using the devicemapper storage driver and is complaining about the lack of loopback devices. If that's the case, check whether OverlayFS is loaded and reinstall Docker.&lt;/p&gt;
 &lt;p&gt;Or you might get an error like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker daemon
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker daemon
 &lt;span class="go"&gt;...&lt;/span&gt;
 &lt;span class="go"&gt;FATA[0000] Error starting daemon: AppArmor enabled on system but the docker-default profile could not be loaded.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -209,7 +209,7 @@ dpkg: error processing package docker.io (--configure):
 &lt;p&gt;It this other case, Docker is complaining about the fact that it can't talk to AppArmor. Check the configuration for the LXC container.&lt;/p&gt;
 &lt;h1 id="step-5"&gt;Step 5: Check if Docker is working&lt;/h1&gt;
 &lt;p&gt;Once you are all set, you should be able to use Docker: try running &lt;code&gt;docker info&lt;/code&gt;, &lt;code&gt;docker ps&lt;/code&gt; or launch a container:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm docker/whalesay cowsay burp!
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker run --rm docker/whalesay cowsay burp!
 &lt;span class="go"&gt;Unable to find image &amp;#39;docker/whalesay:latest&amp;#39; locally&lt;/span&gt;
 &lt;span class="go"&gt;latest: Pulling from docker/whalesay&lt;/span&gt;
 &lt;span class="go"&gt;...&lt;/span&gt;
@@ -231,11 +231,11 @@ dpkg: error processing package docker.io (--configure):
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;It appears to be working. By the way, we can check whether Docker is correctly confining containers. Try running a Docker container and check on the host the output of &lt;code&gt;aa-status&lt;/code&gt;: you should see a process running with the &lt;code&gt;docker-default&lt;/code&gt; profile. For example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run --rm ubuntu bash -c &lt;span class="s1"&gt;&amp;#39;while true; do sleep 1; echo -n zZ; done&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker run --rm ubuntu bash -c &lt;span class="s1"&gt;&amp;#39;while true; do sleep 1; echo -n zZ; done&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;zZzZzZzZzZzZzZzZ...&lt;/span&gt;
 
-&lt;span class="gp"&gt;#&lt;/span&gt; On another shell
-&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; aa-status
+&lt;span class="gp"&gt;# &lt;/span&gt;On another shell
+&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;aa-status
 &lt;span class="go"&gt;apparmor module is loaded.&lt;/span&gt;
 &lt;span class="go"&gt;5 profiles are loaded.&lt;/span&gt;
 &lt;span class="go"&gt;5 profiles are in enforce mode.&lt;/span&gt;
@@ -254,7 +254,7 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="go"&gt;0 processes are in complain mode.&lt;/span&gt;
 &lt;span class="go"&gt;0 processes are unconfined but have a profile defined.&lt;/span&gt;
 
-&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; ps -ef &lt;span class="p"&gt;|&lt;/span&gt; grep &lt;span class="m"&gt;6956&lt;/span&gt;
+&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;ps -ef &lt;span class="p"&gt;|&lt;/span&gt; grep &lt;span class="m"&gt;6956&lt;/span&gt;
 &lt;span class="go"&gt;root      6956  4982  0 17:17 ?        00:00:00 bash -c while true; do sleep 1; echo -n zZ; done&lt;/span&gt;
 &lt;span class="go"&gt;root      6973  6956  0 17:17 ?        00:00:00 sleep 1&lt;/span&gt;
 &lt;span class="go"&gt;root      6982  6808  0 17:17 pts/3    00:00:00 grep --color=auto 6956&lt;/span&gt;
@@ -264,7 +264,7 @@ dpkg: error processing package docker.io (--configure):
 &lt;h1 id="step-6"&gt;Step 6: Set up the Swarm Manager&lt;/h1&gt;
 &lt;p&gt;That was the hardest part. Now we can proceed setting up Swarm as we would usually do.&lt;/p&gt;
 &lt;p&gt;As I said at the beginning, Swarm can be configured in many ways. In this tutorial I'll show how to set it up with etcd discovery. First of all, we need the IP address of the LXC container:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; ifconfig eth0
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;ifconfig eth0
 &lt;span class="go"&gt;eth0      Link encap:Ethernet  HWaddr 00:16:3e:8e:cb:43&lt;/span&gt;
 &lt;span class="go"&gt;          inet addr:10.0.3.154  Bcast:10.0.3.255  Mask:255.255.255.0&lt;/span&gt;
 &lt;span class="go"&gt;          inet6 addr: fe80::216:3eff:fe8e:cb43/64 Scope:Link&lt;/span&gt;
@@ -276,24 +276,24 @@ dpkg: error processing package docker.io (--configure):
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;code&gt;10.0.3.154&lt;/code&gt; is my IP address. Let's start etcd:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; &lt;span class="nv"&gt;SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.0.3.154
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;&lt;span class="nv"&gt;SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.0.3.154
 
-&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;etcd -p &lt;span class="m"&gt;4001&lt;/span&gt;:4001 -p &lt;span class="m"&gt;2380&lt;/span&gt;:2380 -p &lt;span class="m"&gt;2379&lt;/span&gt;:2379 &lt;span class="se"&gt;\&lt;/span&gt;
-                            quay.io/coreos/etcd -name etcd0 &lt;span class="se"&gt;\&lt;/span&gt;
-                            -advertise-client-urls http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2379,http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:4001 &lt;span class="se"&gt;\&lt;/span&gt;
-                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 &lt;span class="se"&gt;\&lt;/span&gt;
-                            -initial-advertise-peer-urls http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2380 &lt;span class="se"&gt;\&lt;/span&gt;
-                            -listen-peer-urls http://0.0.0.0:2380 &lt;span class="se"&gt;\&lt;/span&gt;
-                            -initial-cluster-token etcd-cluster-1 &lt;span class="se"&gt;\&lt;/span&gt;
-                            -initial-cluster &lt;span class="nv"&gt;etcd0&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2380 &lt;span class="se"&gt;\&lt;/span&gt;
-                            -initial-cluster-state new
+&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;etcd -p &lt;span class="m"&gt;4001&lt;/span&gt;:4001 -p &lt;span class="m"&gt;2380&lt;/span&gt;:2380 -p &lt;span class="m"&gt;2379&lt;/span&gt;:2379 &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="go"&gt;                            quay.io/coreos/etcd -name etcd0 \&lt;/span&gt;
+&lt;span class="go"&gt;                            -advertise-client-urls http://$SWARM_MANAGER_IP:2379,http://$SWARM_MANAGER_IP:4001 \&lt;/span&gt;
+&lt;span class="go"&gt;                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \&lt;/span&gt;
+&lt;span class="go"&gt;                            -initial-advertise-peer-urls http://$SWARM_MANAGER_IP:2380 \&lt;/span&gt;
+&lt;span class="go"&gt;                            -listen-peer-urls http://0.0.0.0:2380 \&lt;/span&gt;
+&lt;span class="go"&gt;                            -initial-cluster-token etcd-cluster-1 \&lt;/span&gt;
+&lt;span class="go"&gt;                            -initial-cluster etcd0=http://$SWARM_MANAGER_IP:2380 \&lt;/span&gt;
+&lt;span class="go"&gt;                            -initial-cluster-state new&lt;/span&gt;
 &lt;span class="go"&gt;Unable to find image &amp;#39;quay.io/coreos/etcd:latest&amp;#39; locally&lt;/span&gt;
 &lt;span class="go"&gt;latest: Pulling from coreos/etcd&lt;/span&gt;
 &lt;span class="go"&gt;...&lt;/span&gt;
 &lt;span class="go"&gt;Status: Downloaded newer image for quay.io/coreos/etcd:latest&lt;/span&gt;
 &lt;span class="go"&gt;e742278a97d2ad3f88658aa871903d20b4094e551969a03aa8332d3876fe5d0d&lt;/span&gt;
 
-&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker ps
+&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker ps
 &lt;span class="go"&gt;CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                                NAMES&lt;/span&gt;
 &lt;span class="go"&gt;e742278a97d2        quay.io/coreos/etcd   &amp;quot;/etcd -name etcd0 -a&amp;quot;   32 seconds ago      Up 31 seconds       0.0.0.0:2379-2380-&amp;gt;2379-2380/tcp, 0.0.0.0:4001-&amp;gt;4001/tcp, 7001/tcp   etcd&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -301,22 +301,22 @@ dpkg: error processing package docker.io (--configure):
 &lt;p&gt;Replace &lt;code&gt;10.0.3.154&lt;/code&gt; with the IP address of your LXC container.&lt;/p&gt;
 &lt;p&gt;Note that I've started etcd with &lt;code&gt;--restart=always&lt;/code&gt;, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop &lt;code&gt;--restart=always&lt;/code&gt; if that's not what you want.&lt;/p&gt;
 &lt;p&gt;Now we can start the Swarm manager:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;swarm -p &lt;span class="m"&gt;3375&lt;/span&gt;:3375 &lt;span class="se"&gt;\&lt;/span&gt;
-                            swarm manage -H &lt;span class="m"&gt;0&lt;/span&gt;.0.0.0:3375 etcd://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2379
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;swarm -p &lt;span class="m"&gt;3375&lt;/span&gt;:3375 &lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="go"&gt;                            swarm manage -H 0.0.0.0:3375 etcd://$SWARM_MANAGER_IP:2379&lt;/span&gt;
 &lt;span class="go"&gt;Unable to find image &amp;#39;swarm:latest&amp;#39; locally&lt;/span&gt;
 &lt;span class="go"&gt;latest: Pulling from library/swarm&lt;/span&gt;
 &lt;span class="go"&gt;...&lt;/span&gt;
 &lt;span class="go"&gt;Status: Downloaded newer image for swarm:latest&lt;/span&gt;
 &lt;span class="go"&gt;8080c93c544ff92cc2cf682ff0bbc82e0d2dfb01e1f98f202c3a0801d3427330&lt;/span&gt;
 
-&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker ps
+&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker ps
 &lt;span class="go"&gt;CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                                                NAMES&lt;/span&gt;
 &lt;span class="go"&gt;46b556e73e87        swarm                 &amp;quot;/swarm manage -H 0.0&amp;quot;   3 seconds ago       Up 2 seconds        2375/tcp, 0.0.0.0:3375-&amp;gt;3375/tcp                                     swarm&lt;/span&gt;
 &lt;span class="go"&gt;e742278a97d2        quay.io/coreos/etcd   &amp;quot;/etcd -name etcd0 -a&amp;quot;   7 minutes ago       Up 7 minutes        0.0.0.0:2379-2380-&amp;gt;2379-2380/tcp, 0.0.0.0:4001-&amp;gt;4001/tcp, 7001/tcp   etcd&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Our Swarm manager is up and running. We can connect to it and issue a few commands:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker -H localhost:3375 info
 &lt;span class="go"&gt;Containers: 0&lt;/span&gt;
 &lt;span class="go"&gt; Running: 0&lt;/span&gt;
 &lt;span class="go"&gt; Paused: 0&lt;/span&gt;
@@ -350,7 +350,7 @@ dpkg: error processing package docker.io (--configure):
 &lt;span class="nv"&gt;DOWNLOAD_RELEASE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;xenial
 &lt;span class="nv"&gt;DOWNLOAD_ARCH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;amd64
 
-&lt;span class="k"&gt;for&lt;/span&gt; LXC_NAME in &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; LXC_NAME &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
 &lt;span class="k"&gt;do&lt;/span&gt;
     &lt;span class="nv"&gt;LXC_PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/var/lib/lxc/&lt;/span&gt;&lt;span class="nv"&gt;$LXC_NAME&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
     &lt;span class="nv"&gt;LXC_ROOTFS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$LXC_PATH&lt;/span&gt;&lt;span class="s2"&gt;/rootfs&amp;quot;&lt;/span&gt;
@@ -386,7 +386,7 @@ dpkg: error processing package docker.io (--configure):
 
 &lt;p&gt;Be sure to change the values for &lt;code&gt;SWARM_MANAGER_IP&lt;/code&gt;, &lt;code&gt;DOWNLOAD_DIST&lt;/code&gt;, &lt;code&gt;DOWNLOAD_RELEASE&lt;/code&gt; and &lt;code&gt;DOWNLOAD_ARCH&lt;/code&gt; to fit your needs.&lt;/p&gt;
 &lt;p&gt;Thanks to this script, creating 10 new agents is as simple as running one command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~#&lt;/span&gt; ./swarm-agent-create swarm-agent-&lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;..9&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@host:~# &lt;/span&gt;./swarm-agent-create swarm-agent-&lt;span class="o"&gt;{&lt;/span&gt;&lt;span class="m"&gt;0&lt;/span&gt;..9&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Here's an explanation of what the script does:&lt;/p&gt;
@@ -436,7 +436,7 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;/ul&gt;
 &lt;h1 id="step-8"&gt;Step 8: Play with the Swarm&lt;/h1&gt;
 &lt;p&gt;Now, if we check &lt;code&gt;docker info&lt;/code&gt; on the Swarm manager, we should see 10 healthy nodes:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 info
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker -H localhost:3375 info
 &lt;span class="go"&gt;Containers: 10&lt;/span&gt;
 &lt;span class="go"&gt; Running: 10&lt;/span&gt;
 &lt;span class="go"&gt; Paused: 0&lt;/span&gt;
@@ -539,7 +539,7 @@ lxc-attach -n &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Let's try running a command on the Swarm:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~#&lt;/span&gt; docker -H localhost:3375 run -i --rm docker/whalesay cowsay &lt;span class="s1"&gt;&amp;#39;It works!&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker -H localhost:3375 run -i --rm docker/whalesay cowsay &lt;span class="s1"&gt;&amp;#39;It works!&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt; ___________&lt;/span&gt;
 &lt;span class="go"&gt;&amp;lt; It works! &amp;gt;&lt;/span&gt;
 &lt;span class="go"&gt; -----------&lt;/span&gt;
@@ -1399,39 +1399,39 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;h1 id="creating-the-docker-image"&gt;Creating the Docker image&lt;/h1&gt;
 &lt;h2 id="step-1-get-the-latest-ubuntu-core"&gt;Step 1: get the latest Ubuntu Core&lt;/h2&gt;
 &lt;p&gt;As of writing, the latest Ubuntu Core image is alpha 3 and can be downloaded with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;(If you browse to &lt;a href="http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/"&gt;cdimage.ubuntu.com&lt;/a&gt;, you can also find the signed hashsums.)&lt;/p&gt;
 &lt;p&gt;The downloaded image is XZ-compressed and we need to extract it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$&lt;/span&gt; unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2 id="step-2-connect-the-image-using-qemu-nbd"&gt;Step 2: connect the image using qemu-nbd&lt;/h2&gt;
 &lt;p&gt;The file we have just downloaded and extracted is a filesystem dump. The previous version of the image (Alpha 2) was a QCOW2 image (the format used by QEMU). In order to access its contents, we have a few options. Here I'll show one that works with both filesystem dumps and QCOW2 images. The trick consists in using &lt;code&gt;qemu-nbd&lt;/code&gt; (a tool from the &lt;a href="https://apps.ubuntu.com/cat/applications/qemu-utils/"&gt;qemu-utils&lt;/a&gt; package):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This command will create a virtual device named &lt;code&gt;/dev/nbd0&lt;/code&gt;, with virtual partitions named &lt;code&gt;/dev/nbd0p1&lt;/code&gt;, &lt;code&gt;/dev/nbd0p2&lt;/code&gt;, ... Use &lt;code&gt;fdisk -l /dev/nbd0&lt;/code&gt; to get an idea of what partitions are inside the QCOW2 image.&lt;/p&gt;
 &lt;h2 id="step-3-mount-the-filesystem"&gt;Step 3: mount the filesystem&lt;/h2&gt;
 &lt;p&gt;The partition we are interested in is &lt;code&gt;/dev/nbd0p3&lt;/code&gt;, so we need to mount it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mkdir nbd0p3
-&lt;span class="gp"&gt;#&lt;/span&gt; mount -r /dev/nbd0p3 nbd0p3
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;mkdir nbd0p3
+&lt;span class="gp"&gt;# &lt;/span&gt;mount -r /dev/nbd0p3 nbd0p3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2 id="step-4-create-a-base-docker-image"&gt;Step 4: create a base Docker image&lt;/h2&gt;
 &lt;p&gt;As suggested on the &lt;a href="https://docs.docker.com/articles/baseimages/"&gt;Docker documentation&lt;/a&gt;, creating a base Docker image from a directory is pretty straightforward:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; tar -C nbd0p3 -c . &lt;span class="p"&gt;|&lt;/span&gt; docker import - ubuntu-core alpha-3
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;tar -C nbd0p3 -c . &lt;span class="p"&gt;|&lt;/span&gt; docker import - ubuntu-core alpha-3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Our newly created image will now appear when running &lt;code&gt;docker images&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;docker images
 &lt;span class="go"&gt;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&lt;/span&gt;
 &lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        5 seconds ago       543.5 MB&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Let's verify if we did a good job:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run ubuntu-core:alpha-3 snappy
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;docker run ubuntu-core:alpha-3 snappy
 &lt;span class="go"&gt;Usage:snappy [-h] [-v]&lt;/span&gt;
 &lt;span class="go"&gt;             {info,versions,search,update-versions,update,rollback,install,uninstall,tags,config,build,booted,chroot,framework,fake-version,nap}&lt;/span&gt;
 &lt;span class="go"&gt;             ...&lt;/span&gt;
@@ -1440,7 +1440,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;Yes! We have successfully added Ubuntu Core to the available Docker images and we have run our first snappy container!&lt;/p&gt;
 &lt;h1 id="installing-and-running-software"&gt;Installing and running software&lt;/h1&gt;
 &lt;p&gt;Without wasting too many words, here's how to install and run the &lt;code&gt;xkcd-webserver&lt;/code&gt; snappy package inside docker:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run -p &lt;span class="m"&gt;8000&lt;/span&gt;:80 ubuntu-core:alpha-3 /bin/sh -c &lt;span class="s1"&gt;&amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;docker run -p &lt;span class="m"&gt;8000&lt;/span&gt;:80 ubuntu-core:alpha-3 /bin/sh -c &lt;span class="s1"&gt;&amp;#39;snappy install xkcd-webserver &amp;amp;&amp;amp; cd /apps/xkcd-webserver/0.3.1 &amp;amp;&amp;amp; ./bin/xkcd-webserver&amp;#39;&lt;/span&gt;
 &lt;span class="go"&gt;WARN: AppArmor not available when processing AppArmor hook&lt;/span&gt;
 &lt;span class="go"&gt;Failed to get D-Bus connection: Operation not permitted&lt;/span&gt;
 &lt;span class="go"&gt;Failed to get D-Bus connection: Operation not permitted&lt;/span&gt;
@@ -1463,18 +1463,18 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This &lt;code&gt;Dockerfile&lt;/code&gt; does the same job as the previous command: it installs and runs &lt;code&gt;xkcd-webserver&lt;/code&gt; on port 8000. In order to use it, first build it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker build -t xkcd-webserver .
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;docker build -t xkcd-webserver .
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Check that it has been correctly installed:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker images
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;docker images
 &lt;span class="go"&gt;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&lt;/span&gt;
 &lt;span class="go"&gt;xkcd-webserver      latest              260e0116e9e3        3 minutes ago       543.5 MB&lt;/span&gt;
 &lt;span class="go"&gt;ubuntu-core         alpha-3             f6df3c0e2d74        About an hour ago   543.5 MB&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Then run it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;#&lt;/span&gt; docker run xkcd-webserver
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;# &lt;/span&gt;docker run xkcd-webserver
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Again, you should see a random XKCD comic on &lt;a href="http://localhost:8000/"&gt;http://localhost:8000/&lt;/a&gt;.&lt;/p&gt;
