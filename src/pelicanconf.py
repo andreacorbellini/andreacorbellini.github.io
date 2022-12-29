@@ -76,9 +76,6 @@ STATIC_PATHS = [
 # Plugins.
 PLUGIN_PATHS = [
     os.path.join(PROJECT_PATH, 'plugins'),
-    # A copy of git://github.com/getpelican/pelican-plugins.git is expected
-    # to be in env/src/pelican-plugins.
-    os.path.join(get_venv_path(), 'src', 'pelican-plugins'),
 ]
 
 PLUGINS = [
@@ -107,7 +104,6 @@ JINJA_FILTERS = {
 
 JINJA_ENVIRONMENT = {
     'extensions': [
-        'jinja2.ext.autoescape',
         'jinja2.ext.do',
     ],
 }
