@@ -233,14 +233,14 @@ dpkg: error processing package docker.io (--configure):
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span><span class="nv">SWARM_MANAGER_IP</span><span class="o">=</span><span class="m">10</span>.0.3.154
 
 <span class="gp">root@swarm-manager:~# </span>docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>etcd -p <span class="m">4001</span>:4001 -p <span class="m">2380</span>:2380 -p <span class="m">2379</span>:2379 <span class="se">\</span>
-<span class="go">                            quay.io/coreos/etcd -name etcd0 \</span>
-<span class="go">                            -advertise-client-urls http://$SWARM_MANAGER_IP:2379,http://$SWARM_MANAGER_IP:4001 \</span>
-<span class="go">                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \</span>
-<span class="go">                            -initial-advertise-peer-urls http://$SWARM_MANAGER_IP:2380 \</span>
-<span class="go">                            -listen-peer-urls http://0.0.0.0:2380 \</span>
-<span class="go">                            -initial-cluster-token etcd-cluster-1 \</span>
-<span class="go">                            -initial-cluster etcd0=http://$SWARM_MANAGER_IP:2380 \</span>
-<span class="go">                            -initial-cluster-state new</span>
+                            quay.io/coreos/etcd -name etcd0 <span class="se">\</span>
+                            -advertise-client-urls http://<span class="nv">$SWARM_MANAGER_IP</span>:2379,http://<span class="nv">$SWARM_MANAGER_IP</span>:4001 <span class="se">\</span>
+                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 <span class="se">\</span>
+                            -initial-advertise-peer-urls http://<span class="nv">$SWARM_MANAGER_IP</span>:2380 <span class="se">\</span>
+                            -listen-peer-urls http://0.0.0.0:2380 <span class="se">\</span>
+                            -initial-cluster-token etcd-cluster-1 <span class="se">\</span>
+                            -initial-cluster <span class="nv">etcd0</span><span class="o">=</span>http://<span class="nv">$SWARM_MANAGER_IP</span>:2380 <span class="se">\</span>
+                            -initial-cluster-state new
 <span class="go">Unable to find image &#39;quay.io/coreos/etcd:latest&#39; locally</span>
 <span class="go">latest: Pulling from coreos/etcd</span>
 <span class="go">...</span>
@@ -256,7 +256,7 @@ dpkg: error processing package docker.io (--configure):
 <p>Note that I've started etcd with <code>--restart=always</code>, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop <code>--restart=always</code> if that's not what you want.</p>
 <p>Now we can start the Swarm manager:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">root@swarm-manager:~# </span>docker run -d --restart<span class="o">=</span>always --name<span class="o">=</span>swarm -p <span class="m">3375</span>:3375 <span class="se">\</span>
-<span class="go">                            swarm manage -H 0.0.0.0:3375 etcd://$SWARM_MANAGER_IP:2379</span>
+                            swarm manage -H <span class="m">0</span>.0.0.0:3375 etcd://<span class="nv">$SWARM_MANAGER_IP</span>:2379
 <span class="go">Unable to find image &#39;swarm:latest&#39; locally</span>
 <span class="go">latest: Pulling from library/swarm</span>
 <span class="go">...</span>
@@ -524,7 +524,7 @@ lxc-attach -n <span class="s2">&quot;</span><span class="nv">$LXC_NAME</span><sp
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2021 Andrea Corbellini</p>
+  <p>Copyright &copy; 2015-2022 Andrea Corbellini</p>
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>

@@ -279,14 +279,14 @@ dpkg: error processing package docker.io (--configure):
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;&lt;span class="nv"&gt;SWARM_MANAGER_IP&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;10&lt;/span&gt;.0.3.154
 
 &lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;etcd -p &lt;span class="m"&gt;4001&lt;/span&gt;:4001 -p &lt;span class="m"&gt;2380&lt;/span&gt;:2380 -p &lt;span class="m"&gt;2379&lt;/span&gt;:2379 &lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="go"&gt;                            quay.io/coreos/etcd -name etcd0 \&lt;/span&gt;
-&lt;span class="go"&gt;                            -advertise-client-urls http://$SWARM_MANAGER_IP:2379,http://$SWARM_MANAGER_IP:4001 \&lt;/span&gt;
-&lt;span class="go"&gt;                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \&lt;/span&gt;
-&lt;span class="go"&gt;                            -initial-advertise-peer-urls http://$SWARM_MANAGER_IP:2380 \&lt;/span&gt;
-&lt;span class="go"&gt;                            -listen-peer-urls http://0.0.0.0:2380 \&lt;/span&gt;
-&lt;span class="go"&gt;                            -initial-cluster-token etcd-cluster-1 \&lt;/span&gt;
-&lt;span class="go"&gt;                            -initial-cluster etcd0=http://$SWARM_MANAGER_IP:2380 \&lt;/span&gt;
-&lt;span class="go"&gt;                            -initial-cluster-state new&lt;/span&gt;
+                            quay.io/coreos/etcd -name etcd0 &lt;span class="se"&gt;\&lt;/span&gt;
+                            -advertise-client-urls http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2379,http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:4001 &lt;span class="se"&gt;\&lt;/span&gt;
+                            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 &lt;span class="se"&gt;\&lt;/span&gt;
+                            -initial-advertise-peer-urls http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2380 &lt;span class="se"&gt;\&lt;/span&gt;
+                            -listen-peer-urls http://0.0.0.0:2380 &lt;span class="se"&gt;\&lt;/span&gt;
+                            -initial-cluster-token etcd-cluster-1 &lt;span class="se"&gt;\&lt;/span&gt;
+                            -initial-cluster &lt;span class="nv"&gt;etcd0&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2380 &lt;span class="se"&gt;\&lt;/span&gt;
+                            -initial-cluster-state new
 &lt;span class="go"&gt;Unable to find image &amp;#39;quay.io/coreos/etcd:latest&amp;#39; locally&lt;/span&gt;
 &lt;span class="go"&gt;latest: Pulling from coreos/etcd&lt;/span&gt;
 &lt;span class="go"&gt;...&lt;/span&gt;
@@ -302,7 +302,7 @@ dpkg: error processing package docker.io (--configure):
 &lt;p&gt;Note that I've started etcd with &lt;code&gt;--restart=always&lt;/code&gt;, so that every time etcd is automatically started when the LXC container starts. With this option, etcd will restart even if you explicitly stop it. Drop &lt;code&gt;--restart=always&lt;/code&gt; if that's not what you want.&lt;/p&gt;
 &lt;p&gt;Now we can start the Swarm manager:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="gp"&gt;root@swarm-manager:~# &lt;/span&gt;docker run -d --restart&lt;span class="o"&gt;=&lt;/span&gt;always --name&lt;span class="o"&gt;=&lt;/span&gt;swarm -p &lt;span class="m"&gt;3375&lt;/span&gt;:3375 &lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="go"&gt;                            swarm manage -H 0.0.0.0:3375 etcd://$SWARM_MANAGER_IP:2379&lt;/span&gt;
+                            swarm manage -H &lt;span class="m"&gt;0&lt;/span&gt;.0.0.0:3375 etcd://&lt;span class="nv"&gt;$SWARM_MANAGER_IP&lt;/span&gt;:2379
 &lt;span class="go"&gt;Unable to find image &amp;#39;swarm:latest&amp;#39; locally&lt;/span&gt;
 &lt;span class="go"&gt;latest: Pulling from library/swarm&lt;/span&gt;
 &lt;span class="go"&gt;...&lt;/span&gt;
@@ -1093,7 +1093,7 @@ $$\begin{align*}
 $$m = (y_P - y_Q)(x_P - x_Q)^{-1} \bmod{p}$$&lt;/p&gt;
 &lt;p&gt;Else, if $P = Q$, we have:
 $$m = (3 x_P^2 + a)(2 y_P)^{-1} \bmod{p}$$&lt;/p&gt;
-&lt;p&gt;It's not a coincidence that the equations have not changed: in fact, these equations work in every field, finite or infinite (with the exception of $\mathbb{F}_2$ and $\mathbb{F}_3$, which are special cased). Now I feel I have to provide a justification for this fact. The problem is: proofs for the group law generally involve complex mathematical concepts. However, I found out a &lt;a href="http://math.rice.edu/~friedl/papers/AAELLIPTIC.PDF"&gt;proof from Stefan Friedl&lt;/a&gt; that uses only elementary concepts. Read it if you are interested in why these equations work in (almost) every field.&lt;/p&gt;
+&lt;p&gt;It's not a coincidence that the equations have not changed: in fact, these equations work in every field, finite or infinite (with the exception of $\mathbb{F}_2$ and $\mathbb{F}_3$, which are special cased). Now I feel I have to provide a justification for this fact. The problem is: proofs for the group law generally involve complex mathematical concepts. However, I found a &lt;a href="https://arxiv.org/pdf/1710.00214"&gt;proof from Stefan Friedl&lt;/a&gt; that uses only elementary concepts. Read it if you are interested in why these equations work in (almost) every field.&lt;/p&gt;
 &lt;p&gt;Back to us — we won't define a geometric method: in fact, there are a few problems with that. For example, in the previous post, we said that to compute $P + P$ we needed to take the tangent to the curve in $P$. But without continuity, the word "tangent" does not make any sense. We can workaround this and other problems, however a pure geometric method would just be too complicated and not practical at all.&lt;/p&gt;
 &lt;p&gt;Instead, you can play with the &lt;strong&gt;&lt;a href="https://andrea.corbellini.name/ecc/interactive/modk-add.html"&gt;interactive tool&lt;/a&gt; I've written for computing point additions&lt;/strong&gt;.&lt;/p&gt;
 &lt;h1 id="the-order-of-an-elliptic-curve-group"&gt;The order of an elliptic curve group&lt;/h1&gt;
@@ -1456,10 +1456,10 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$&lt;/p&gt;
 &lt;p&gt;If you have payed attention, you may have noticed a few warnings about AppArmor, DBus and logind. The reason why you are seeing these warnings is pretty simple: we did not start neither AppArmor nor DBus nor logind. Now, generally speaking, we could run init inside Docker and fix these and other warnings. However that's not what Docker is meant for. So if you want to run AppArmor or similar stuff &lt;em&gt;from inside&lt;/em&gt; Docker or LXC, then probably you should consider virtualization.&lt;/p&gt;
 &lt;h1 id="dockerfile"&gt;Dockerfile&lt;/h1&gt;
 &lt;p&gt;Once you have created the base Docker image, you can start creating some &lt;code&gt;Dockerfile&lt;/code&gt;s, if you need to. Here's an example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;FROM&lt;/span&gt; &lt;span class="s"&gt;ubuntu-core:alpha-3&lt;/span&gt;
-&lt;span class="k"&gt;RUN&lt;/span&gt; snappy install xkcd-webserver
-&lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="s"&gt; 8000:80&lt;/span&gt;
-&lt;span class="k"&gt;CMD&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /apps/xkcd-webserver/0.3.1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./bin/xkcd-webserver
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;ubuntu-core:alpha-3&lt;/span&gt;
+&lt;span class="k"&gt;RUN&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;snappy install xkcd-webserver
+&lt;span class="k"&gt;EXPOSE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;8000:80&lt;/span&gt;
+&lt;span class="k"&gt;CMD&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /apps/xkcd-webserver/0.3.1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./bin/xkcd-webserver
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;This &lt;code&gt;Dockerfile&lt;/code&gt; does the same job as the previous command: it installs and runs &lt;code&gt;xkcd-webserver&lt;/code&gt; on port 8000. In order to use it, first build it:&lt;/p&gt;

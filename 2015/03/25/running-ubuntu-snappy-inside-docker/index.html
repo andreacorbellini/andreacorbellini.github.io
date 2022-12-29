@@ -132,10 +132,10 @@
 <p>If you have payed attention, you may have noticed a few warnings about AppArmor, DBus and logind. The reason why you are seeing these warnings is pretty simple: we did not start neither AppArmor nor DBus nor logind. Now, generally speaking, we could run init inside Docker and fix these and other warnings. However that's not what Docker is meant for. So if you want to run AppArmor or similar stuff <em>from inside</em> Docker or LXC, then probably you should consider virtualization.</p>
 <h1 id="dockerfile">Dockerfile</h1>
 <p>Once you have created the base Docker image, you can start creating some <code>Dockerfile</code>s, if you need to. Here's an example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">FROM</span> <span class="s">ubuntu-core:alpha-3</span>
-<span class="k">RUN</span> snappy install xkcd-webserver
-<span class="k">EXPOSE</span><span class="s"> 8000:80</span>
-<span class="k">CMD</span> <span class="nb">cd</span> /apps/xkcd-webserver/0.3.1 <span class="o">&amp;&amp;</span> ./bin/xkcd-webserver
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu-core:alpha-3</span>
+<span class="k">RUN</span><span class="w"> </span>snappy install xkcd-webserver
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000:80</span>
+<span class="k">CMD</span><span class="w"> </span><span class="nb">cd</span> /apps/xkcd-webserver/0.3.1 <span class="o">&amp;&amp;</span> ./bin/xkcd-webserver
 </code></pre></div>
 
 <p>This <code>Dockerfile</code> does the same job as the previous command: it installs and runs <code>xkcd-webserver</code> on port 8000. In order to use it, first build it:</p>
@@ -167,7 +167,7 @@
 </main>
       </div>
     <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2021 Andrea Corbellini</p>
+  <p>Copyright &copy; 2015-2022 Andrea Corbellini</p>
   <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
   <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
 </div>
