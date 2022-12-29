@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
+    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ]
+      },
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
+    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        tocbot.init({
+          tocSelector: '#toc nav',
+          contentSelector: 'article .body',
+          headingSelector: 'h1, h2, h3, h4, h5, h6',
+          activeLinkClass: 'active',
+        });
+      });
+    </script>
+      <meta name="tags" content="ubuntu">
+      <meta name="tags" content="storage">
+      <meta name="tags" content="ssd">
+      <meta name="tags" content="badblocks">
+    <link rel="canonical" href="https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/">
+    <title>The curious case of bad blocks on an SSD, and how I got rid of them - Andrea Corbellini</title>
+  </head>
+  <body>
+    <header class="main-header">  <nav class="navbar navbar-inverse">
+    <div class="container">
+      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
+      <div class="navbar-header">
+        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+      <div class="main-container container">
+        <main id="content">    <article>
+      <header>
+        <h1><a href="https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/" rel="bookmark" title="The curious case of bad blocks on an SSD, and how I got rid of them">The curious case of bad blocks on an SSD, and how I got rid of them</a></h1>
+<div class="details small">
+  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2022-12-29T04:00:00+00:00">December 29, 2022</time></span>
+  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/#disqus_thread" title="Comments" data-disqus-identifier="curious-ssd-badblocks">Comments</a></span>
+</div>      </header>
+      <div class="wrapper">
+        <aside id="toc">
+          <nav></nav>
+        </aside>
+        <div class="body"><p>I recently inherited a laptop that was broken by pouring some hot coffee on it.
+When I dissected it, it was pretty clear that most of it was unrecoverable: the
+CPU was completely fried, and its thermal paste splashed everywhere on the
+motherboard. (I wish I took a picture of it that I could share.) There were
+however a few pieces that looked in a good state. One of those components was a
+NVMe Solid State Drive (SSD). I decided to take this SSD and recycle it in my
+own laptop, maybe to join my LVM pool.</p>
+<p>When I plugged it in my laptop however the SSD I tried to navigate the
+filesystem, and it appeared to be working quite slowly. Opening certain files
+sometimes would hang indefinitely. Upon inspection of the SMART data and the
+kernel logs, it was clear that the drive was returning plenty of <strong>read
+errors</strong>.</p>
+<p>Here is a sample of the kernel logs:</p>
+<div class="highlight"><pre><span></span><code>$ dmesg
+...
+[  860.465707] ata2.00: exception Emask 0x0 SAct 0x8 SErr 0x0 action 0x0
+[  860.465726] ata2.00: irq_stat 0x40000008
+[  860.465733] ata2.00: failed command: READ FPDMA QUEUED
+[  860.465737] ata2.00: cmd 60/08:18:58:c5:28/00:00:00:00:00/40 tag 3 ncq dma 4096 in
+[  860.465737]          res 41/40:08:58:c5:28/00:00:00:00:00/00 Emask 0x409 (media error) &lt;F&gt;
+[  860.465750] ata2.00: status: { DRDY ERR }
+[  860.465754] ata2.00: error: { UNC }
+[  860.467010] ata2.00: configured for UDMA/133
+[  860.467046] sd 1:0:0:0: [sda] tag#3 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_OK cmd_age=0s
+[  860.467054] sd 1:0:0:0: [sda] tag#3 Sense Key : Medium Error [current]
+[  860.467060] sd 1:0:0:0: [sda] tag#3 Add. Sense: Unrecovered read error - auto reallocate failed
+[  860.467066] sd 1:0:0:0: [sda] tag#3 CDB: Read(10) 28 00 00 28 c5 58 00 00 08 00
+[  860.467069] I/O error, dev sda, sector 2671960 op 0x0:(READ) flags 0x80700 phys_seg 1 prio class 0
+...
+[ 1057.914608] ata2: softreset failed (device not ready)
+[ 1057.914623] ata2: hard resetting link
+[ 1063.230631] ata2: found unknown device (class 0)
+[ 1067.934891] ata2: softreset failed (device not ready)
+[ 1067.934911] ata2: hard resetting link
+[ 1073.270826] ata2: found unknown device (class 0)
+[ 1078.486604] ata2: link is slow to respond, please be patient (ready=0)
+[ 1102.970841] ata2: softreset failed (device not ready)
+[ 1102.970860] ata2: limiting SATA link speed to 1.5 Gbps
+[ 1102.970865] ata2: hard resetting link
+[ 1108.034602] ata2: found unknown device (class 0)
+[ 1108.194622] ata2: softreset failed (device not ready)
+[ 1108.194638] ata2: reset failed, giving up
+[ 1108.194642] ata2.00: disable device
+[ 1108.194677] ata2: EH complete
+[ 1108.194726] sd 1:0:0:0: [sda] tag#6 FAILED Result: hostbyte=DID_BAD_TARGET driverbyte=DRIVER_OK cmd_age=232s
+[ 1108.194740] sd 1:0:0:0: [sda] tag#6 CDB: Synchronize Cache(10) 35 00 00 00 00 00 00 00 00 00
+[ 1108.194748] I/O error, dev sda, sector 0 op 0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
+...
+</code></pre></div>
+
+<p>These logs show that the SSD was returning errors (exceptions) to the operating
+system, and also that the SSD would sometimes become so slow to respond that
+the kernel would attempt to reset it (which didn't really work, I can tell
+you).</p>
+<p>Here is an excerpt of the SMART data:</p>
+<div class="highlight"><pre><span></span><code>$ smartctl -a /dev/sda
+...
+SMART Attributes Data Structure revision number: 0
+Vendor Specific SMART Attributes with Thresholds:
+ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE
+  1 Raw_Read_Error_Rate     0x000f   166   001   006    Pre-fail  Always   In_the_past 0
+  5 Retired_Block_Count     0x0032   100   100   036    Old_age   Always       -       76
+  9 Power_On_Hours          0x0032   099   099   000    Old_age   Always       -       1740
+ 12 Power_Cycle_Count       0x0032   100   100   020    Old_age   Always       -       2247
+100 Total_Erase_Count       0x0032   100   100   000    Old_age   Always       -       7654272
+168 Min_Erase_Count         0x0032   253   096   000    Old_age   Always       -       0
+169 Max_Erase_Count         0x0032   083   083   000    Old_age   Always       -       181
+171 Program_Fail_Count      0x0032   253   253   000    Old_age   Always       -       0
+172 Erase_Fail_Count        0x0032   253   253   000    Old_age   Always       -       0
+174 Unexpect_Power_Loss_Ct  0x0030   100   100   000    Old_age   Offline      -       14
+175 Program_Fail_Count_Chip 0x0032   253   253   000    Old_age   Always       -       0
+176 Unused_Rsvd_Blk_Cnt_Tot 0x0032   253   253   000    Old_age   Always       -       0
+177 Wear_Leveling_Count     0x0032   090   090   000    Old_age   Always       -       116
+178 Used_Rsvd_Blk_Cnt_Chip  0x0032   100   100   000    Old_age   Always       -       399
+179 Used_Rsvd_Blk_Cnt_Tot   0x0032   100   100   000    Old_age   Always       -       2460
+180 Erase_Fail_Count        0x0032   100   100   000    Old_age   Always       -       2980
+184 End-to-End_Error        0x0032   100   100   000    Old_age   Always       -       9919
+187 Reported_Uncorrect      0x0032   100   100   000    Old_age   Always       -       10051
+188 Command_Timeout         0x0032   253   253   000    Old_age   Always       -       0
+194 Temperature_Celsius     0x0002   038   000   000    Old_age   Always       -       38 (Min/Max 16/48)
+195 Hardware_ECC_Recovered  0x0032   100   085   000    Old_age   Always       -       715203
+196 Reallocated_Event_Count 0x0032   100   100   036    Old_age   Always       -       76
+198 Offline_Uncorrectable   0x0032   253   253   000    Old_age   Always       -       0
+199 UDMA_CRC_Error_Count    0x0032   253   253   000    Old_age   Always       -       0
+204 Soft_ECC_Correction     0x000e   100   001   000    Old_age   Always       -       13
+212 Phy_Error_Count         0x0032   253   253   000    Old_age   Always       -       0
+234 Unknown_SK_hynix_Attrib 0x0032   100   100   000    Old_age   Always       -       32297
+241 Total_Writes_GB         0x0032   100   100   000    Old_age   Always       -       3715
+242 Total_Reads_GB          0x0032   100   100   000    Old_age   Always       -       3680
+250 Read_Retry_Count        0x0032   096   096   000    Old_age   Always       -       176835377
+...
+</code></pre></div>
+
+<p>This table show various attributes for the operational status of the SSD. The
+meaning of the numeric values is pretty much vendor-specific, so trying to
+understand those number exactly is quite a challenge, but what matters is that
+the numbers under the <code>VALUE</code> column are higher than the <code>THRESH</code> (threshold)
+column. The <code>WORST</code> column indicates the lowest <code>VALUE</code> that has ever been
+observed.</p>
+<p>To my surprise, despite all the errors and hangs that the SSD was experiencing,
+the SMART values looked pretty good. Sure, there's a very low <code>WORST</code> value for
+<code>Raw_Read_Error_Rate</code> (001, much lower than the threshold 001), and there is
+also and indication that this attribute failed in the past, but besides that
+everything looked acceptable enough.</p>
+<p>Of course the SMART log was recording the read errors as well. Here's another
+excerpt from the output:</p>
+<div class="highlight"><pre><span></span><code>$ smartctl -a /dev/sda
+...
+SMART Error Log Version: 1
+ATA Error Count: 1875 (device log contains only the most recent five errors)
+...
+
+Error 1875 occurred at disk power-on lifetime: 1737 hours (72 days + 9 hours)
+  When the command that caused the error occurred, the device was active or idle.
+
+  After command completion occurred, registers were:
+  ER ST SC SN CL CH DH
+  -- -- -- -- -- -- --
+  40 41 00 00 00 00 00  Error: UNC at LBA = 0x00000000 = 0
+
+  Commands leading to the command that caused the error were:
+  CR FR SC SN CL CH DH DC   Powered_Up_Time  Command/Feature_Name
+  -- -- -- -- -- -- -- --  ----------------  --------------------
+  60 08 70 98 31 af 40 40      00:02:32.920  READ FPDMA QUEUED
+  47 00 01 30 08 00 a0 a0      00:02:32.920  READ LOG DMA EXT
+  47 00 01 30 00 00 a0 a0      00:02:32.920  READ LOG DMA EXT
+  47 00 01 00 00 00 a0 a0      00:02:32.920  READ LOG DMA EXT
+  ef 10 02 00 00 00 a0 a0      00:02:32.920  SET FEATURES [Enable SATA feature]
+
+...
+</code></pre></div>
+
+<p>Give the lack of concrete signs of old age or extended damage to the SSD, I
+wondered if it could be a link problem: maybe I did not insert the drive
+correctly, or maybe a pin was dirty. But no: upon inspection I did not find any
+issue, and after carefully reseating the drive, the problem was persisting.</p>
+<p>I proceeded to run a SMART self test, here are the results (from most recent to oldest):</p>
+<div class="highlight"><pre><span></span><code>SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Short captive       Completed: read failure       90%      1736         5712
+# 2  Short offline       Completed: read failure       90%      1736         5712
+# 3  Extended offline    Completed: read failure       90%      1733         50117792
+# 4  Extended captive    Interrupted (host reset)      90%      1730         -
+# 5  Short captive       Interrupted (host reset)      90%      1730         -
+</code></pre></div>
+
+<p>The first two tests were interrupted by Linux, which tried to reset the device
+while the tests were running. A self-test (as the name suggests) is completely
+self contained and does not involve sharing of data between the SSD and the
+operating system in the process. The fact that the self-test was failing due to
+bad blocks was therefore a sign that this was not a link error, but that the
+blocks were really damaged.</p>
+<p>I decided therefore to give up on trying to fix the SSD, but I still wanted to
+use it. After all, it was working for the most part: as long as you didn't
+access the bad blocks, the SSD would behave fine. So here is my plan: I would
+format the SSD and create an ext4 filesystem on it, using <code>mkfs.ext4 -c</code>, which
+would scan for and exclude bad blocks so that they wouldn't be used. The
+resulting filesystem would have less storage available than the advertised
+capacity of the SSD, but that was an acceptable trade-off for me.</p>
+<p>And here is the most interesting part: <code>mkfs.ext4 -c</code> <strong>discarded all blocks
+before creating the filesystem</strong>. After that, it <strong>scanned for bad blocks and,
+shockingly, it found none!</strong></p>
+<p>SMART self-tests also did not report any error:</p>
+<div class="highlight"><pre><span></span><code>SMART Self-test log structure revision number 1
+Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA_of_first_error
+# 1  Extended offline    Completed without error       00%      1740         -
+# 2  Short offline       Completed without error       00%      1738         -
+</code></pre></div>
+
+<p>All the read errors, exceptions and the hanging problem that kept appearing
+before disappeared!</p>
+<p>I'm not fully sure how to explain how this happened, but I did some research
+and the general consensus is that discarding bad blocks won't recover them. My
+theory is that, when the coffee was poured on the laptop, a spike of voltage
+led to incorrect values to be written to a few blocks that were in use at that
+time, causing uncorrectable discrepancies between the data and the
+error-correcting-codes of the SSD. Discarding the blocks reset both the data
+cells and the ECC cells, removing all the inconsistencies.</p>
+<p>Do you have a better explanation? Let me know in the comments!</p></div>
+      </div>
+    </article>
+      <section>
+        <div class="comments">
+          <div id="disqus_thread"></div>
+          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+        </div>
+      </section>
+</main>
+      </div>
+    <footer class="main-footer small">  <div class="container">
+  <p>Copyright &copy; 2015-2022 Andrea Corbellini</p>
+  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a> and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
+</div>
+    <script>
+      var disqus_shortname = "andreacorbellini";
+      var disqus_identifier = "curious-ssd-badblocks";
+      var disqus_title = "The curious case of bad blocks on an SSD, and how I got rid of them";
+      var disqus_url = "https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/";
+    </script>
+    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
+</footer>
+  </body>
+</html>

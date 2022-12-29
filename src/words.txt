@@ -29,11 +29,13 @@ MathWorld
 MiB
 Monico
 NIST
+NVMe
 NetworkManager
 OpenSSH
 OpenSSL
 OverlayFS
 SELinux
+SSD
 Schoof
 Schoof's
 Shor's
@@ -110,6 +112,7 @@ projective
 qcow
 qemu
 quantal
+reseating
 rsa
 secg
 semiplane
@@ -127,6 +130,7 @@ transactional
 ubuntu
 uid
 ulimit
+uncorrectable
 unsuspicious
 untrusted
 unxz
