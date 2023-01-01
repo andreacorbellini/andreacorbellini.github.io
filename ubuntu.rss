@@ -1,5 +1,293 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Thu, 29 Dec 2022 04:00:00 +0000</lastBuildDate><item><title>The curious case of bad blocks on an SSD, and how I got rid of them</title><link>https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/</link><description>&lt;p&gt;I recently inherited a laptop that was broken by pouring some hot coffee on it.
+<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Mon, 02 Jan 2023 06:30:00 +0000</lastBuildDate><item><title>Can we encrypt data using Elliptic Curves?</title><link>https://andrea.corbellini.name/2023/01/02/ec-encryption/</link><description>&lt;p&gt;From time to time, I hear people saying that Elliptic Curve Cryptography (ECC)
+cannot be used to directly encrypt data, and you can only do key agreement and
+digital signatures with it. This is a common misconception, but it's not
+actually true: you can indeed use elliptic curve keys to encrypt arbitrary
+data. And I'm not talking about hybrid-encryption schemes (like
+&lt;a href="https://en.wikipedia.org/wiki/Integrated_Encryption_Scheme"&gt;ECIES&lt;/a&gt; or
+&lt;a href="https://datatracker.ietf.org/doc/rfc9180/"&gt;HPKE&lt;/a&gt;): I'm talking about pure
+elliptic curve encryption, and I'm going to show an example of it in this
+article.  It's true however that pure elliptic curve encryption is not widely
+used or standardized because, as I will explain at the end of the article, key
+agreement is more convenient for most applications.&lt;/p&gt;
+&lt;h1 id="quick-recap-on-elliptic-curve-cryptography"&gt;Quick recap on Elliptic Curve Cryptography&lt;/h1&gt;
+&lt;p&gt;I wrote an &lt;a href="({filename}/2015-005-ecc-part-1.md)"&gt;in-depth article about elliptic curve
+cryptography&lt;/a&gt; in the past on this blog,
+and here is a quick recap: points on an elliptic curve from an interesting
+algebraic structure: a &lt;em&gt;cyclic group&lt;/em&gt;. This group lets us do some algebra with
+the points of the elliptic curve: if we have two points $A$ and $B$, we can
+&lt;strong&gt;add&lt;/strong&gt; them ($A + B$) or &lt;strong&gt;subtract&lt;/strong&gt; them ($A - B$). We can also &lt;strong&gt;multiply&lt;/strong&gt;
+a point by an integer, which is the same as doing repeated addition ($n A$ = $A
++ A + \cdots + A$, $n$ times).&lt;/p&gt;
+&lt;p&gt;We know some efficient algorithms for doing multiplication, but the reverse of
+multiplication is believed to be a "hard" problem for certain elliptic curves,
+in the sense that we know efficient methods for computing $B = n A$ given $n$
+and $A$, but we do not know very efficient methods to figure out $n$ given $A$
+and $B$.  This problem of reversing a multiplication is known as Elliptic
+Curve Discrete Logarithm Problem (ECDLP).&lt;/p&gt;
+&lt;p&gt;Elliptic Curve Cryptography is based on multiplication of elliptic curve points
+by integers and its security is given mainly by the difficulty of solving the
+ECDLP.&lt;/p&gt;
+&lt;p&gt;In order to use Elliptic Curve Cryptography, we first have to generate a
+&lt;strong&gt;private-public key pair&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the &lt;strong&gt;private key&lt;/strong&gt; is a random integer $s$;&lt;/li&gt;
+&lt;li&gt;the &lt;strong&gt;public key&lt;/strong&gt; is the result of multiplying the integer $s$ with the
+  generator $G$ of the elliptic curve group: $P = s G$.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let's now see a method to use Elliptic Curve Cryptography to encrypt arbitrary
+data, so that we can demystify the common belief that elliptic curves cannot be
+used to encrypt.&lt;/p&gt;
+&lt;h1 id="elliptic-curve-elgamal"&gt;Elliptic Curve ElGamal&lt;/h1&gt;
+&lt;p&gt;One method to encrypt data with elliptic curve keys is
+&lt;strong&gt;&lt;a href="https://en.wikipedia.org/wiki/ElGamal_encryption"&gt;ElGamal&lt;/a&gt;&lt;/strong&gt;. This is not
+the only method, of course, but it's the one that I chose because it's well
+known and simple enough. ElGamal is a cryptosystem that takes the name from
+&lt;a href="https://en.wikipedia.org/wiki/Taher_Elgamal"&gt;its author&lt;/a&gt; and works on any
+cyclic group, not just elliptic curve groups.&lt;/p&gt;
+&lt;p&gt;If we want to &lt;strong&gt;encrypt&lt;/strong&gt; a message using the public key $P$ via ElGamal, we
+can do the following:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;map the message to a point $M$ on the elliptic curve&lt;/li&gt;
+&lt;li&gt;generate a random integer $t$&lt;/li&gt;
+&lt;li&gt;compute $C_1 = t G$&lt;/li&gt;
+&lt;li&gt;compute $C_2 = t P + M$&lt;/li&gt;
+&lt;li&gt;return the tuple $(C_1, C_2)$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To &lt;strong&gt;decrypt&lt;/strong&gt; an encrypted tuple $(C_1, C_2)$ using the private key $s$, we
+can do the following:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;compute $M = C_2 - s C_1$&lt;/li&gt;
+&lt;li&gt;map the point $M$ back to a message&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The scheme works because:
+$$\begin{align*}
+    s C_1 &amp;amp; = s (t G) \\
+          &amp;amp; = t (s G) \\
+          &amp;amp; = t P
+\end{align*}$$
+therefore:
+$$\begin{align*}
+    C_2 - s C_1 &amp;amp; = (t P + M) - (t P) \\
+                &amp;amp; = M
+\end{align*}$$&lt;/p&gt;
+&lt;p&gt;There's however a big problem with this scheme: how can we perform step 1 of
+both the encryption and the decryption algorithms? How do we map a message to a
+point, and vice versa?&lt;/p&gt;
+&lt;h1 id="mapping-a-message-to-a-point"&gt;Mapping a message to a point&lt;/h1&gt;
+&lt;p&gt;A message can be an arbitrary byte string. An elliptic curve point is,
+generally speaking, a pair of integers $(x, y)$ belonging to the elliptic curve
+field.  How can we transform a byte string into a pair of field integers?&lt;/p&gt;
+&lt;p&gt;Well, as far as computers are concerned, both byte strings and integers have
+the same nature: they are just sequences of bits, so there's a natural map
+between the two. We could take the message, split it into two parts, and
+interpret the first part as an integer $x$ and the second part as an integer
+$y$. This would work for obtaining two arbitrary integers, but there's a
+problem: the coordinates $x$ and $y$ of an elliptic curve point are related by
+a mathematical equation (the curve equation), so we cannot choose two arbitrary
+$x$ and $y$ and expect them to identify a valid point on the curve. In fact,
+for curves in Weierstrass form, given $x$ there are at most two possible
+choices for $y$, so it's &lt;em&gt;very&lt;/em&gt; unlikely that this splitting method will yield
+a valid point.&lt;/p&gt;
+&lt;p&gt;Let's change our strategy a little bit: instead of transforming the message to
+a pair $(x, y)$, we transform it to $x$ and then we compute a valid $y$ from
+the curve equation. This is a much better method, but there's still a problem:
+generally speaking, not every $x$ will have a corresponding $y$. Not every $x$
+can satisfy the curve equation.&lt;/p&gt;
+&lt;p&gt;Luckily, most of the popular elliptic curves used in cryptography have an
+interesting property: about half of the possible field integers are valid
+$x$-coordinates. To see this, let's take a look at an example: the curve
+&lt;code&gt;secp384r1&lt;/code&gt;. This is a Weierstrass curve that has the following order:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;0xffffffffffffffffffffffffffffffffffffffffffffffffc7634d81f4372ddf581a0db248b0a77aecec196accc52973
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I remind you that the order is the number of valid points that belong to the
+elliptic curve group. Because this is a Weierstrass curve, for each $x$ there
+are 2 possible points, so the number of valid $x$-coordinates is &lt;code&gt;order / 2&lt;/code&gt;.
+Given an arbitrary 384-bit integer, what are the chances that this is a valid
+$x$-coordinate? The answer is &lt;code&gt;(order / 2) / (2 ** 384)&lt;/code&gt; which is approximately
+0.5 or 50%.&lt;/p&gt;
+&lt;p&gt;OK, but how does this help with our goal: mapping an arbitrary message to a
+valid $x$-coordinate? It's simple: we can &lt;em&gt;append&lt;/em&gt; a random byte (or multiple
+bytes) to the message. We call this extra byte (or bytes): &lt;strong&gt;padding&lt;/strong&gt;. If the
+resulting padded message does not translate to a valid $x$-coordinate, we
+choose another random padding and try again, until we find one that works.
+Given that there's 50% chance of finding a valid $x$ coordinate, this method
+will find a valid $x$-coordinate very quickly: on average, this will happen on
+the first or the second try.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src="https://andrea.corbellini.name/images/ec-elgamal-padding.svg" alt="Padding a message to obtain a valid elliptic curve point" width="500" height="120"&gt;
+  &lt;figcaption&gt;Example of how to use padding to obtain a valid elliptic curve point from an arbitrary message.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;This operation can be easily &lt;strong&gt;reversed&lt;/strong&gt;: if you have a point $(x, y)$, in
+order to recover the message that generated it, just take the $x$ coordinate
+and remove the padding. That's it!&lt;/p&gt;
+&lt;p&gt;It's worth noting that there are some standard curves where all the possible
+byte strings (of the proper size) can be translated to elliptic curve points,
+without any random padding needed. For example, with
+&lt;a href="https://en.wikipedia.org/wiki/Curve25519"&gt;Curve25519&lt;/a&gt;, every 32-byte string is
+a valid elliptic curve point. Another curve like that is
+&lt;a href="https://en.wikipedia.org/wiki/Curve448"&gt;Curve448&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It's also important to note that the padding does not need to be truly random.
+In the image above I show a padding that is simply a constantly increasing
+sequence of numbers: 0, 1, 2, ... That's enough to find a valid point.&lt;/p&gt;
+&lt;h1 id="putting-everything-together"&gt;Putting everything together&lt;/h1&gt;
+&lt;p&gt;We have seen how to map a message to a point and how ElGamal works, so now we
+have all the elements to write some working code. I'm choosing
+&lt;a href="https://www.python.org/"&gt;Python&lt;/a&gt; and the
+&lt;a href="https://github.com/cslashm/ECPy"&gt;ECPy&lt;/a&gt; package to work with elliptic curves,
+which you can install with &lt;code&gt;pip install ecpy&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;ecpy.curves&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Curve&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Point&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;message_to_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Curve&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Point&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;# Number of bytes to represent a coordinate of a point&lt;/span&gt;
+    &lt;span class="n"&gt;coordinate_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+    &lt;span class="c1"&gt;# Minimum number of bytes for the padding. We need at least 1 byte so that&lt;/span&gt;
+    &lt;span class="c1"&gt;# we can try different values and find a valid point. We also add an extra&lt;/span&gt;
+    &lt;span class="c1"&gt;# byte as a delimiter between the message and the padding (see below)&lt;/span&gt;
+    &lt;span class="n"&gt;min_padding_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+    &lt;span class="c1"&gt;# Maximum number of bytes that we can encode&lt;/span&gt;
+    &lt;span class="n"&gt;max_message_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;coordinate_size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;min_padding_size&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;max_message_size&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Message too long&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Add a padding long enough to ensure that the resulting padded message has&lt;/span&gt;
+    &lt;span class="c1"&gt;# the same size as a point coordinate. Initially the padding is all 0&lt;/span&gt;
+    &lt;span class="n"&gt;padding_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;coordinate_size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;padded_message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;bytearray&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\0&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;padding_size&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Put a delimiter between the message and the padding, so that we can&lt;/span&gt;
+    &lt;span class="c1"&gt;# properly remove the padding at decrypt time&lt;/span&gt;
+    &lt;span class="n"&gt;padded_message&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mh"&gt;0xff&lt;/span&gt;
+
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="c1"&gt;# Convert the padded message to an integer, which may or may not be a&lt;/span&gt;
+        &lt;span class="c1"&gt;# valid x-coordinate&lt;/span&gt;
+        &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;from_bytes&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;padded_message&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;little&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="c1"&gt;# Calculate the corresponding y-coordinate (if it exists)&lt;/span&gt;
+        &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y_recover&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;# x was not a valid coordinate; increment the padding and try again&lt;/span&gt;
+            &lt;span class="n"&gt;padded_message&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;# x was a valid coordinate; return the point (x, y)&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;public_key&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Point&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;curve&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;public_key&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;
+    &lt;span class="c1"&gt;# Map the message to an elliptic curve point&lt;/span&gt;
+    &lt;span class="n"&gt;message_point&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;message_to_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# Generate a randon number&lt;/span&gt;
+    &lt;span class="n"&gt;seed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# Calculate c1 and c2 according to the ElGamal algorithm&lt;/span&gt;
+    &lt;span class="n"&gt;c1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;seed&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generator&lt;/span&gt;
+    &lt;span class="n"&gt;c2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;seed&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;public_key&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;message_point&lt;/span&gt;
+    &lt;span class="c1"&gt;# Encode c1 and c2 and return them&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c2&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;point_to_message&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;point&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Point&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;# Number of bytes to represent a coordinate of a point&lt;/span&gt;
+    &lt;span class="n"&gt;coordinate_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+    &lt;span class="c1"&gt;# Convert the x-coordinate of the point to a byte string&lt;/span&gt;
+    &lt;span class="n"&gt;padded_message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;point&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;to_bytes&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;coordinate_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;little&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# Find the padding delimiter&lt;/span&gt;
+    &lt;span class="n"&gt;message_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;padded_message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rfind&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0xff&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;# Remove the padding and return the resulting message&lt;/span&gt;
+    &lt;span class="n"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;padded_message&lt;/span&gt;&lt;span class="p"&gt;[:&lt;/span&gt;&lt;span class="n"&gt;message_size&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Curve&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;secret_key&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ciphertext&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;bytes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;# Decode c1 and c2 and convert them to elliptic curve points&lt;/span&gt;
+    &lt;span class="n"&gt;c1_bytes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ciphertext&lt;/span&gt;&lt;span class="p"&gt;[:&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ciphertext&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;c2_bytes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ciphertext&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ciphertext&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
+    &lt;span class="n"&gt;c1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c1_bytes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;c2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c2_bytes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Calculate the message point according to the ElGamal algorithm&lt;/span&gt;
+    &lt;span class="n"&gt;message_point&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c2&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;secret_key&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;c1&lt;/span&gt;
+    &lt;span class="c1"&gt;# Convert the message point to a message and return it&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;point_to_message&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;message_point&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And here is an usage example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;curve&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_curve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;secp384r1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;secret_key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mh"&gt;0x123456789abcdef&lt;/span&gt;
+&lt;span class="n"&gt;public_key&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;secret_key&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generator&lt;/span&gt;
+
+&lt;span class="n"&gt;message&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;hello&amp;#39;&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;  Message:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;encrypted&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;public_key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Encrypted:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encrypted&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hex&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+
+&lt;span class="n"&gt;decrypted&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;decrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;secret_key&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;encrypted&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Decrypted:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;decrypted&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Which produces the following output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  Message: hello
+Encrypted: 04fa333c6a03994c5bce4627de4447c5cdd358415f8db2745b67836932a0d5e81f19...
+Decrypted: hello
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1 id="some-considerations-on-padding-and-security"&gt;Some considerations on padding and security&lt;/h1&gt;
+&lt;p&gt;It's important to note that padding is a very delicate problem in cryptography.
+There exist many &lt;a href="https://en.wikipedia.org/wiki/Padding_(cryptography)"&gt;padding
+schemes&lt;/a&gt;, and &lt;strong&gt;not all
+of them are secure&lt;/strong&gt;. The padding scheme that I wrote in this article was just
+for demonstration purposes and may not be the most secure, so don't use it in
+production systems. Take a look at
+&lt;a href="https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding"&gt;OAEP&lt;/a&gt; if
+you're looking for a modern and secure padding scheme.&lt;/p&gt;
+&lt;p&gt;Another thing to note is that the decryption method that I wrote does not check
+if the decryption was successful. If you try to decrypt an invalid ciphertext,
+or use the wrong key, you won't get an error but instead a random result, which
+is not desiderable. A good padding scheme like OAEP will instead throw an error
+if decryption was unsuccessful.&lt;/p&gt;
+&lt;h1 id="cost-of-elliptic-curve-encryption"&gt;Cost of elliptic curve encryption&lt;/h1&gt;
+&lt;p&gt;With Elliptic Curve ElGamal, if we are using an &lt;em&gt;n&lt;/em&gt;-bit elliptic curve, we can
+encrypt messages that are at most &lt;em&gt;n&lt;/em&gt;-bit long (actually less than that,
+especially if we're using padding), and the output is at least &lt;em&gt;2n&lt;/em&gt;-bit long
+(if the resulting points $C_1$ and $C_2$ are encoded using point compression).
+This means that encryption using Elliptic Curve ElGamal doubles the size of the
+data that we want to encrypt. It also requires a fair amount of compute
+resources, because it involves a random number generation and 2 point
+multiplications.&lt;/p&gt;
+&lt;p&gt;In short, Elliptic Curve ElGamal is expensive both in terms of space and in
+terms of time and compute power, and this makes it unattractive in applications
+like &lt;a href="https://en.wikipedia.org/wiki/Transport_Layer_Security"&gt;TLS&lt;/a&gt; or general
+purpose encryption.&lt;/p&gt;
+&lt;p&gt;So what can we use Elliptic Curve ElGamal for? We can use it to encrypt
+&lt;em&gt;symmetric keys&lt;/em&gt;, such as
+&lt;a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"&gt;AES&lt;/a&gt; keys or
+&lt;a href="https://en.wikipedia.org/wiki/ChaCha20"&gt;ChaCha20&lt;/a&gt; keys, and then use these
+symmetric keys to encrypt our arbitrary data. Symmetric keys are relatively
+short (ranging from 128 to 256 bits nowadays), so they can be encrypted with
+one round of Elliptic Curve ElGamal with most curves. It's worth noting that
+this is the same approach that we use with
+&lt;a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)"&gt;RSA&lt;/a&gt; encryption: we don't
+use RSA to encrypt data directly (not anymore), but rather we use RSA to
+encrypt symmetric keys which are later used for encrypting data.&lt;/p&gt;
+&lt;p&gt;These are the reason why schemes like Elliptic Curve ElGamal, or other methods of
+encryption with elliptic curves, are not used in practice:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;elliptic curve encryption is more expensive than hybrid encryption;&lt;/li&gt;
+&lt;li&gt;hybrid encryption scales better and is more performant;&lt;/li&gt;
+&lt;li&gt;elliptic curve key exchange is simpler and has fewer pitfalls than
+  encryption.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In conclusion, no practical use case benefits from elliptic curve encryption,
+and that's why we don't use it and prefer elliptic curve key exchange instead.
+However, the idea that elliptic curves cannot be used for encryption is a myth,
+and I hope this article will help clarify that confusion.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Mon, 02 Jan 2023 06:30:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2023-01-02:/2023/01/02/ec-encryption/</guid><category>cryptography</category><category>ecc</category><category>encryption</category><category>elgamal</category></item><item><title>The curious case of bad blocks on an SSD, and how I got rid of them</title><link>https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/</link><description>&lt;p&gt;I recently inherited a laptop that was broken by pouring some hot coffee on it.
 When I dissected it, it was pretty clear that most of it was unrecoverable: the
 CPU was completely fried, and its thermal paste splashed everywhere on the
 motherboard. (I wish I took a picture of it that I could share.) There were
