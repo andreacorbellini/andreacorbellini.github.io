@@ -20,6 +20,10 @@ MINIFY_CSS = True
 DISQUS_SITENAME = 'andreacorbellini'
 
 
+# Stats.
+GOATCOUNTER_URL = 'https://cor.goatcounter.com/count'
+
+
 # Feeds.
 FEED_ATOM = 'feed.atom'
 FEED_RSS = 'feed.rss'

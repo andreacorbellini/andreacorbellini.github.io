@@ -59,4 +59,7 @@
   {% if DISQUS_SITENAME %}
     <script src="//{{ DISQUS_SITENAME }}.disqus.com/count.js" defer></script>
   {% endif %}
+  {% if GOATCOUNTER_URL %}
+    <script src="https://gc.zgo.at/count.js" defer data-goatcounter="{{ GOATCOUNTER_URL }}"></script>
+  {% endif %}
 {% endautoescape %}
