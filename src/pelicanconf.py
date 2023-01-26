@@ -83,6 +83,7 @@ PLUGINS = [
     'redirects',
     'spellcheck',
     'ubuntuplanet',
+    'uniquotes',
 ]
 
 MARKDOWN = {
