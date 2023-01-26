@@ -21,8 +21,8 @@ agreement is more convenient for most applications.
 # Quick recap on Elliptic Curve Cryptography
 
 I wrote an [in-depth article about elliptic curve
-cryptography](({filename}/2015-005-ecc-part-1.md)) in the past on this blog,
-and here is a quick recap: points on an elliptic curve from an interesting
+cryptography]({filename}/2015-005-ecc-part-1.md) in the past on this blog, and
+here is a quick recap: points on an elliptic curve from an interesting
 algebraic structure: a _cyclic group_. This group lets us do some algebra with
 the points of the elliptic curve: if we have two points $A$ and $B$, we can
 **add** them ($A + B$) or **subtract** them ($A - B$). We can also **multiply**
