@@ -104,9 +104,6 @@ JINJA_FILTERS = {
 }
 
 JINJA_ENVIRONMENT = {
-    'extensions': [
-        'jinja2.ext.do',
-    ],
 }
 
 DIRECT_TEMPLATES = [
