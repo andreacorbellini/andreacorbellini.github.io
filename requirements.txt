@@ -1,5 +1,6 @@
 cssmin
 flask
+jsmin
 markdown
 
 pelican[markdown]

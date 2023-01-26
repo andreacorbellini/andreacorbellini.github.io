@@ -1,0 +1,134 @@
+@header-background: url(/theme/background.jpg) no-repeat;
+@header-background-width: 2166px;
+@header-background-height: 120px;
+
+@navbar-height: 4rem;
+@navbar-link-padding: 1em;
+
+@navbar-small-screen-horizontal-padding: @main-content-small-screen-horizontal-padding;
+
+header#main-header {
+  position: relative;
+  height: @header-background-height;
+  margin-bottom: @navbar-height;
+
+  background: @header-background;
+  @media only screen and (min-width: @header-background-width) {
+    background-size: 100% 100%;
+  }
+
+  .main-navbar-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    min-height: @navbar-height;
+    margin-bottom: -@navbar-height;
+
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+
+    background: @color-navbar-background;
+
+    a {
+      color: @color-navbar-text;
+      text-decoration: none;
+    }
+
+    nav.main-navbar {
+      .main-content-width;
+      margin: 0 auto;
+      position: relative;
+
+      .main-navbar-sitename {
+        position: absolute;
+        left: 0;
+        font-size: 1.1rem;
+        line-height: @navbar-height;
+
+        a {
+          display: inline-block;
+        }
+      }
+
+      .main-navbar-links {
+        position: absolute;
+        right: 0;
+
+        ul {
+          margin: 0;
+          padding: 0;
+          font-size: 0.92rem;
+          line-height: @navbar-height;
+          list-style: none;
+
+          li {
+            display: inline-block;
+
+            a {
+              display: block;
+              padding: 0 @navbar-link-padding;
+
+              &:hover, &:focus {
+                background: darken(@color-navbar-background, 10%);
+              }
+            }
+          }
+        }
+      }
+
+      @media (min-width: @screen-width-small) {
+        button.main-navbar-expand {
+          display: none;
+        }
+      }
+
+      @media not (min-width: @screen-width-small) {
+        .main-navbar-sitename {
+          left: @navbar-small-screen-horizontal-padding;
+        }
+
+        .main-navbar-links {
+          position: static;
+          height: 0;
+          padding-top: @navbar-height;
+          padding-left: @navbar-small-screen-horizontal-padding;
+          padding-right: $padding-left;
+
+          overflow-y: clip;
+
+          transition: height 300ms;
+
+          ul {
+            margin: 0 -@navbar-link-padding;
+            padding: 0 @navbar-link-padding;
+            background: darken(@color-navbar-background, 5%);
+            li {
+              a:first-child {
+                margin-left: -@navbar-link-padding;
+              }
+            }
+          }
+
+          &.expanded {
+            height: @navbar-height;
+          }
+        }
+
+        button.main-navbar-expand {
+          position: absolute;
+          top: @navbar-height / 2 - $height / 2;
+          right: @navbar-small-screen-horizontal-padding;
+          padding: 0;
+          border: 0;
+          width: $height;
+          height: @navbar-height / 2;
+
+          .inline-feather-icon(menu);
+          filter: invert(1);
+        }
+      }
+    }
+  }
+}

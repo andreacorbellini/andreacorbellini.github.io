@@ -1,329 +1,85 @@
-@import "bootstrap/bootstrap.less";
+@import "about.less";
+@import "colors.less";
+@import "content.less";
+@import "footer.less";
+@import "header.less";
+@import "images.less";
+@import "table-of-contents.less";
 
-@brand-primary: darken(#428bca, 6.5%);
-@brand-success: #5cb85c;
-@brand-info:    #5bc0de;
-@brand-warning: #f0ad4e;
-@brand-danger:  #d9534f;
+@screen-width-small:  768px;
+@screen-width-medium: 992px;
+@screen-width-large:  1200px;
 
-@code-color:    @text-color;
-@code-bg:       #f0f0f0;
+@content-width-small:  530px;
+@content-width-medium: 630px;
+@content-width-large:  830px;
 
-@navbar-height: 60px;
-@navbar-margin-bottom: -62px;
-@navbar-border-radius: 0;
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
 
-@navbar-inverse-color:                  #fff;
-@navbar-inverse-bg:                     #125b9a;
-@navbar-inverse-border:                 @navbar-inverse-bg;
-@navbar-inverse-link-color:             @navbar-inverse-color;
-@navbar-inverse-link-hover-color:       @navbar-inverse-link-color;
-@navbar-inverse-link-hover-bg:          darken(@navbar-inverse-bg, 15%);
-@navbar-inverse-link-active-color:      @navbar-inverse-link-hover-color;
-@navbar-inverse-link-active-bg:         darken(@navbar-inverse-bg, 15%);
-@navbar-inverse-link-disabled-color:    #444;
-@navbar-inverse-link-disabled-bg:       transparent;
-@navbar-inverse-brand-color:            @navbar-inverse-link-color;
-@navbar-inverse-brand-hover-color:      @navbar-inverse-color;
-@navbar-inverse-brand-hover-bg:         transparent;
-@navbar-inverse-toggle-hover-bg:        #333;
-@navbar-inverse-toggle-icon-bar-bg:     #fff;
-@navbar-inverse-toggle-border-color:    #333;
-
-@font-family-sans-serif: 'Open Sans', sans-serif;
-@font-family-monospace: 'Ubuntu Mono', Consolas, 'Courier New', monospace;
-
-@font-size-base: 14px;
-@line-height-base: 1.9;
-
-.body {
-  a {
-    color: #333333;
-    background: linear-gradient(to right, #9bd5fe, #9bd5fe) no-repeat;
-    background-size: 100% 0.2em;
-    background-position: left bottom;
-    padding: 0.1em 0.1em;
-    margin: 0 -0.1em;
-  }
-
-  a:hover, a:focus {
-    border-radius: 2px;
-    background: #d4edff;
-    text-decoration: none;
-    .transition(background 300ms);
-  }
+  background: @color-main-background;
 }
 
-.main-header {
-  position: relative;
-  z-index: 99;
-  height: 120px;
-  margin-bottom: 62px;
-  background: url(/theme/background.jpg) no-repeat;
-
-  @media only screen and (min-width: 2166px) {
-    background-size: 100% 100%;
-  }
-}
-
-.navbar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-
-  button {
-    color: #ffffff;
-    background: none;
-    padding: 0;
-    border: 0;
-    outline: none;
-    height: 60px;
-    float: right;
-    font-size: 24px;
-    text-align: right;
-  }
-}
-
-.navbar-brand {
-  padding-right: 0;
-
-  @media (max-width: 290px) {
-    display: none;
-  }
-}
-
-.main-footer {
-  background: #f7f7f7;
-  padding-top: 20px;
-  padding-bottom: 40px;
-}
-
-#latest {
-  ul.articles {
-    padding: 0;
-    list-style-type: none;
-
-    & > li {
-      margin-bottom: 8px;
-      padding-bottom: 32px;
-      border-bottom: 1px solid #d0d0d0;
-
-      &:last-child {
-        border-bottom: 0;
-      }
-    }
-  }
-}
-
-#toc {
+.hidden {
   display: none;
-  position: absolute;
-  left: 100%;
-  height: 100%;
-  font-size: 92%;
+}
 
-  @media only screen and (min-width: @screen-sm-min) {
-    display: block;
-    width: calc(50vw - @container-sm / 2);
+.main-content-width() {
+  @media (min-width: @screen-width-small) {
+    width: @content-width-small;
   }
-
-  @media only screen and (min-width: @screen-md-min) {
-    display: block;
-    width: calc(50vw - @container-md / 2);
+  @media (min-width: @screen-width-medium) {
+    width: @content-width-medium;
   }
-
-  @media only screen and (min-width: @screen-lg-min) {
-    display: block;
-    width: calc(50vw - @container-lg / 2);
-  }
-
-  nav {
-    position: sticky;
-    top: 4em;
-    margin-left: 2em;
-    border-left: 1px solid lighten(@brand-primary, 40%);
-
-    .toc-list {
-      margin: 0;
-      padding: 0;
-
-      li {
-        list-style: none;
-        padding-left: 1em;
-
-        .toc-link.active {
-          font-weight: bold;
-
-          &::before {
-            content: '';
-            position: absolute;
-            left: -0.4em;
-            width: 0.8em;
-            height: 0.8em;
-            margin-top: 0.6em;
-            background-color: @brand-primary;
-            border-radius: 50%;
-          }
-        }
-      }
-    }
+  @media (min-width: @screen-width-large) {
+    width: @content-width-large;
   }
 }
 
-#content {
-  img {
-    max-width: 100%;
-    height: auto;
-    width: auto;
-  }
+.boxed(@border-color) {
+  display: block;
+  border: 0.1rem solid @border-color;
+  border-radius: 0.2em;
+}
 
-  & > article, & > footer {
-    margin-bottom: 60px;
-
-    @media only screen and (max-width: 768px) {
-      padding: 5px 4px;
-      margin: 0 4px;
-    }
-  }
-
-  & > article {
-    header {
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px dotted #333333;
-
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      hyphens: auto;
-
-      h1 a {
-        text-decoration: none;
-        color: #000000;
-      }
-    }
-
-    .wrapper {
-      position: relative;
-    }
-
-    .body {
-      position: relative;
-
-      h1, h2, h3, h4, h5, h6 {
-        border-bottom: 1px solid #cccccc;
-      }
-    }
-
-    figure {
-      text-align: center;
-      margin-top: 16px;
-      margin-bottom: 16px;
-      padding-top: 10px;
-      border-radius: 4px;
-      border: 1px solid #cccccc;
-
-      figcaption {
-        padding: 10px;
-        margin-top: 10px;
-        background: #f5f5f5;
-
-        @media only screen and (max-width: 768px) {
-          padding-left: 0;
-          padding-right: 0;
-        }
-      }
-    }
+.underline-on-hover() {
+  text-decoration: none;
+  &:hover, &:focus {
+    text-decoration: underline;
   }
 }
 
-.details {
-  & > span {
+.inline-icon(@icon-url) {
+  vertical-align: middle;
+  background: url(@icon-url) no-repeat;
+  background-size: contain;
+}
+
+.inline-feather-icon(@icon-name) {
+  .inline-icon("https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/icons/@{icon-name}.svg");
+}
+
+.inline-simple-icon(@icon-name) {
+  .inline-icon("https://cdn.jsdelivr.net/npm/simple-icons@8.3.0/icons/@{icon-name}.svg");
+}
+
+.icon(@icon-url) {
+  &::before {
+    content: '';
     display: inline-block;
-    margin-right: 15px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-
-    & > span.fa,
-    & > span.fab,
-    & > span.far,
-    & > span.fas {
-      color: #757575;
-    }
-  }
-
-  .fa, .fab, .far, .fas {
-    width: 21px;
-  }
-
-  .tags {
-    display: inline;
-
-    & > li {
-      padding: 0;
-      margin-right: 6px;
-    }
+    padding-right: 0.5em;
+    width: 1em;
+    height: 1em;
+    .inline-icon(@icon-url);
   }
 }
 
-.article-summary {
-  margin-top: 30px;
-  padding-bottom: 30px;
-  border-bottom: 1px dotted #333333;
-
-  &:last-child {
-    border-bottom: 0;
-  }
-
-  & > header {
-    padding-bottom: 22px;
-  }
-
-  .summary > h2 {
-    margin-top: 0;
-    margin-bottom: 7px;
-    font-size: 23px;
-  }
+.feather-icon(@icon-name) {
+  .icon("https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/icons/@{icon-name}.svg");
 }
 
-.read-more {
-  text-decoration: underline;
-}
-
-.social {
-  margin-right: 10px;
-
-  &, .fb-share-button > span {
-    vertical-align: top !important;
-  }
-
-  @media only screen and (max-width: 768px) {
-    display: block !important;
-    margin-bottom: 6px;
-    margin-right: 0;
-  }
-}
-
-pre {
-  overflow-x: auto;
-  word-wrap: nowrap;
-  line-height: 1.3;
-
-  border: 0 none;
-  border-radius: 0;
-
-  padding: 15px 30px;
-  border-left: 5px solid #337ab7;
-
-  background-color: #fbfbfb;
-}
-
-code {
-  font-size: 1em;
-  padding: 0.3em 0.5em;
-  background-color: @code-bg;
+.simple-icon(@icon-name) {
+  .icon("https://cdn.jsdelivr.net/npm/simple-icons@8.3.0/icons/@{icon-name}.svg");
 }

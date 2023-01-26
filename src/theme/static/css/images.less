@@ -1,0 +1,34 @@
+@figure-padding: 0.5em;
+@figure-overflow-width: 4rem;
+
+main#content {
+  img {
+    display: block;
+    height: auto;
+    width: auto;
+    max-width: calc(100% - 2 * @figure-padding);
+    padding: @figure-padding;
+  }
+
+  figure {
+    .boxed(@color-section-divider);
+    margin-block: 0;
+    background: @color-white;
+
+    @media (min-width: @screen-width-small) {
+      margin-left: -@figure-overflow-width;
+      margin-right: -@figure-overflow-width;
+    }
+
+    img {
+      margin: 0 auto;
+    }
+
+    figcaption {
+      padding: 1em;
+      font-size: 0.9em;
+      border-top: 0.1rem solid @color-section-divider;
+      background: @color-figure-caption-background;
+    }
+  }
+}

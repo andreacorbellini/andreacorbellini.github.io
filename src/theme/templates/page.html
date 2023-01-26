@@ -9,11 +9,11 @@
 
 {% block content %}
   {% autoescape true %}
-    <article>
+    <article class="article">
       <header>
         <h1><a href="{{ SITEURL }}/{{ page.url }}" rel="bookmark" title="{{ page.title }}">{{ page.title }}</a></h1>
       </header>
-      <div class="body">{{ page.content|safe }}</div>
+      <div class="article-body">{{ page.content|safe }}</div>
     </article>
   {% endautoescape %}
 {% endblock %}

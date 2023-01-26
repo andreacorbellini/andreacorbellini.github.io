@@ -1,6 +1,6 @@
 {% autoescape true %}
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ SITEURL }}/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ SITEURL }}/theme/favicon-32x32.png">
   {% if FEED_ALL_ATOM %}
@@ -37,17 +37,20 @@
     <link rel="shortcut icon" href="{{ SHORTCUT_ICON }}" type="image/x-icon">
   {% endif %}
   {% if MINIFY_CSS %}
-    {% assets filters="cssmin", output="css/style.min.css", "css/style.css", "css/pygments.css" %}
+    {% assets filters="cssmin", output="css/style.min.css", "css/style.css" %}
       <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
     {% endassets %}
   {% else %}
-    <link rel="stylesheet" href="{{ SITEURL }}/theme/css/pygments.css">
     <link rel="stylesheet" href="{{ SITEURL }}/theme/css/style.css">
   {% endif %}
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+  {% if MINIFY_JS %}
+    {% assets filters="jsmin", output="js/scripts.min.js", "js/navbar.js" %}
+      <script src="{{ SITEURL }}/{{ ASSET_URL }}" defer></script>
+    {% endassets %}
+  {% else %}
+    <script src="{{ SITEURL }}/theme/js/navbar.js" defer></script>
+  {% endif %}
   <script>
     window.MathJax = {
       tex: {
@@ -57,7 +60,7 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
   {% if DISQUS_SITENAME %}
-    <script src="//{{ DISQUS_SITENAME }}.disqus.com/count.js" defer></script>
+    <script src="https://{{ DISQUS_SITENAME }}.disqus.com/count.js" defer></script>
   {% endif %}
   {% if GOATCOUNTER_URL %}
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="{{ GOATCOUNTER_URL }}"></script>

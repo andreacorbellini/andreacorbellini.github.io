@@ -117,6 +117,7 @@ DIRECT_TEMPLATES = [
 
 # Static files.
 MINIFY_CSS = False
+MINIFY_JS = False
 
 
 # Pagination and summary.

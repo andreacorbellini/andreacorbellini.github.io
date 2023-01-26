@@ -20,10 +20,12 @@ from the beautiful [Lake Garda](https://en.wikipedia.org/wiki/Lake_Garda), in
 Italy, where I did hundreds of dives.
 
 If you have something cool to share, or if you just want to know more about me
-or what I do, you can reach me out by:
+or what I do, you can reach out at:
 
-<span class="far fa-envelope" aria-hidden="true"></span> [Email](mailto:corbellini.andrea@gmail.com) &emsp;
-<span class="fab fa-mastodon" aria-hidden="true"></span> [Mastodon](https://ubuntu.social/@andrea) &emsp;
-<span class="fab fa-linkedin" aria-hidden="true"></span> [LinkedIn](https://linkedin.com/in/andreacorbellini)
+<ul class="about-link-list">
+  <li><a href="mailto:corbellini.andrea@gmail.com" rel="me" class="email">Email</a></li>
+  <li><a href="https://ubuntu.social/@andrea" rel="me" class="mastodon">Mastodon</a></li>
+  <li><a href="https://linkedin.com/in/andreacorbellini" rel="me" class="linkedin">LinkedIn</a></li>
+</ul>
 
-<span style="font-size: 80%">(Opinions are my own and not the views of my employer.)</span>
+Opinions are my own and not the views of my employer.

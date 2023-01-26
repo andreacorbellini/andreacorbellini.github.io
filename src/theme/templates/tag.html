@@ -4,15 +4,22 @@
 
 {% block content %}
   {% autoescape true %}
-    <section>
+    <article class="article-list tag">
       <header>
         <h1><a href="{{ SITEURL }}/{{ tag.url }}" rel="bookmark" title="{{ tag }}">{{ tag }}</a></h1>
-        <div class="details small"><span>{{ articles|count }} article{{ 's' if articles|count != 1 else ''}} with this tag</span></div>
+        <div class="article-count">{{ articles|count }} article{{ 's' if articles|count != 1 else ''}} with this tag</div>
       </header>
-      {% include "_includes/articles-list.html" %}
-    </section>
-    {% if articles_paginator.num_pages > 1 %}
-      <footer>{% include "_includes/pagination.html" %}</footer>
-    {% endif %}
+      <ul class="article-list">
+        {% for article in articles_page.object_list %}
+          <li>
+            <h3><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h3>
+            {% include "_includes/article-details.html" %}
+          </li>
+        {% endfor %}
+      </ul>
+      {% if articles_paginator.num_pages > 1 %}
+        <nav class="pagination">{% include "_includes/pagination.html" %}</nav>
+      {% endif %}
+    </article>
   {% endautoescape %}
 {% endblock %}

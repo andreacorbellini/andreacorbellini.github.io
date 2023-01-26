@@ -1,19 +1,10 @@
 {% autoescape true %}
-  <nav>
-    <ul class="pagination">
-      {% if articles_previous_page %}
-        <li><a href="{{ SITEURL }}/{{ articles_previous_page.url }}" rel="prev" title="Previous Page"><span class="fas fa-chevron-left" aria-hidden="true"></span></a></li>
-      {% else %}
-        <li class="disabled"><span class="fas fa-chevron-left" aria-hidden="true"></span></li>
-      {% endif %}
-      {% for page_num in articles_paginator.page_range %}
-        <li {% if page_num == articles_page.number %}class="active"{% endif %}><a href="{{ SITEURL }}/{{ articles_paginator.page(page_num).url }}" title="Page {{ page_num }}">{{ page_num }}</a></li>
-      {% endfor %}
-      {% if articles_next_page %}
-        <li><a href="{{ SITEURL }}/{{ articles_next_page.url }}" rel="next" title="Next Page"><span class="fas fa-chevron-right" aria-hidden="true"></span></a></li>
-      {% else %}
-        <li class="disabled"><span class="fas fa-chevron-right" aria-hidden="true"></span></li>
-      {% endif %}
-    </ul>
-  </nav>
+  <ul>
+    {% if articles_previous_page %}
+      <li><a href="{{ SITEURL }}/{{ articles_previous_page.url }}" rel="prev" title="Newer Stories">Newer Stories</a></li>
+    {% endif %}
+    {% if articles_next_page %}
+      <li><a href="{{ SITEURL }}/{{ articles_next_page.url }}" rel="next" title="Older Stories">Older Stories</a></li>
+    {% endif %}
+  </ul>
 {% endautoescape %}

@@ -7,23 +7,21 @@
 
 {% block content %}
   {% autoescape true %}
-    <div id="latest">
+    <article class="article-list latest">
       <h1>Latest articles</h1>
-      <ul class="articles">
+      <ul class="article-list">
         {% for article in articles_page.object_list %}
           <li>
-            <h3><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h3>
+            <h2><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
             {% include "_includes/article-details.html" %}
           </li>
         {% endfor %}
       </ul>
       {% if articles_paginator.num_pages > 1 %}
-        <footer>{% include "_includes/pagination.html" %}</footer>
+        <nav class="pagination">{% include "_includes/pagination.html" %}</nav>
       {% endif %}
-    </div>
+    </article>
   {% endautoescape %}
-  <!-- Hidden link to verify Mastodon account -->
-  <div class="hidden" aria-hidden="true">
-    <a href="https://ubuntu.social/@andrea" rel="me" aria-hidden="true"></a>
-  </div>
+  {# Hidden link to verify Mastodon account #}
+  <a href="https://ubuntu.social/@andrea" rel="me" class="hidden" aria-hidden="true"></a>
 {% endblock %}

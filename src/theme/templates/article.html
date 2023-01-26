@@ -7,13 +7,22 @@
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+    {% if DISQUS_SITENAME %}
+      <script>
+        var disqus_shortname = {{ DISQUS_SITENAME|tojson }};
+        var disqus_identifier = {{ article.slug|tojson }};
+        var disqus_title = {{ article.title|tojson }};
+        var disqus_url = {{ (SITEURL + '/' + article.url)|tojson }};
+      </script>
+      <script src="https://{{ DISQUS_SITENAME }}.disqus.com/embed.js" defer></script>
+    {% endif %}
     {% for keyword in article.keywords %}
       <meta name="keywords" content="{{ keyword }}">
     {% endfor %}
@@ -31,38 +40,25 @@
 
 {% block content %}
   {% autoescape true %}
-    <article>
+    <article class="article">
       <header>
         <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
         {% include "_includes/article-details.html" %}
       </header>
-      <div class="wrapper">
-        <aside id="toc">
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body">{{ article.content|safe }}</div>
+        <div class="article-body">{{ article.content|safe }}</div>
       </div>
+      {% if DISQUS_SITENAME %}
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
+      {% endif %}
     </article>
-    {% if DISQUS_SITENAME %}
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-    {% endif %}
   {% endautoescape %}
-{% endblock %}
-
-{% block footer %}
-  {{ super() }}
-  {% if DISQUS_SITENAME %}
-    <script>
-      var disqus_shortname = {{ DISQUS_SITENAME|tojson }};
-      var disqus_identifier = {{ article.slug|tojson }};
-      var disqus_title = {{ article.title|tojson }};
-      var disqus_url = {{ (SITEURL + '/' + article.url)|tojson }};
-    </script>
-    <script src="//{{ DISQUS_SITENAME }}.disqus.com/embed.js" defer></script>
-  {% endif %}
 {% endblock %}

@@ -14,6 +14,7 @@ OUTPUT_PATH = os.path.dirname(PROJECT_PATH)
 
 # Static files.
 MINIFY_CSS = True
+MINIFY_JS = True
 
 
 # Comments.

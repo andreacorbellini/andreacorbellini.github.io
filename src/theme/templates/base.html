@@ -5,12 +5,8 @@
     <title>{% block title %}{{ SITENAME|e }}{% endblock %}</title>
   </head>
   <body>
-    <header class="main-header">{% block nav %}{% include "_includes/nav.html" %}{% endblock %}</header>
-    {% block main %}
-      <div class="main-container container">
-        <main id="content">{% block content %}{% endblock %}</main>
-      </div>
-    {% endblock %}
-    <footer class="main-footer small">{% block footer %}{% include "_includes/footer.html" %}{% endblock %}</footer>
+    <header id="main-header">{% block nav %}{% include "_includes/nav.html" %}{% endblock %}</header>
+    {% block main %}<main id="content">{% block content %}{% endblock %}</main>{% endblock %}
+    <footer id="main-footer">{% block footer %}{% include "_includes/footer.html" %}{% endblock %}</footer>
   </body>
 </html>

@@ -1,0 +1,39 @@
+article.article {
+  ul.about-link-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    font-size: 1.2em;
+
+    li {
+      display: inline-block;
+      padding-bottom: 0.5em + @main-link-underline-height;
+
+      a {
+        padding: 0.5em;
+        margin: 0 1em;
+
+        &.email {
+          .feather-icon(mail);
+        }
+
+        &.mastodon {
+          .simple-icon(mastodon);
+        }
+
+        &.linkedin {
+          .simple-icon(linkedin);
+        }
+
+        &:hover, &:focus {
+          color: @color-white !important;
+          background: darken(@color-main-link-hover-background, 50%) !important;
+          &::before {
+            filter: invert(1);
+          }
+        }
+      }
+    }
+  }
+}

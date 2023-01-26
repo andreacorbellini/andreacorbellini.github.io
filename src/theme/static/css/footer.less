@@ -1,0 +1,29 @@
+@footer-vertical-padding: 1.5rem;
+
+@footer-small-screen-horizontal-padding: @main-content-small-screen-horizontal-padding;
+
+footer#main-footer {
+  margin: 0;
+  padding: @footer-vertical-padding 0;
+  font-size: 0.8rem;
+  line-height: 3em;
+
+  color: @color-footer-text;
+  background: @color-footer-background;
+  border-top: 0.1rem solid darken($background, 20%);
+
+  p {
+    .main-content-width;
+    margin: 0 auto;
+
+    a {
+      .underline-on-hover;
+      color: @color-footer-link;
+    }
+  }
+
+  @media not (min-width: @screen-width-small) {
+    padding-left: @footer-small-screen-horizontal-padding;
+    padding-right: $padding-left;
+  }
+}
