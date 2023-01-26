@@ -37,7 +37,7 @@
     <link rel="shortcut icon" href="{{ SHORTCUT_ICON }}" type="image/x-icon">
   {% endif %}
   {% if MINIFY_CSS %}
-    {% assets filters="cssmin", output="css/style.min.css", "css/style.css" %}
+    {% assets filters="rcssmin", output="css/style.min.css", "css/style.css" %}
       <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
     {% endassets %}
   {% else %}

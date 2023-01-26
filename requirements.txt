@@ -1,8 +1,8 @@
 beautifulsoup4
-cssmin
 flask
 jsmin
 markdown
+rcssmin
 
 pelican[markdown]
 pelican-webassets
