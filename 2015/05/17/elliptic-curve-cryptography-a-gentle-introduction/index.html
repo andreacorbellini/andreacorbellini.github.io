@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,20 +18,27 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "elliptic-curve-cryptography-a-gentle-introduction";
+        var disqus_title = "Elliptic Curve Cryptography: a gentle introduction";
+        var disqus_url = "https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="bitcoin">
       <meta name="tags" content="dh">
       <meta name="tags" content="dsa">
@@ -49,66 +54,63 @@
     <title>Elliptic Curve Cryptography: a gentle introduction - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" rel="bookmark" title="Elliptic Curve Cryptography: a gentle introduction">Elliptic Curve Cryptography: a gentle introduction</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-05-17T11:24:00+00:00">May 17, 2015</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-a-gentle-introduction">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2015-05-17T11:24:00+00:00">May 17, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="elliptic-curve-cryptography-a-gentle-introduction">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><p>Those of you who know what public-key cryptography is may have already heard of <strong>ECC</strong>, <strong>ECDH</strong> or <strong>ECDSA</strong>. The first is an acronym for Elliptic Curve Cryptography, the others are names for algorithms based on it.</p>
+        <div class="article-body"><p>Those of you who know what public-key cryptography is may have already heard of <strong>ECC</strong>, <strong>ECDH</strong> or <strong>ECDSA</strong>. The first is an acronym for Elliptic Curve Cryptography, the others are names for algorithms based on it.</p>
 <p>Today, we can find elliptic curves cryptosystems in <a href="https://tools.ietf.org/html/rfc4492">TLS</a>, <a href="https://tools.ietf.org/html/rfc6637">PGP</a> and <a href="https://tools.ietf.org/html/rfc5656">SSH</a>, which are just three of the main technologies on which the modern web and IT world are based. Not to mention <a href="https://en.bitcoin.it/wiki/Secp256k1">Bitcoin</a> and other cryptocurrencies.</p>
 <p>Before ECC become popular, almost all public-key algorithms were based on RSA, DSA, and DH, alternative cryptosystems based on modular arithmetic. RSA and friends are still very important today, and often are used alongside ECC. However, while the magic behind RSA and friends can be easily explained, is widely understood, and <a href="http://code.activestate.com/recipes/578838-rsa-a-simple-and-easy-to-read-implementation/">rough implementations can be written quite easily</a>, the foundations of ECC are still a mystery to most.</p>
-<p>With a series of blog posts I'm going to give you a gentle introduction to the world of elliptic curve cryptography. My aim is not to provide a complete and detailed guide to ECC (the web is full of information on the subject), but to provide <strong>a simple overview of what ECC is and why it is considered secure</strong>, without losing time on long mathematical proofs or boring implementation details. I will also give <strong>helpful examples together with visual interactive tools and scripts to play with</strong>.</p>
-<p>Specifically, here are the topics I'll touch:</p>
+<p>With a series of blog posts I’m going to give you a gentle introduction to the world of elliptic curve cryptography. My aim is not to provide a complete and detailed guide to ECC (the web is full of information on the subject), but to provide <strong>a simple overview of what ECC is and why it is considered secure</strong>, without losing time on long mathematical proofs or boring implementation details. I will also give <strong>helpful examples together with visual interactive tools and scripts to play with</strong>.</p>
+<p>Specifically, here are the topics I’ll touch:</p>
 <ol>
 <li><strong><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">Elliptic curves over real numbers and the group law</a></strong> (covered in this blog post)</li>
 <li><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Elliptic curves over finite fields and the discrete logarithm problem</a></strong></li>
 <li><strong><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Key pair generation and two ECC algorithms: ECDH and ECDSA</a></strong></li>
 <li><strong><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">Algorithms for breaking ECC security, and a comparison with RSA</a></strong></li>
 </ol>
-<p>In order to understand what's written here, you'll need to know some basic stuff of set theory, geometry and modular arithmetic, and have familiarity with symmetric and asymmetric cryptography. Lastly, you need to have a clear idea of what an "easy" problem is, what a "hard" problem is, and their roles in cryptography.</p>
-<p>Ready? Let's start!</p>
+<p>In order to understand what’s written here, you’ll need to know some basic stuff of set theory, geometry and modular arithmetic, and have familiarity with symmetric and asymmetric cryptography. Lastly, you need to have a clear idea of what an “easy” problem is, what a “hard” problem is, and their roles in cryptography.</p>
+<p>Ready? Let’s start!</p>
 <h1 id="elliptic-curves">Elliptic Curves</h1>
 <p>First of all: what is an elliptic curve? Wolfram MathWorld gives an excellent and complete <a href="http://mathworld.wolfram.com/EllipticCurve.html">definition</a>. But for our aims, an elliptic curve will simply be <strong>the set of points described by the equation</strong>:
 $$y^2 = x^3 + ax + b$$</p>
 <p>where $4a^3 + 27b^2 \ne 0$ (this is required to exclude <a href="https://en.wikipedia.org/wiki/Singularity_(mathematics)">singular curves</a>). The equation above is what is called <em>Weierstrass normal form</em> for elliptic curves.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/curves.png" alt="Different shapes for different elliptic curves" width="440" height="450">
-  <figcaption>Different shapes for different elliptic curves ($b = 1$, $a$ varying from 2 to -3).</figcaption>
+<img alt="Different shapes for different elliptic curves" height="450" src="https://andrea.corbellini.name/images/curves.png" width="440"/>
+<figcaption>Different shapes for different elliptic curves ($b = 1$, $a$ varying from 2 to -3).</figcaption>
 </figure>
-
 <figure>
-  <img src="https://andrea.corbellini.name/images/singularities.png" alt="Types of singularities" width="300" height="220">
-  <figcaption>Types of singularities: on the left, a curve with a cusp ($y^2 = x^3$). On the right, a curve with a self-intersection ($y^2 = x^3 - 3x + 2$). None of them is a valid elliptic curve.</figcaption>
+<img alt="Types of singularities" height="220" src="https://andrea.corbellini.name/images/singularities.png" width="300"/>
+<figcaption>Types of singularities: on the left, a curve with a cusp ($y^2 = x^3$). On the right, a curve with a self-intersection ($y^2 = x^3 - 3x + 2$). None of them is a valid elliptic curve.</figcaption>
 </figure>
-
 <p>Depending on the value of $a$ and $b$, elliptic curves may assume different shapes on the plane. As it can be easily seen and verified, elliptic curves are symmetric about the $x$-axis.</p>
 <p>For our aims, <strong>we will also need a <a href="https://en.wikipedia.org/wiki/Point_at_infinity">point at infinity</a></strong> (also known as ideal point) to be part of our curve. From now on, we will denote our point at infinity with the symbol 0 (zero).</p>
 <p>If we want to explicitly take into account the point at infinity, we can refine our definition of elliptic curve as follows:
 $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 \right\}\ \cup\ \left\{ 0 \right\}$$</p>
 <h1 id="groups">Groups</h1>
-<p>A group in mathematics is a set for which we have defined a binary operation that we call "addition" and indicate with the symbol +. In order for the set $\mathbb{G}$ to be a group, addition must defined so that it respects the following four properties:</p>
+<p>A group in mathematics is a set for which we have defined a binary operation that we call “addition” and indicate with the symbol +. In order for the set $\mathbb{G}$ to be a group, addition must defined so that it respects the following four properties:</p>
 <ol>
 <li><strong>closure:</strong> if $a$ and $b$ are members of $\mathbb{G}$, then $a + b$ is a member of $\mathbb{G}$;</li>
 <li><strong>associativity:</strong> $(a + b) + c = a + (b + c)$;</li>
@@ -117,11 +119,10 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 </ol>
 <p>If we add a fifth requirement:</p>
 <ol start="5">
-  <li><strong>commutativity:</strong> $a + b = b + a$,</li>
+<li><strong>commutativity:</strong> $a + b = b + a$,</li>
 </ol>
-
 <p>then the group is called <em>abelian group</em>.</p>
-<p>With the usual notion of addition, the set of integer numbers $\mathbb{Z}$ is a group (moreover, it's an abelian group). The set of natural numbers $\mathbb{N}$ however is not a group, as the fourth property can't be satisfied.</p>
+<p>With the usual notion of addition, the set of integer numbers $\mathbb{Z}$ is a group (moreover, it’s an abelian group). The set of natural numbers $\mathbb{N}$ however is not a group, as the fourth property can’t be satisfied.</p>
 <p>Groups are nice because, if we can demonstrate that those four properties hold, we get some other properties for free. For example: <strong>the identity element is unique</strong>; also the <strong>inverses are unique</strong>, that is: for every $a$ there exists only one $b$ such that $a + b = 0$ (and we can write $b$ as $-a$). Either directly or indirectly, these and other facts about groups will be very important for us later.</p>
 <h1 id="group-law">The group law for elliptic curves</h1>
 <p>We can define a group over elliptic curves. Specifically:</p>
@@ -132,42 +133,40 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <li><strong>addition</strong> is given by the following rule: <strong>given three aligned, non-zero points $P$, $Q$ and $R$, their sum is $P + Q + R = 0$</strong>.</li>
 </ul>
 <figure>
-  <img src="https://andrea.corbellini.name/images/three-aligned-points.png" alt="Three aligned points" width="300" height="300">
-  <figcaption>The sum of three aligned point is 0.</figcaption>
+<img alt="Three aligned points" height="300" src="https://andrea.corbellini.name/images/three-aligned-points.png" width="300"/>
+<figcaption>The sum of three aligned point is 0.</figcaption>
 </figure>
-
 <p>Note that with the last rule, we only require three aligned points, and three points are aligned without respect to order. This means that, if $P$, $Q$ and $R$ are aligned, then $P + (Q + R) = Q + (P + R) = R + (P + Q) = \cdots = 0$. This way, we have intuitively proved that <strong>our + operator is both associative and commutative: we are in an abelian group</strong>.</p>
 <p>So far, so great. But how do we actually compute the sum of two arbitrary points?</p>
 <h1 id="geometric-addition">Geometric addition</h1>
 <p>Thanks to the fact that we are in an abelian group, we can write $P + Q + R = 0$ as $P + Q = -R$. This equation, in this form, lets us derive a geometric method to compute the sum between two points $P$ and $Q$: <strong>if we draw a line passing through $P$ and $Q$, this line will intersect a third point on the curve, $R$</strong> (this is implied by the fact that $P$, $Q$ and $R$ are aligned). <strong>If we take the inverse of this point, $-R$, we have found the result of $P + Q$</strong>.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/point-addition.png" alt="Point addition" width="287" height="300">
-  <figcaption>Draw the line through $P$ and $Q$. The line intersects a third point $R$. The point symmetric to it, $-R$, is the result of $P + Q$.</figcaption>
+<img alt="Point addition" height="300" src="https://andrea.corbellini.name/images/point-addition.png" width="287"/>
+<figcaption>Draw the line through $P$ and $Q$. The line intersects a third point $R$. The point symmetric to it, $-R$, is the result of $P + Q$.</figcaption>
 </figure>
-
 <p>This geometric method works but needs some refinement. Particularly, we need to answer a few questions:</p>
 <ul>
-<li><strong>What if $P = 0$ or $Q = 0$?</strong> Certainly, we can't draw any line (0 is not on the $xy$-plane). But given that we have defined 0 as the identity element, $P + 0 = P$ and $0 + Q = Q$, for any $P$ and for any $Q$.</li>
+<li><strong>What if $P = 0$ or $Q = 0$?</strong> Certainly, we can’t draw any line (0 is not on the $xy$-plane). But given that we have defined 0 as the identity element, $P + 0 = P$ and $0 + Q = Q$, for any $P$ and for any $Q$.</li>
 <li><strong>What if $P = -Q$?</strong> In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.</li>
-<li><strong>What if $P = Q$?</strong> In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q' \ne P$. What happens if we make $Q'$ approach $P$, getting closer and closer to it?
- <br />
+<li><strong>What if $P = Q$?</strong> In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q’ \ne P$. What happens if we make $Q’$ approach $P$, getting closer and closer to it?
+ <br/>
 <figure>
-     <img src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P">
-     <figcaption>As the two points become closer together, the line passing through them becomes tangent to the curve.</figcaption>
-   </figure></li>
+<img alt="The result of P + Q as Q is approaching P" height="300" src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300"/>
+<figcaption>As the two points become closer together, the line passing through them becomes tangent to the curve.</figcaption>
+</figure></li>
 </ul>
-<p>As $Q'$ tends towards $P$, the line passing through $P$ and $Q'$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.
+<p>As $Q’$ tends towards $P$, the line passing through $P$ and $Q’$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.
 * <strong>What if $P \ne Q$, but there is no third point $R$?</strong> We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
- <br />
+ <br/>
 <figure>
-     <img src="https://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300">
-     <figcaption>If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.</figcaption>
-   </figure></p>
-<p>Let's assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.</p>
-<p>The geometric method is now complete and covers all cases. With a pencil and a ruler we are able to perform addition involving every point of any elliptic curve. If you want to try, <strong>take a look at the <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html">HTML5/JavaScript visual tool</a> I've built for computing sums on elliptic curves!</strong></p>
+<img alt="The result of P + Q as Q is approaching P" height="300" src="https://andrea.corbellini.name/images/animation-tangent-line.gif" width="300"/>
+<figcaption>If our line intersects just two points, then it means that it’s tangent to the curve. It’s easy to see how the result of the sum becomes symmetric to one of the two points.</figcaption>
+</figure></p>
+<p>Let’s assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.</p>
+<p>The geometric method is now complete and covers all cases. With a pencil and a ruler we are able to perform addition involving every point of any elliptic curve. If you want to try, <strong>take a look at the <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html">HTML5/JavaScript visual tool</a> I’ve built for computing sums on elliptic curves!</strong></p>
 <h1 id="algebraic-addition">Algebraic addition</h1>
 <p>If we want a computer to perform point addition, we need to turn the geometric method into an algebraic method. Transforming the rules described above into a set of equations may seem straightforward, but actually it can be really tedious because it requires solving cubic equations. For this reason, here I will report only the results.</p>
-<p>First, let's get get rid of the most annoying corner cases. We already know that $P + (-P) = 0$, and we also know that $P + 0 = 0 + P = P$. So, in our equations, we will avoid these two cases and we will only consider <strong>two non-zero, non-symmetric points $P = (x_P, y_P)$ and $Q = (x_Q, y_Q)$</strong>.</p>
+<p>First, let’s get get rid of the most annoying corner cases. We already know that $P + (-P) = 0$, and we also know that $P + 0 = 0 + P = P$. So, in our equations, we will avoid these two cases and we will only consider <strong>two non-zero, non-symmetric points $P = (x_P, y_P)$ and $Q = (x_Q, y_Q)$</strong>.</p>
 <p><strong>If $P$ and $Q$ are distinct</strong> ($x_P \ne x_Q$), the line through them has <strong>slope</strong>:
 $$m = \frac{y_P - y_Q}{x_P - x_Q}$$</p>
 <p>The <strong>intersection</strong> of this line with the elliptic curve is a third point $R = (x_R, y_R)$:
@@ -179,7 +178,7 @@ $$\begin{align*}
 $$y_R = y_Q + m(x_R - x_Q)$$</p>
 <p>Hence $(x_P, y_P) + (x_Q, y_Q) = (x_R, -y_R)$ (pay attention at the signs and remember that $P + Q = -R$).</p>
 <p>If we wanted to check whether this result is right, we would have had to check whether $R$ belongs to the curve and whether $P$, $Q$ and $R$ are aligned. Checking whether the points are aligned is trivial, checking that $R$ belongs to the curve is not, as we would need to solve a cubic equation, which is not fun at all.</p>
-<p>Instead, let's play with an example: according to our <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html">visual tool</a>, given $P = (1, 2)$ and $Q = (3, 4)$ over the curve $y^2 = x^3 - 7x + 10$, their sum is $P + Q = -R = (-3, 2)$. Let's see if our equations agree:
+<p>Instead, let’s play with an example: according to our <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html">visual tool</a>, given $P = (1, 2)$ and $Q = (3, 4)$ over the curve $y^2 = x^3 - 7x + 10$, their sum is $P + Q = -R = (-3, 2)$. Let’s see if our equations agree:
 $$\begin{align*}
     m &amp; = \frac{y_P - y_Q}{x_P - x_Q} = \frac{2 - 4}{1 - 3} = 1 \\
     x_R &amp; = m^2 - x_P - x_Q = 1^2 - 1 - 3 = -3 \\
@@ -187,7 +186,7 @@ $$\begin{align*}
         &amp; = y_Q + m(x_R - x_Q) = 4 + 1 \cdot (-3 - 3) = -2
 \end{align*}$$</p>
 <p>Yes, this is correct!</p>
-<p>Note that these equations work even if <strong>one of $P$ or $Q$ is a tangency point</strong>. Let's try with $P = (-1, 4)$ and $Q = (1, 2)$.
+<p>Note that these equations work even if <strong>one of $P$ or $Q$ is a tangency point</strong>. Let’s try with $P = (-1, 4)$ and $Q = (1, 2)$.
 $$\begin{align*}
     m &amp; = \frac{y_P - y_Q}{x_P - x_Q} = \frac{4 - 2}{-1 - 1} = -1 \\
     x_R &amp; = m^2 - x_P - x_Q = (-1)^2 - (-1) - 1 = 1 \\
@@ -198,7 +197,7 @@ $$\begin{align*}
 $$m = \frac{3 x_P^2 + a}{2 y_P}$$</p>
 <p>Note that, as we would expect, this expression for $m$ is the first derivative of:
 $$y_P = \pm \sqrt{x_P^3 + ax_P + b}$$</p>
-<p>To prove the validity of this result it is enough to check that $R$ belongs to the curve and that the line passing through $P$ and $R$ has only two intersections with the curve. But again, we don't prove this fact, and instead try with an example: $P = Q = (1, 2)$.
+<p>To prove the validity of this result it is enough to check that $R$ belongs to the curve and that the line passing through $P$ and $R$ has only two intersections with the curve. But again, we don’t prove this fact, and instead try with an example: $P = Q = (1, 2)$.
 $$\begin{align*}
     m &amp; = \frac{3x_P^2 + a}{2 y_P} = \frac{3 \cdot 1^2 - 7}{2 \cdot 2} = -1 \\
     x_R &amp; = m^2 - x_P - x_Q = (-1)^2 - 1 - 1 = -1 \\
@@ -209,7 +208,7 @@ $$\begin{align*}
 <h1 id="scalar-multiplication">Scalar multiplication</h1>
 <p>Other than addition, we can define another operation: <strong>scalar multiplication</strong>, that is:
 $$nP = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
-<p>where $n$ is a natural number. I've written a <strong><a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html">visual tool</a> for scalar multiplication</strong> too, if you want to play with that.</p>
+<p>where $n$ is a natural number. I’ve written a <strong><a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html">visual tool</a> for scalar multiplication</strong> too, if you want to play with that.</p>
 <p>Written in that form, it may seem that computing $nP$ requires $n$ additions. If $n$ has $k$ binary digits, then our algorithm would be $O(2^k)$, which is not really good. But there exist faster algorithms.</p>
 <p>One of them is the <span id="double-and-add"><strong>double and add</strong></span> algorithm. Its principle of operation can be better explained with an example. Take $n = 151$. Its binary representation is $10010111_2$. This binary representation can be turned into a sum of powers of two:
 $$\begin{align*}
@@ -227,29 +226,29 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 <li><em>Double</em> $2P$, so that we get $2^2P$.</li>
 <li><em>Add</em> it to our result (so that we get $2^2P + 2^1P + 2^0P$).</li>
 <li><em>Double</em> $2^2P$ to get $2^3P$.</li>
-<li>Don't perform any addition involving $2^3P$.</li>
+<li>Don’t perform any addition involving $2^3P$.</li>
 <li><em>Double</em> $2^3P$ to get $2^4P$.</li>
 <li><em>Add</em> it to our result (so that we get $2^4P + 2^2P + 2^1P + 2^0P$).</li>
 <li>...</li>
 </ul>
 <p>In the end, we can compute $151 \cdot P$ performing just seven doublings and four additions.</p>
-<p>If this is not clear enough, here's a Python script that implements the algorithm:</p>
+<p>If this is not clear enough, here’s a Python script that implements the algorithm:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">bits</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">"""</span>
 <span class="sd">    Generates the binary digits of n, starting</span>
 <span class="sd">    from the least significant bit.</span>
 
 <span class="sd">    bits(151) -&gt; 1, 1, 1, 0, 1, 0, 0, 1</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">while</span> <span class="n">n</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">n</span> <span class="o">&amp;</span> <span class="mi">1</span>
         <span class="n">n</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
 
 <span class="k">def</span> <span class="nf">double_and_add</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">"""</span>
 <span class="sd">    Returns the result of n * x, computed using</span>
 <span class="sd">    the double and add algorithm.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">addend</span> <span class="o">=</span> <span class="n">x</span>
 
@@ -260,37 +259,24 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
-
 <p>If doubling and adding are both $O(1)$ operations, then <strong>this algorithm is $O(\log n)$</strong> (or $O(k)$ if we consider the bit length), which is pretty good. Surely much better than the initial $O(n)$ algorithm!</p>
 <h1 id="logarithm">Logarithm</h1>
-<p>Given $n$ and $P$, we now have at least one polynomial time algorithm for computing $Q = nP$. But what about the other way round? <strong>What if we know $Q$ and $P$ and need to find out $n$</strong>? This problem is known as the <strong>logarithm problem</strong>. We call it "logarithm" instead of "division" for conformity with other cryptosystems (where instead of multiplication we have exponentiation).</p>
-<p>I don't know of any "easy" algorithm for the logarithm problem, however <a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html?a=-3&amp;b=1&amp;px=0&amp;py=1">playing with multiplication</a> it's easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.</p>
-<p>But there's a variant of the logarithm problem: the <em>discrete</em> logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, <strong>scalar multiplication remains "easy", while the discrete logarithm becomes a "hard" problem</strong>. This duality is the key brick of elliptic curve cryptography.</p>
+<p>Given $n$ and $P$, we now have at least one polynomial time algorithm for computing $Q = nP$. But what about the other way round? <strong>What if we know $Q$ and $P$ and need to find out $n$</strong>? This problem is known as the <strong>logarithm problem</strong>. We call it “logarithm” instead of “division” for conformity with other cryptosystems (where instead of multiplication we have exponentiation).</p>
+<p>I don’t know of any “easy” algorithm for the logarithm problem, however <a href="https://andrea.corbellini.name/ecc/interactive/reals-mul.html?a=-3&amp;b=1&amp;px=0&amp;py=1">playing with multiplication</a> it’s easy to see some patterns. For example, take the curve $y^2 = x^3 - 3x + 1$ and the point $P = (0, 1)$. We can immediately verify that, if $n$ is odd, $nP$ is on the curve on the left semiplane; if $n$ is even, $nP$ is on the curve on the right semiplane. If we experimented more, we could probably find more patterns that eventually could lead us to write an algorithm for computing the logarithm on that curve efficiently.</p>
+<p>But there’s a variant of the logarithm problem: the <em>discrete</em> logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, <strong>scalar multiplication remains “easy”, while the discrete logarithm becomes a “hard” problem</strong>. This duality is the key brick of elliptic curve cryptography.</p>
 <h1 id="see-you-next-week">See you next week</h1>
-<p>That's all for today, I hope you enjoyed this post! Next week we will discover <strong>finite fields</strong> and the <strong><em>discrete</em> logarithm problem</strong>, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!</p>
-<p><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series &raquo;</a></strong></p></div>
+<p>That’s all for today, I hope you enjoyed this post! Next week we will discover <strong>finite fields</strong> and the <strong><em>discrete</em> logarithm problem</strong>, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!</p>
+<p><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series »</a></strong></p></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "elliptic-curve-cryptography-a-gentle-introduction";
-      var disqus_title = "Elliptic Curve Cryptography: a gentle introduction";
-      var disqus_url = "https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>

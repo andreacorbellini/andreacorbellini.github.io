@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,85 +18,79 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "cookie-law";
+        var disqus_title = "When bureaucracy hits the web: the cookie law";
+        var disqus_url = "https://andrea.corbellini.name/2015/09/22/cookie-law/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="blog">
       <meta name="tags" content="cookie-law">
     <link rel="canonical" href="https://andrea.corbellini.name/2015/09/22/cookie-law/">
     <title>When bureaucracy hits the web: the cookie law - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2015/09/22/cookie-law/" rel="bookmark" title="When bureaucracy hits the web: the cookie law">When bureaucracy hits the web: the cookie law</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-09-22T18:35:00+00:00">September 22, 2015</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/09/22/cookie-law/#disqus_thread" title="Comments" data-disqus-identifier="cookie-law">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2015-09-22T18:35:00+00:00">September 22, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/09/22/cookie-law/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="cookie-law">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><p>For a few years now, every first of April I hoped to read between the news something on the lines of "the cookie law was a joke, sorry for that". You know, bureaucracy is slow, and it's reasonable to think that it takes time for them to reveal jokes. Yet, many firsts of April have passed, and no such announcement has been made. Many missed opportunities for Europe to show their love for progress and their competence with the web.</p>
-<p>Being compliant with the EU cookie law is hard to do. It's not just a matter of showing a boring banner, it's a matter of defacing your web pages, writing long privacy policies that nobody will read, implementing ways to prevent certain cookies from being set.</p>
-<p>The truth is: if you, as a webmaster, want to avoid wasting time and avoid headaches, you just have to avoid cookies. This is what I have done with most websites I maintain: <strong>I have removed all analytics, all social sharing buttons, all YouTube videos, all comments</strong>. This was a sad thing to do, but it was the only thing I could do: I maintain websites for free mainly as a favor for friends and no-profits I'm involved with &mdash; it's not my day job. Also, I do not want other people being sued because of mistakes from my side: cookies may be set in the most unexpected situations and disabling every feature that could potentially set them seems the safest choice.</p>
-<p>The only exception is this blog. Here, I use cookies for Google Analytics, for social sharing buttons and for Disqus. I may live without Google Analytics (even though it gives useful insights, such as performance statistics and tips), but I can't really remove social buttons and Disqus: this is a blog and it wouldn't make any sense to remove social features and comments.</p>
-<p>Being compliant with the EU cookie law has been on my todo list for a while, and I never found the time (nor the desire) to look into it. Today I did. I spent a few hours of my time to discover that <strong>Google Analytics is "OK"</strong> (in the sense that I do not have to display an ugly banner, nor have to ask for explicit permission from the user before setting the cookies) and to discover that <strong>social buttons and Disqus are "bad"</strong> (in the sense that I have to display a banner and ask for explicit consent from the user <em>before</em> setting the cookies). In the end, the only service that I could remove is the less problematic service.</p>
-<p>As I said, I really do not want to remove social buttons, Disqus or whatever third-party content I'll want to display in the future. Therefore, in order to comply with the cookie law, I'm forced to write code, write a privacy policy, waste another bunch of hours of my time. But not today, as I've already had enough sense of sadness and impotence.</p>
-<p>At least for now, I guess that the EU cookie law compliance will stay on my todo list for some more time. Probably if I worked on compliance instead of writing this rant, I could have already finished (but then what's the point of having a blog if you don't blog?)</p>
-<p>The cookie law wants to be "on the side of the users," and it is based on noble principles: it wants users to be well-informed about how their data is used and by whom. However, as it is today, it's against both users and webmasters. <strong>Webmasters have to lose their time working on compliance, and users receive a degraded experience due to silly regulations.</strong></p>
-<p>I'd like to do <a href="http://nocookielaw.com/">what Silktide did</a>: actively protesting against the law, but I wouldn't be so happy if I were sued. I'd like to read "the cookie law was a joke" in the news, but I'm starting to believe that it's not going to happen any time soon. It seems that accepting the sadness of the reality is the only option I'm left with.</p>
-<p>End of rant, let's move on.</p></div>
+        <div class="article-body"><p>For a few years now, every first of April I hoped to read between the news something on the lines of “the cookie law was a joke, sorry for that”. You know, bureaucracy is slow, and it’s reasonable to think that it takes time for them to reveal jokes. Yet, many firsts of April have passed, and no such announcement has been made. Many missed opportunities for Europe to show their love for progress and their competence with the web.</p>
+<p>Being compliant with the EU cookie law is hard to do. It’s not just a matter of showing a boring banner, it’s a matter of defacing your web pages, writing long privacy policies that nobody will read, implementing ways to prevent certain cookies from being set.</p>
+<p>The truth is: if you, as a webmaster, want to avoid wasting time and avoid headaches, you just have to avoid cookies. This is what I have done with most websites I maintain: <strong>I have removed all analytics, all social sharing buttons, all YouTube videos, all comments</strong>. This was a sad thing to do, but it was the only thing I could do: I maintain websites for free mainly as a favor for friends and no-profits I’m involved with — it’s not my day job. Also, I do not want other people being sued because of mistakes from my side: cookies may be set in the most unexpected situations and disabling every feature that could potentially set them seems the safest choice.</p>
+<p>The only exception is this blog. Here, I use cookies for Google Analytics, for social sharing buttons and for Disqus. I may live without Google Analytics (even though it gives useful insights, such as performance statistics and tips), but I can’t really remove social buttons and Disqus: this is a blog and it wouldn’t make any sense to remove social features and comments.</p>
+<p>Being compliant with the EU cookie law has been on my todo list for a while, and I never found the time (nor the desire) to look into it. Today I did. I spent a few hours of my time to discover that <strong>Google Analytics is “OK”</strong> (in the sense that I do not have to display an ugly banner, nor have to ask for explicit permission from the user before setting the cookies) and to discover that <strong>social buttons and Disqus are “bad”</strong> (in the sense that I have to display a banner and ask for explicit consent from the user <em>before</em> setting the cookies). In the end, the only service that I could remove is the less problematic service.</p>
+<p>As I said, I really do not want to remove social buttons, Disqus or whatever third-party content I’ll want to display in the future. Therefore, in order to comply with the cookie law, I’m forced to write code, write a privacy policy, waste another bunch of hours of my time. But not today, as I’ve already had enough sense of sadness and impotence.</p>
+<p>At least for now, I guess that the EU cookie law compliance will stay on my todo list for some more time. Probably if I worked on compliance instead of writing this rant, I could have already finished (but then what’s the point of having a blog if you don’t blog?)</p>
+<p>The cookie law wants to be “on the side of the users,” and it is based on noble principles: it wants users to be well-informed about how their data is used and by whom. However, as it is today, it’s against both users and webmasters. <strong>Webmasters have to lose their time working on compliance, and users receive a degraded experience due to silly regulations.</strong></p>
+<p>I’d like to do <a href="http://nocookielaw.com/">what Silktide did</a>: actively protesting against the law, but I wouldn’t be so happy if I were sued. I’d like to read “the cookie law was a joke” in the news, but I’m starting to believe that it’s not going to happen any time soon. It seems that accepting the sadness of the reality is the only option I’m left with.</p>
+<p>End of rant, let’s move on.</p></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "cookie-law";
-      var disqus_title = "When bureaucracy hits the web: the cookie law";
-      var disqus_url = "https://andrea.corbellini.name/2015/09/22/cookie-law/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>

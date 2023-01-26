@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,20 +18,27 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "ubuntu-global-dns";
+        var disqus_title = "How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)";
+        var disqus_url = "https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="ubuntu">
       <meta name="tags" content="systemd">
       <meta name="tags" content="resolved">
@@ -45,35 +50,34 @@
     <title>How to use the same DNS for all connections in Ubuntu (and other network privacy tricks) - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/" rel="bookmark" title="How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)">How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2020-04-28T06:30:00+00:00">April 28, 2020</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/#disqus_thread" title="Comments" data-disqus-identifier="ubuntu-global-dns">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2020-04-28T06:30:00+00:00">April 28, 2020</time></li>
+  <li><a href="https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="ubuntu-global-dns">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><h1 id="problem">Problem</h1>
-<p>Currently Ubuntu does not offer an easy way to set up a "global" DNS for all network connections: whenever you connect to a new WiFi network, if you don't want to use the DNS server provided by the WiFi, you are forced to go to the network settings and manually set your preferred DNS server.</p>
+        <div class="article-body"><h1 id="problem">Problem</h1>
+<p>Currently Ubuntu does not offer an easy way to set up a “global” DNS for all network connections: whenever you connect to a new WiFi network, if you don’t want to use the DNS server provided by the WiFi, you are forced to go to the network settings and manually set your preferred DNS server.</p>
 <p>With this brief guide I want to show how you can setup a global DNS to be used for <em>all</em> the WiFi and network connections, both old and new ones. I will also show you how to use DNSSEC, DNS-over-TLS and randomized MAC addresses for all connections.</p>
 <p>This guide is written for Ubuntu 20.04, but in general it will work on every distribution using systemd-resolved and NetworkManager.</p>
 <h1 id="step-1-setup-the-global-dns-in-resolved">Step 1: setup the Global DNS in resolved</h1>
@@ -88,11 +92,9 @@ DNS=1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
 #DNSStubListener=yes
 #ReadEtcHosts=yes
 </code></pre></div>
-
 <p>Once you are done with the changes, reload systemd-resolved:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl restart systemd-resolved.service
 </code></pre></div>
-
 <p>You can check your changes with <code>resolvectl status</code>: you should see your DNS servers on top of the output, under the <em>Global</em> section:</p>
 <div class="highlight"><pre><span></span><code>$ resolvectl status
 Global
@@ -108,8 +110,7 @@ MulticastDNS setting: no
                       2606:4700:4700::1001
 ...
 </code></pre></div>
-
-<p>This however won't be enough to use that DNS! In fact, the <em>Global</em> DNS of systemd-resolved is just a default option that is used whenever no DNS servers are configured for an interface. When you connect to a WiFi network, NetworkManager will ask the access point for a list of DNS servers and will communicate that list to systemd-resolved, effectively overriding the settings that we just edited. If you scroll down the output of <code>resolvectl status</code>, you will see the DNS servers added by NetworkManager. We have to tell NetworkManager to stop doing that.</p>
+<p>This however won’t be enough to use that DNS! In fact, the <em>Global</em> DNS of systemd-resolved is just a default option that is used whenever no DNS servers are configured for an interface. When you connect to a WiFi network, NetworkManager will ask the access point for a list of DNS servers and will communicate that list to systemd-resolved, effectively overriding the settings that we just edited. If you scroll down the output of <code>resolvectl status</code>, you will see the DNS servers added by NetworkManager. We have to tell NetworkManager to stop doing that.</p>
 <h1 id="step-2-disable-dns-processing-in-networkmanager">Step 2: Disable DNS processing in NetworkManager</h1>
 <p>In order for systemd-resolved to consider our global DNS, we need to tell NetworkManager not to provide any DNS information for new connections. Doing that is easy: just create a new file <code>/etc/NetworkManager/conf.d/dns.conf</code> (or any name you like) with this content:</p>
 <div class="highlight"><pre><span></span><code>[main]
@@ -118,17 +119,15 @@ MulticastDNS setting: no
 dns=none
 systemd-resolved=false
 </code></pre></div>
-
 <p>To apply the settings either restart your computer or run:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl reload NetworkManager.service
 </code></pre></div>
-
-<p>Now, when you connect to a new network connection, NetworkManager won't push the list of DNS servers to systemd-resolved and only the global ones will be used. If you check <code>resolvectl status</code>, you should see that, for every interface, there is <em>no</em> DNS server specified. If you specified <code>1.1.1.1</code> as your DNS servers, then you can also head over to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify that they've been correctly set up.</p>
+<p>Now, when you connect to a new network connection, NetworkManager won’t push the list of DNS servers to systemd-resolved and only the global ones will be used. If you check <code>resolvectl status</code>, you should see that, for every interface, there is <em>no</em> DNS server specified. If you specified <code>1.1.1.1</code> as your DNS servers, then you can also head over to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify that they’ve been correctly set up.</p>
 <h1 id="dnssec-and-dns-over-tls">DNSSEC and DNS-over-TLS</h1>
 <p>If you would like to enable DNSSEC and/or DNS-over-TLS, the file to edit is <code>/etc/systemd/resolved.conf</code>. You can add the following options:</p>
 <ul>
 <li><code>DNSSEC=true</code> if you want all queries to be DNSSEC-validated. The default is <code>DNSSEC=allow-downgrade</code>, which attempts to use DNSSEC if it works properly, and falls back to disabling validation otherwise.</li>
-<li><code>DNSOverTLS=true</code> if you want all queries to go through TLS. You can also specify <code>DNSOverTLS=opportunistic</code> to attempt to use TLS if it supported, and fall back to the plaintext DNS protocol if it's not.</li>
+<li><code>DNSOverTLS=true</code> if you want all queries to go through TLS. You can also specify <code>DNSOverTLS=opportunistic</code> to attempt to use TLS if it supported, and fall back to the plaintext DNS protocol if it’s not.</li>
 </ul>
 <p>With those options, my <code>/etc/systemd/resolved.conf</code> looks like this:</p>
 <div class="highlight"><pre><span></span><code>[Resolve]
@@ -143,19 +142,16 @@ DNSOverTLS=opportunistic
 #DNSStubListener=yes
 #ReadEtcHosts=yes
 </code></pre></div>
-
-<p>Note that I'm using <code>DNSOverTLS=opportunistic</code> because I found that some access points with captive portals don't work properly when using <code>DNSOverTLS=true</code>. Also note that <code>DNSSEC=true</code> may cause some pain because there are still many misconfigured domain records out there that will make make DNSSEC validation fail.</p>
+<p>Note that I’m using <code>DNSOverTLS=opportunistic</code> because I found that some access points with captive portals don’t work properly when using <code>DNSOverTLS=true</code>. Also note that <code>DNSSEC=true</code> may cause some pain because there are still many misconfigured domain records out there that will make make DNSSEC validation fail.</p>
 <p>Like before, to apply the changes, run:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl restart systemd-resolved.service
 </code></pre></div>
-
 <p>And to verify the changes:</p>
 <div class="highlight"><pre><span></span><code>resolvectl status
 </code></pre></div>
-
-<p>If you're using <code>1.1.1.1</code>, you can also go to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify DNS-over-TLS.</p>
+<p>If you’re using <code>1.1.1.1</code>, you can also go to <a href="https://1.1.1.1/help">https://1.1.1.1/help</a> to verify DNS-over-TLS.</p>
 <h1 id="random-mac-address">Random MAC address</h1>
-<p>NetworkManager supports 3 options to have a random MAC address (also known as "cloned" or "spoofed" MAC address):</p>
+<p>NetworkManager supports 3 options to have a random MAC address (also known as “cloned” or “spoofed” MAC address):</p>
 <ol>
 <li><code>wifi.scan-rand-mac-address</code> controls the MAC address used when scanning for WiFi devices. This goes into the <code>[device]</code> section</li>
 <li><code>wifi.cloned-mac-address</code> controls the MAC address for WiFi connections. This goes into the <code>[connection]</code> section</li>
@@ -164,9 +160,9 @@ DNSOverTLS=opportunistic
 <p>The first option can take either <code>yes</code> or <code>no</code>. The last two can take various values, but if you want a randomized MAC address you are interested in these two:</p>
 <ul>
 <li><code>random</code>: generate a new random MAC address each time you establish a connection</li>
-<li><code>stable</code>: this generates a MAC address that is kinda random (it's a hash), but will be reused when you connect to the same network again.</li>
+<li><code>stable</code>: this generates a MAC address that is kinda random (it’s a hash), but will be reused when you connect to the same network again.</li>
 </ul>
-<p><code>random</code> is better if you don't want to be tracked, but it has the disadvantage that captive portals won't remember you. Instead <code>stable</code> allows captive portals to remember you and therefore won't show up whenever you reconnect.</p>
+<p><code>random</code> is better if you don’t want to be tracked, but it has the disadvantage that captive portals won’t remember you. Instead <code>stable</code> allows captive portals to remember you and therefore won’t show up whenever you reconnect.</p>
 <p>Whatever options you want to go with, put them into a file <code>/etc/NetworkManager/conf.d/mac.conf</code> (or any other name you like). Mine looks like this:</p>
 <div class="highlight"><pre><span></span><code>[device]
 # use a random mac address when scanning for wifi networks
@@ -177,36 +173,22 @@ wifi.scan-rand-mac-address=yes
 ethernet.cloned-mac-address=random
 wifi.cloned-mac-address=random
 </code></pre></div>
-
 <p>To apply the settings either run restart your computer or run:</p>
 <div class="highlight"><pre><span></span><code>sudo systemctl reload NetworkManager.service
 </code></pre></div>
-
 <p>You can test your changes with:</p>
 <div class="highlight"><pre><span></span><code>ip link
 </code></pre></div></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "ubuntu-global-dns";
-      var disqus_title = "How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)";
-      var disqus_url = "https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>

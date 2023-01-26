@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,20 +18,27 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "ec-encryption";
+        var disqus_title = "Can we encrypt data using Elliptic Curves?";
+        var disqus_url = "https://andrea.corbellini.name/2023/01/02/ec-encryption/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="ecc">
       <meta name="tags" content="encryption">
       <meta name="tags" content="elgamal">
@@ -41,55 +46,54 @@
     <title>Can we encrypt data using Elliptic Curves? - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2023/01/02/ec-encryption/" rel="bookmark" title="Can we encrypt data using Elliptic Curves?">Can we encrypt data using Elliptic Curves?</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2023-01-02T06:30:00+00:00">January 02, 2023</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2023/01/02/ec-encryption/#disqus_thread" title="Comments" data-disqus-identifier="ec-encryption">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2023-01-02T06:30:00+00:00">January 02, 2023</time></li>
+  <li><a href="https://andrea.corbellini.name/2023/01/02/ec-encryption/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="ec-encryption">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><p>From time to time, I hear people saying that Elliptic Curve Cryptography (ECC)
+        <div class="article-body"><p>From time to time, I hear people saying that Elliptic Curve Cryptography (ECC)
 cannot be used to directly encrypt data, and you can only do key agreement and
-digital signatures with it. This is a common misconception, but it's not
+digital signatures with it. This is a common misconception, but it’s not
 actually true: you can indeed use elliptic curve keys to encrypt arbitrary
-data. And I'm not talking about hybrid-encryption schemes (like
+data. And I’m not talking about hybrid-encryption schemes (like
 <a href="https://en.wikipedia.org/wiki/Integrated_Encryption_Scheme">ECIES</a> or
-<a href="https://datatracker.ietf.org/doc/rfc9180/">HPKE</a>): I'm talking about pure
-elliptic curve encryption, and I'm going to show an example of it in this
-article.  It's true however that pure elliptic curve encryption is not widely
+<a href="https://datatracker.ietf.org/doc/rfc9180/">HPKE</a>): I’m talking about pure
+elliptic curve encryption, and I’m going to show an example of it in this
+article.  It’s true however that pure elliptic curve encryption is not widely
 used or standardized because, as I will explain at the end of the article, key
 agreement is more convenient for most applications.</p>
 <h1 id="quick-recap-on-elliptic-curve-cryptography">Quick recap on Elliptic Curve Cryptography</h1>
-<p>I wrote an <a href="({filename}/2015-005-ecc-part-1.md)">in-depth article about elliptic curve
-cryptography</a> in the past on this blog,
-and here is a quick recap: points on an elliptic curve from an interesting
+<p>I wrote an <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">in-depth article about elliptic curve
+cryptography</a> in the past on this blog, and
+here is a quick recap: points on an elliptic curve from an interesting
 algebraic structure: a <em>cyclic group</em>. This group lets us do some algebra with
 the points of the elliptic curve: if we have two points $A$ and $B$, we can
 <strong>add</strong> them ($A + B$) or <strong>subtract</strong> them ($A - B$). We can also <strong>multiply</strong>
 a point by an integer, which is the same as doing repeated addition ($n A$ = $A
 + A + \cdots + A$, $n$ times).</p>
 <p>We know some efficient algorithms for doing multiplication, but the reverse of
-multiplication is believed to be a "hard" problem for certain elliptic curves,
+multiplication is believed to be a “hard” problem for certain elliptic curves,
 in the sense that we know efficient methods for computing $B = n A$ given $n$
 and $A$, but we do not know very efficient methods to figure out $n$ given $A$
 and $B$.  This problem of reversing a multiplication is known as Elliptic
@@ -104,13 +108,13 @@ ECDLP.</p>
 <li>the <strong>public key</strong> is the result of multiplying the integer $s$ with the
   generator $G$ of the elliptic curve group: $P = s G$.</li>
 </ul>
-<p>Let's now see a method to use Elliptic Curve Cryptography to encrypt arbitrary
+<p>Let’s now see a method to use Elliptic Curve Cryptography to encrypt arbitrary
 data, so that we can demystify the common belief that elliptic curves cannot be
 used to encrypt.</p>
 <h1 id="elliptic-curve-elgamal">Elliptic Curve ElGamal</h1>
 <p>One method to encrypt data with elliptic curve keys is
 <strong><a href="https://en.wikipedia.org/wiki/ElGamal_encryption">ElGamal</a></strong>. This is not
-the only method, of course, but it's the one that I chose because it's well
+the only method, of course, but it’s the one that I chose because it’s well
 known and simple enough. ElGamal is a cryptosystem that takes the name from
 <a href="https://en.wikipedia.org/wiki/Taher_Elgamal">its author</a> and works on any
 cyclic group, not just elliptic curve groups.</p>
@@ -140,7 +144,7 @@ $$\begin{align*}
     C_2 - s C_1 &amp; = (t P + M) - (t P) \\
                 &amp; = M
 \end{align*}$$</p>
-<p>There's however a big problem with this scheme: how can we perform step 1 of
+<p>There’s however a big problem with this scheme: how can we perform step 1 of
 both the encryption and the decryption algorithms? How do we map a message to a
 point, and vice versa?</p>
 <h1 id="mapping-a-message-to-a-point">Mapping a message to a point</h1>
@@ -148,28 +152,27 @@ point, and vice versa?</p>
 generally speaking, a pair of integers $(x, y)$ belonging to the elliptic curve
 field.  How can we transform a byte string into a pair of field integers?</p>
 <p>Well, as far as computers are concerned, both byte strings and integers have
-the same nature: they are just sequences of bits, so there's a natural map
+the same nature: they are just sequences of bits, so there’s a natural map
 between the two. We could take the message, split it into two parts, and
 interpret the first part as an integer $x$ and the second part as an integer
-$y$. This would work for obtaining two arbitrary integers, but there's a
+$y$. This would work for obtaining two arbitrary integers, but there’s a
 problem: the coordinates $x$ and $y$ of an elliptic curve point are related by
 a mathematical equation (the curve equation), so we cannot choose two arbitrary
 $x$ and $y$ and expect them to identify a valid point on the curve. In fact,
 for curves in Weierstrass form, given $x$ there are at most two possible
-choices for $y$, so it's <em>very</em> unlikely that this splitting method will yield
+choices for $y$, so it’s <em>very</em> unlikely that this splitting method will yield
 a valid point.</p>
-<p>Let's change our strategy a little bit: instead of transforming the message to
+<p>Let’s change our strategy a little bit: instead of transforming the message to
 a pair $(x, y)$, we transform it to $x$ and then we compute a valid $y$ from
-the curve equation. This is a much better method, but there's still a problem:
+the curve equation. This is a much better method, but there’s still a problem:
 generally speaking, not every $x$ will have a corresponding $y$. Not every $x$
 can satisfy the curve equation.</p>
 <p>Luckily, most of the popular elliptic curves used in cryptography have an
 interesting property: about half of the possible field integers are valid
-$x$-coordinates. To see this, let's take a look at an example: the curve
+$x$-coordinates. To see this, let’s take a look at an example: the curve
 <code>secp384r1</code>. This is a Weierstrass curve that has the following order:</p>
 <div class="highlight"><pre><span></span><code>0xffffffffffffffffffffffffffffffffffffffffffffffffc7634d81f4372ddf581a0db248b0a77aecec196accc52973
 </code></pre></div>
-
 <p>I remind you that the order is the number of valid points that belong to the
 elliptic curve group. Because this is a Weierstrass curve, for each $x$ there
 are 2 possible points, so the number of valid $x$-coordinates is <code>order / 2</code>.
@@ -177,33 +180,32 @@ Given an arbitrary 384-bit integer, what are the chances that this is a valid
 $x$-coordinate? The answer is <code>(order / 2) / (2 ** 384)</code> which is approximately
 0.5 or 50%.</p>
 <p>OK, but how does this help with our goal: mapping an arbitrary message to a
-valid $x$-coordinate? It's simple: we can <em>append</em> a random byte (or multiple
+valid $x$-coordinate? It’s simple: we can <em>append</em> a random byte (or multiple
 bytes) to the message. We call this extra byte (or bytes): <strong>padding</strong>. If the
 resulting padded message does not translate to a valid $x$-coordinate, we
 choose another random padding and try again, until we find one that works.
-Given that there's 50% chance of finding a valid $x$ coordinate, this method
+Given that there’s 50% chance of finding a valid $x$ coordinate, this method
 will find a valid $x$-coordinate very quickly: on average, this will happen on
 the first or the second try.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/ec-elgamal-padding.svg" alt="Padding a message to obtain a valid elliptic curve point" width="500" height="120">
-  <figcaption>Example of how to use padding to obtain a valid elliptic curve point from an arbitrary message.</figcaption>
+<img alt="Padding a message to obtain a valid elliptic curve point" height="120" src="https://andrea.corbellini.name/images/ec-elgamal-padding.svg" width="500"/>
+<figcaption>Example of how to use padding to obtain a valid elliptic curve point from an arbitrary message.</figcaption>
 </figure>
-
 <p>This operation can be easily <strong>reversed</strong>: if you have a point $(x, y)$, in
 order to recover the message that generated it, just take the $x$ coordinate
-and remove the padding. That's it!</p>
-<p>It's worth noting that there are some standard curves where all the possible
+and remove the padding. That’s it!</p>
+<p>It’s worth noting that there are some standard curves where all the possible
 byte strings (of the proper size) can be translated to elliptic curve points,
 without any random padding needed. For example, with
 <a href="https://en.wikipedia.org/wiki/Curve25519">Curve25519</a>, every 32-byte string is
 a valid elliptic curve point. Another curve like that is
 <a href="https://en.wikipedia.org/wiki/Curve448">Curve448</a>.</p>
-<p>It's also important to note that the padding does not need to be truly random.
+<p>It’s also important to note that the padding does not need to be truly random.
 In the image above I show a padding that is simply a constantly increasing
-sequence of numbers: 0, 1, 2, ... That's enough to find a valid point.</p>
+sequence of numbers: 0, 1, 2, ... That’s enough to find a valid point.</p>
 <h1 id="putting-everything-together">Putting everything together</h1>
 <p>We have seen how to map a message to a point and how ElGamal works, so now we
-have all the elements to write some working code. I'm choosing
+have all the elements to write some working code. I’m choosing
 <a href="https://www.python.org/">Python</a> and the
 <a href="https://github.com/cslashm/ECPy">ECPy</a> package to work with elliptic curves,
 which you can install with <code>pip install ecpy</code>.</p>
@@ -222,12 +224,12 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="n">max_message_size</span> <span class="o">=</span> <span class="n">coordinate_size</span> <span class="o">-</span> <span class="n">min_padding_size</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_message_size</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Message too long&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Message too long'</span><span class="p">)</span>
 
     <span class="c1"># Add a padding long enough to ensure that the resulting padded message has</span>
     <span class="c1"># the same size as a point coordinate. Initially the padding is all 0</span>
     <span class="n">padding_size</span> <span class="o">=</span> <span class="n">coordinate_size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-    <span class="n">padded_message</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span> <span class="o">*</span> <span class="n">padding_size</span>
+    <span class="n">padded_message</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">'</span><span class="se">\0</span><span class="s1">'</span> <span class="o">*</span> <span class="n">padding_size</span>
 
     <span class="c1"># Put a delimiter between the message and the padding, so that we can</span>
     <span class="c1"># properly remove the padding at decrypt time</span>
@@ -236,7 +238,7 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="c1"># Convert the padded message to an integer, which may or may not be a</span>
         <span class="c1"># valid x-coordinate</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">padded_message</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">padded_message</span><span class="p">,</span> <span class="s1">'little'</span><span class="p">)</span>
         <span class="c1"># Calculate the corresponding y-coordinate (if it exists)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">curve</span><span class="o">.</span><span class="n">y_recover</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -264,7 +266,7 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="c1"># Number of bytes to represent a coordinate of a point</span>
     <span class="n">coordinate_size</span> <span class="o">=</span> <span class="n">curve</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">8</span>
     <span class="c1"># Convert the x-coordinate of the point to a byte string</span>
-    <span class="n">padded_message</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">coordinate_size</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
+    <span class="n">padded_message</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">coordinate_size</span><span class="p">,</span> <span class="s1">'little'</span><span class="p">)</span>
     <span class="c1"># Find the padding delimiter</span>
     <span class="n">message_size</span> <span class="o">=</span> <span class="n">padded_message</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="mh">0xff</span><span class="p">)</span>
     <span class="c1"># Remove the padding and return the resulting message</span>
@@ -284,47 +286,44 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="c1"># Convert the message point to a message and return it</span>
     <span class="k">return</span> <span class="n">point_to_message</span><span class="p">(</span><span class="n">message_point</span><span class="p">)</span>
 </code></pre></div>
-
 <p>And here is an usage example:</p>
-<div class="highlight"><pre><span></span><code><span class="n">curve</span> <span class="o">=</span> <span class="n">Curve</span><span class="o">.</span><span class="n">get_curve</span><span class="p">(</span><span class="s1">&#39;secp384r1&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">curve</span> <span class="o">=</span> <span class="n">Curve</span><span class="o">.</span><span class="n">get_curve</span><span class="p">(</span><span class="s1">'secp384r1'</span><span class="p">)</span>
 
 <span class="n">secret_key</span> <span class="o">=</span> <span class="mh">0x123456789abcdef</span>
 <span class="n">public_key</span> <span class="o">=</span> <span class="n">secret_key</span> <span class="o">*</span> <span class="n">curve</span><span class="o">.</span><span class="n">generator</span>
 
-<span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;hello&#39;</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Message:&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s1">'hello'</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'  Message:'</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 
-<span class="n">encrypted</span> <span class="o">=</span> <span class="n">encrypt</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Encrypted:&#39;</span><span class="p">,</span> <span class="n">encrypted</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
+<span class="n">encrypted</span> <span class="o">=</span> <span class="n">encrypt</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Encrypted:'</span><span class="p">,</span> <span class="n">encrypted</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
 
-<span class="n">decrypted</span> <span class="o">=</span> <span class="n">decrypt</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">encrypted</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Decrypted:&#39;</span><span class="p">,</span> <span class="n">decrypted</span><span class="p">)</span>
+<span class="n">decrypted</span> <span class="o">=</span> <span class="n">decrypt</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">encrypted</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Decrypted:'</span><span class="p">,</span> <span class="n">decrypted</span><span class="p">)</span>
 </code></pre></div>
-
 <p>Which produces the following output:</p>
 <div class="highlight"><pre><span></span><code>  Message: hello
 Encrypted: 04fa333c6a03994c5bce4627de4447c5cdd358415f8db2745b67836932a0d5e81f19...
 Decrypted: hello
 </code></pre></div>
-
 <h1 id="some-considerations-on-padding-and-security">Some considerations on padding and security</h1>
-<p>It's important to note that padding is a very delicate problem in cryptography.
+<p>It’s important to note that padding is a very delicate problem in cryptography.
 There exist many <a href="https://en.wikipedia.org/wiki/Padding_(cryptography)">padding
 schemes</a>, and <strong>not all
 of them are secure</strong>. The padding scheme that I wrote in this article was just
-for demonstration purposes and may not be the most secure, so don't use it in
+for demonstration purposes and may not be the most secure, so don’t use it in
 production systems. Take a look at
 <a href="https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding">OAEP</a> if
-you're looking for a modern and secure padding scheme.</p>
+you’re looking for a modern and secure padding scheme.</p>
 <p>Another thing to note is that the decryption method that I wrote does not check
 if the decryption was successful. If you try to decrypt an invalid ciphertext,
-or use the wrong key, you won't get an error but instead a random result, which
+or use the wrong key, you won’t get an error but instead a random result, which
 is not desiderable. A good padding scheme like OAEP will instead throw an error
 if decryption was unsuccessful.</p>
 <h1 id="cost-of-elliptic-curve-encryption">Cost of elliptic curve encryption</h1>
 <p>With Elliptic Curve ElGamal, if we are using an <em>n</em>-bit elliptic curve, we can
 encrypt messages that are at most <em>n</em>-bit long (actually less than that,
-especially if we're using padding), and the output is at least <em>2n</em>-bit long
+especially if we’re using padding), and the output is at least <em>2n</em>-bit long
 (if the resulting points $C_1$ and $C_2$ are encoded using point compression).
 This means that encryption using Elliptic Curve ElGamal doubles the size of the
 data that we want to encrypt. It also requires a fair amount of compute
@@ -340,9 +339,9 @@ purpose encryption.</p>
 <a href="https://en.wikipedia.org/wiki/ChaCha20">ChaCha20</a> keys, and then use these
 symmetric keys to encrypt our arbitrary data. Symmetric keys are relatively
 short (ranging from 128 to 256 bits nowadays), so they can be encrypted with
-one round of Elliptic Curve ElGamal with most curves. It's worth noting that
+one round of Elliptic Curve ElGamal with most curves. It’s worth noting that
 this is the same approach that we use with
-<a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA</a> encryption: we don't
+<a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA</a> encryption: we don’t
 use RSA to encrypt data directly (not anymore), but rather we use RSA to
 encrypt symmetric keys which are later used for encrypting data.</p>
 <p>These are the reason why schemes like Elliptic Curve ElGamal, or other methods of
@@ -354,31 +353,19 @@ encryption with elliptic curves, are not used in practice:</p>
   encryption.</li>
 </ul>
 <p>In conclusion, no practical use case benefits from elliptic curve encryption,
-and that's why we don't use it and prefer elliptic curve key exchange instead.
+and that’s why we don’t use it and prefer elliptic curve key exchange instead.
 However, the idea that elliptic curves cannot be used for encryption is a myth,
 and I hope this article will help clarify that confusion.</p></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "ec-encryption";
-      var disqus_title = "Can we encrypt data using Elliptic Curves?";
-      var disqus_url = "https://andrea.corbellini.name/2023/01/02/ec-encryption/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>

@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,20 +18,27 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "elliptic-curve-cryptography-ecdh-and-ecdsa";
+        var disqus_title = "Elliptic Curve Cryptography: ECDH and ECDSA";
+        var disqus_url = "https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="dh">
       <meta name="tags" content="dsa">
       <meta name="tags" content="ecc">
@@ -46,36 +51,35 @@
     <title>Elliptic Curve Cryptography: ECDH and ECDSA - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/" rel="bookmark" title="Elliptic Curve Cryptography: ECDH and ECDSA">Elliptic Curve Cryptography: ECDH and ECDSA</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-05-30T19:23:00+00:00">May 30, 2015</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-ecdh-and-ecdsa">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2015-05-30T19:23:00+00:00">May 30, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="elliptic-curve-cryptography-ecdh-and-ecdsa">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><p><strong>This post is the third in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
+        <div class="article-body"><p><strong>This post is the third in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
 <p>In the previous posts, we have seen <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">what an elliptic curve is</a> and we have defined a <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law">group law</a> in order to do some math with the points of elliptic curves. Then we have <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">restricted elliptic curves to finite fields of integers modulo a prime</a>. With this restriction, we have seen that the points of elliptic curves generate <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication">cyclic subgroups</a> and we have introduced the terms <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#base-point">base point</a>, <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#subgroup-order">order</a> and <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#cofactor">cofactor</a>.</p>
-<p>Finally, we have seen that <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication">scalar multiplication in finite fields</a> is an "easy" problem, while the <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm">discrete logarithm problem</a> seems to be "hard". Now we'll see how all of this applies to cryptography.</p>
+<p>Finally, we have seen that <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#scalar-multiplication">scalar multiplication in finite fields</a> is an “easy” problem, while the <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#discrete-logarithm">discrete logarithm problem</a> seems to be “hard”. Now we’ll see how all of this applies to cryptography.</p>
 <h1 id="domain-parameters">Domain parameters</h1>
 <p>Our elliptic curve algorithms will work in a cyclic subgroup of an elliptic curve over a finite field. Therefore, our algorithms will need the following parameters:</p>
 <ul>
@@ -87,44 +91,42 @@
 </ul>
 <p>In conclusion, the <strong>domain parameters</strong> for our algorithms are the <strong>sextuple $(p, a, b, G, n, h)$</strong>.</p>
 <h2 id="random-curves">Random curves</h2>
-<p>When I said that the discrete logarithm problem was "hard", I wasn't entirely right. There are <strong>some classes of elliptic curves that are particularly weak</strong> and allow the use of special purpose algorithms to solve the discrete logarithm problem efficiently. For example, all the curves that have $p = hn$ (that is, the order of the finite field is equal to the order of the elliptic curve) are vulnerable to <a href="http://interact.sagemath.org/edu/2010/414/projects/novotney.pdf">Smart's attack</a>, which can be used to solve discrete logarithms in polynomial time on a classical computer.</p>
-<p>Now, suppose that I give you the domain parameters of a curve. There's the possibility that I've discovered a new class of weak curves that nobody knows, and probably I have built a "fast" algorithm for computing discrete logarithms on the curve I gave you. How can I convince you of the contrary, i.e. that I'm not aware of any vulnerability? <strong>How can I assure you that the curve is "safe" (in the sense that it can't be used for special purpose attacks by me)?</strong></p>
-<p>In an attempt to solve this kind of problem, sometimes we have an additional domain parameter: the <strong>seed $S$</strong>. This is a random number used to generate the coefficients $a$ and $b$, or the base point $G$, or both. These parameters are generated by computing the hash of the seed $S$. Hashes, as we know, are "easy" to compute, but "hard" to reverse.</p>
+<p>When I said that the discrete logarithm problem was “hard”, I wasn’t entirely right. There are <strong>some classes of elliptic curves that are particularly weak</strong> and allow the use of special purpose algorithms to solve the discrete logarithm problem efficiently. For example, all the curves that have $p = hn$ (that is, the order of the finite field is equal to the order of the elliptic curve) are vulnerable to <a href="http://interact.sagemath.org/edu/2010/414/projects/novotney.pdf">Smart’s attack</a>, which can be used to solve discrete logarithms in polynomial time on a classical computer.</p>
+<p>Now, suppose that I give you the domain parameters of a curve. There’s the possibility that I’ve discovered a new class of weak curves that nobody knows, and probably I have built a “fast” algorithm for computing discrete logarithms on the curve I gave you. How can I convince you of the contrary, i.e. that I’m not aware of any vulnerability? <strong>How can I assure you that the curve is “safe” (in the sense that it can’t be used for special purpose attacks by me)?</strong></p>
+<p>In an attempt to solve this kind of problem, sometimes we have an additional domain parameter: the <strong>seed $S$</strong>. This is a random number used to generate the coefficients $a$ and $b$, or the base point $G$, or both. These parameters are generated by computing the hash of the seed $S$. Hashes, as we know, are “easy” to compute, but “hard” to reverse.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/random-parameters-generation.png" alt="Random curve generation" width="500" height="74">
-  <figcaption>A simple sketch of how a random curve is generated from a seed: the hash of a random number is used to calculate different parameters of the curve.</figcaption>
+<img alt="Random curve generation" height="74" src="https://andrea.corbellini.name/images/random-parameters-generation.png" width="500"/>
+<figcaption>A simple sketch of how a random curve is generated from a seed: the hash of a random number is used to calculate different parameters of the curve.</figcaption>
 </figure>
-
 <figure>
-  <img src="https://andrea.corbellini.name/images/seed-inversion.png" alt="Building a seed from a hash" width="359" height="76">
-  <figcaption>If we wanted to cheat and try to construct a seed from the domain parameters, we would have to solve a "hard" problem: hash inversion.</figcaption>
+<img alt="Building a seed from a hash" height="76" src="https://andrea.corbellini.name/images/seed-inversion.png" width="359"/>
+<figcaption>If we wanted to cheat and try to construct a seed from the domain parameters, we would have to solve a “hard” problem: hash inversion.</figcaption>
 </figure>
-
-<p>A curve generated through a seed is said to be <strong>verifiably random</strong>. The principle of using hashes to generate parameters is known as "<a href="http://en.wikipedia.org/wiki/Nothing_up_my_sleeve_number">nothing up my sleeve</a>", and is commonly used in cryptography.</p>
-<p>This trick should give some sort of assurance that <strong>the curve has not been specially crafted to expose vulnerabilities known to the author</strong>. In fact, if I give you a curve together with a seed, it means I was not free to arbitrarily choose the parameters $a$ and $b$, and you should be relatively sure that the curve cannot be used for special purpose attacks by me. The reason why I say "relatively" will be explained in the next post.</p>
-<p>A standardized algorithm for generating and checking random curves is described in ANSI X9.62 and is based on <a href="https://en.wikipedia.org/wiki/SHA-1">SHA-1</a>. If you are curious, you can read the algorithms for generating verifiable random curves on <a href="http://www.secg.org/sec1-v2.pdf">a specification by SECG</a> (look for "Verifiably Random Curves and Base Point Generators").</p>
-<p>I've created a <strong><a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/verifyrandom.py">tiny Python script</a> that verifies all the random curves currently <a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c">shipped with OpenSSL</a></strong>. I strongly recommend you to check it out!</p>
+<p>A curve generated through a seed is said to be <strong>verifiably random</strong>. The principle of using hashes to generate parameters is known as “<a href="http://en.wikipedia.org/wiki/Nothing_up_my_sleeve_number">nothing up my sleeve</a>“, and is commonly used in cryptography.</p>
+<p>This trick should give some sort of assurance that <strong>the curve has not been specially crafted to expose vulnerabilities known to the author</strong>. In fact, if I give you a curve together with a seed, it means I was not free to arbitrarily choose the parameters $a$ and $b$, and you should be relatively sure that the curve cannot be used for special purpose attacks by me. The reason why I say “relatively” will be explained in the next post.</p>
+<p>A standardized algorithm for generating and checking random curves is described in ANSI X9.62 and is based on <a href="https://en.wikipedia.org/wiki/SHA-1">SHA-1</a>. If you are curious, you can read the algorithms for generating verifiable random curves on <a href="http://www.secg.org/sec1-v2.pdf">a specification by SECG</a> (look for “Verifiably Random Curves and Base Point Generators”).</p>
+<p>I’ve created a <strong><a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/verifyrandom.py">tiny Python script</a> that verifies all the random curves currently <a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c">shipped with OpenSSL</a></strong>. I strongly recommend you to check it out!</p>
 <h1 id="elliptic-curve-cryptography">Elliptic Curve Cryptography</h1>
 <p>It took us a long time, but finally here we are! Therefore, pure and simple:</p>
 <ol>
 <li>The <strong>private key</strong> is a random integer $d$ chosen from $\{1, \dots, n - 1\}$ (where $n$ is the order of the subgroup).</li>
 <li>The <strong>public key</strong> is the point $H = dG$ (where $G$ is the base point of the subgroup).</li>
 </ol>
-<p>You see? If we know $d$ and $G$ (along with the other domain parameters), finding $H$ is "easy". But if we know $H$ and $G$, <strong>finding the private key $d$ is "hard", because it requires us to solve the discrete logarithm problem</strong>.</p>
+<p>You see? If we know $d$ and $G$ (along with the other domain parameters), finding $H$ is “easy”. But if we know $H$ and $G$, <strong>finding the private key $d$ is “hard”, because it requires us to solve the discrete logarithm problem</strong>.</p>
 <p>Now we are going to describe two public-key algorithms based on that: ECDH (Elliptic curve Diffie-Hellman), which is used for encryption, and ECDSA (Elliptic Curve Digital Signature Algorithm), used for digital signing.</p>
 <h2 id="encryption-with-ecdh">Encryption with ECDH</h2>
 <p>ECDH is a variant of the <a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange">Diffie-Hellman algorithm</a> for elliptic curves. It is actually a <a href="https://en.wikipedia.org/wiki/Key-agreement_protocol">key-agreement protocol</a>, more than an encryption algorithm. This basically means that ECDH defines (to some extent) how keys should be generated and exchanged between parties. How to actually encrypt data using such keys is up to us.</p>
 <p>The problem it solves is the following: two parties (the usual <a href="http://en.wikipedia.org/wiki/Alice_and_Bob">Alice and Bob</a>) want to exchange information securely, so that a third party (the <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man In the Middle</a>) may intercept them, but may not decode them. This is one of the principles behind TLS, just to give you an example.</p>
-<p>Here's how it works:</p>
+<p>Here’s how it works:</p>
 <ol>
 <li>
 <p>First, <strong>Alice and Bob generate their own private and public keys</strong>. We have the private key $d_A$ and the public key $H_A = d_AG$ for Alice, and the keys $d_B$ and $H_B = d_BG$ for Bob. Note that both Alice and Bob are using the same domain parameters: the same base point $G$ on the same elliptic curve on the same finite field.</p>
 </li>
 <li>
-<p><strong>Alice and Bob exchange their public keys $H_A$ and $H_B$ over an insecure channel</strong>. The Man In the Middle would intercept $H_A$ and $H_B$, but won't be able to find out neither $d_A$ nor $d_B$ without solving the discrete logarithm problem.</p>
+<p><strong>Alice and Bob exchange their public keys $H_A$ and $H_B$ over an insecure channel</strong>. The Man In the Middle would intercept $H_A$ and $H_B$, but won’t be able to find out neither $d_A$ nor $d_B$ without solving the discrete logarithm problem.</p>
 </li>
 <li>
-<p><strong>Alice calculates $S = d_A H_B$</strong> (using her own private key and Bob's public key), <strong>and Bob calculates $S = d_B H_A$</strong> (using his own private key and Alice's public key). Note that $S$ is the same for both Alice and Bob, in fact:
+<p><strong>Alice calculates $S = d_A H_B$</strong> (using her own private key and Bob’s public key), <strong>and Bob calculates $S = d_B H_A$</strong> (using his own private key and Alice’s public key). Note that $S$ is the same for both Alice and Bob, in fact:
    $$S = d_A H_B = d_A (d_B G) = d_B (d_A G) = d_B H_A$$</p>
 </li>
 </ol>
@@ -138,17 +140,16 @@
 </blockquote>
 <p>(The latter form is used in the original Diffie-Hellman algorithm, based on modular arithmetic.)</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/ecdh.png" alt="ECDH" width="468" height="196">
-  <figcaption>The Diffie-Hellman key exchange: Alice and Bob can "easily" calculate the shared secret, the Man in the Middle has to solve a "hard" problem.</figcaption>
+<img alt="ECDH" height="196" src="https://andrea.corbellini.name/images/ecdh.png" width="468"/>
+<figcaption>The Diffie-Hellman key exchange: Alice and Bob can “easily” calculate the shared secret, the Man in the Middle has to solve a “hard” problem.</figcaption>
 </figure>
-
 <p>The principle behind the Diffie-Hellman problem is also explained in a great <a href="https://www.youtube.com/watch?v=YEBfamv-_do#t=02m37s">YouTube video by Khan Academy</a>, which later explains the Diffie-Hellman algorithm applied to modular arithmetic (not to elliptic curves).</p>
-<p>The Diffie-Hellman problem for elliptic curves is assumed to be a "hard" problem. It is believed to be as "hard" as the discrete logarithm problem, although no mathematical proofs are available. What we can tell for sure is that it can't be "harder", because solving the logarithm problem is a way of solving the Diffie-Hellman problem.</p>
+<p>The Diffie-Hellman problem for elliptic curves is assumed to be a “hard” problem. It is believed to be as “hard” as the discrete logarithm problem, although no mathematical proofs are available. What we can tell for sure is that it can’t be “harder”, because solving the logarithm problem is a way of solving the Diffie-Hellman problem.</p>
 <p><strong>Now that Alice and Bob have obtained the shared secret, they can exchange data with symmetric encryption.</strong></p>
 <p>For example, they can use the $x$ coordinate of $S$ as the key to encrypt messages using secure ciphers like <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a> or <a href="https://en.wikipedia.org/wiki/Triple_DES">3DES</a>. This is more or less what TLS does, the difference is that TLS concatenates the $x$ coordinate with other numbers relative to the connection and then computes a hash of the resulting byte string.</p>
 <h3 id="playing-with-ecdh">Playing with ECDH</h3>
-<p>I've created <strong><a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdhe.py">another Python script</a> for computing public/private keys and shared secrets over an elliptic curve</strong>.</p>
-<p>Unlike all the examples we have seen till now, this script makes use of a standardized curve, rather than a simple curve on a small field. The curve I've chosen is <code>secp256k1</code>, from <a href="http://www.secg.org/">SECG</a> (the "Standards for Efficient Cryptography Group", founded by <a href="https://www.certicom.com/">Certicom</a>). <a href="https://en.bitcoin.it/wiki/Secp256k1">This same curve is also used by Bitcoin</a> for digital signatures. Here are the domain parameters:</p>
+<p>I’ve created <strong><a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdhe.py">another Python script</a> for computing public/private keys and shared secrets over an elliptic curve</strong>.</p>
+<p>Unlike all the examples we have seen till now, this script makes use of a standardized curve, rather than a simple curve on a small field. The curve I’ve chosen is <code>secp256k1</code>, from <a href="http://www.secg.org/">SECG</a> (the “Standards for Efficient Cryptography Group”, founded by <a href="https://www.certicom.com/">Certicom</a>). <a href="https://en.bitcoin.it/wiki/Secp256k1">This same curve is also used by Bitcoin</a> for digital signatures. Here are the domain parameters:</p>
 <ul>
 <li>$p$ = 0xffffffff ffffffff ffffffff ffffffff ffffffff ffffffff fffffffe fffffc2f</li>
 <li>$a$ = 0</li>
@@ -159,21 +160,20 @@
 <li>$h$ = 1</li>
 </ul>
 <p>(These numbers were taken from <a href="https://github.com/openssl/openssl/blob/81fc390/crypto/ec/ec_curve.c#L766">OpenSSL source code</a>.)</p>
-<p>Of course, you are free to modify the script to use other curves and domain parameters, just be sure to use prime fields and curves Weierstrass normal form, otherwise the script won't work.</p>
+<p>Of course, you are free to modify the script to use other curves and domain parameters, just be sure to use prime fields and curves Weierstrass normal form, otherwise the script won’t work.</p>
 <p>The script is really simple and includes some of the algorithms we have described so far: point addition, double and add, ECDH. I recommend you to read and run it. It will produce an output like this:</p>
 <div class="highlight"><pre><span></span><code>Curve: secp256k1
-Alice&#39;s private key: 0xe32868331fa8ef0138de0de85478346aec5e3912b6029ae71691c384237a3eeb
-Alice&#39;s public key: (0x86b1aa5120f079594348c67647679e7ac4c365b2c01330db782b0ba611c1d677, 0x5f4376a23eed633657a90f385ba21068ed7e29859a7fab09e953cc5b3e89beba)
-Bob&#39;s private key: 0xcef147652aa90162e1fff9cf07f2605ea05529ca215a04350a98ecc24aa34342
-Bob&#39;s public key: (0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8a26fc2c20134a, 0x9e773199edc1ea792b150270ea3317689286c9fe239dd5b9c5cfd9e81b4b632)
+Alice's private key: 0xe32868331fa8ef0138de0de85478346aec5e3912b6029ae71691c384237a3eeb
+Alice's public key: (0x86b1aa5120f079594348c67647679e7ac4c365b2c01330db782b0ba611c1d677, 0x5f4376a23eed633657a90f385ba21068ed7e29859a7fab09e953cc5b3e89beba)
+Bob's private key: 0xcef147652aa90162e1fff9cf07f2605ea05529ca215a04350a98ecc24aa34342
+Bob's public key: (0x4034127647bb7fdab7f1526c7d10be8b28174e2bba35b06ffd8a26fc2c20134a, 0x9e773199edc1ea792b150270ea3317689286c9fe239dd5b9c5cfd9e81b4b632)
 Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3cd, 0x43ca148c92af58ebdb525542488a4fe6397809200fe8c61b41a105449507083)
 </code></pre></div>
-
 <h3 id="ephemeral-ecdh">Ephemeral ECDH</h3>
-<p>Some of you may have heard of ECDHE instead of ECDH. The "E" in ECDHE stands for "Ephemeral" and refers to the fact that the <strong>keys exchanged are temporary</strong>, rather than static.</p>
+<p>Some of you may have heard of ECDHE instead of ECDH. The “E” in ECDHE stands for “Ephemeral” and refers to the fact that the <strong>keys exchanged are temporary</strong>, rather than static.</p>
 <p>ECDHE is used, for example, in TLS, where both the client and the server generate their public-private key pair on the fly, when the connection is established. The keys are then signed with the TLS certificate (for authentication) and exchanged between the parties.</p>
 <h2 id="signing-with-ecdsa">Signing with ECDSA</h2>
-<p>The scenario is the following: <strong>Alice wants to sign a message with her private key</strong> ($d_A$), and <strong>Bob wants to validate the signature using Alice's public key</strong> ($H_A$). Nobody but Alice should be able to produce valid signatures. Everyone should be able to check signatures.</p>
+<p>The scenario is the following: <strong>Alice wants to sign a message with her private key</strong> ($d_A$), and <strong>Bob wants to validate the signature using Alice’s public key</strong> ($H_A$). Nobody but Alice should be able to produce valid signatures. Everyone should be able to check signatures.</p>
 <p>Again, Alice and Bob are using the same domain parameters. The algorithm we are going to see is ECDSA, a variant of the <a href="https://en.wikipedia.org/wiki/Digital_Signature_Algorithm">Digital Signature Algorithm</a> applied to elliptic curves.</p>
 <p>ECDSA works on the hash of the message, rather than on the message itself. The choice of the hash function is up to us, but it should be obvious that a <a href="http://en.wikipedia.org/wiki/Cryptographic_hash_function">cryptographically-secure hash function</a> should be chosen. <strong>The hash of the message ought to be truncated</strong> so that the bit length of the hash is the same as the bit length of $n$ (the order of the subgroup). <strong>The truncated hash is an integer and will be denoted as $z$.</strong></p>
 <p>The algorithm performed by Alice to sign the message works as follows:</p>
@@ -182,19 +182,18 @@ Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3
 <li>Calculate the point <strong>$P = kG$</strong> (where $G$ is the base point of the subgroup).</li>
 <li>Calculate the number <strong>$r = x_P \bmod{n}$</strong> (where $x_P$ is the $x$ coordinate of $P$).</li>
 <li>If $r = 0$, then choose another $k$ and try again.</li>
-<li>Calculate <strong>$s = k^{-1} (z + rd_A) \bmod{n}$</strong> (where $d_A$ is Alice's private key and $k^{-1}$ is the multiplicative inverse of $k$ modulo $n$).</li>
+<li>Calculate <strong>$s = k^{-1} (z + rd_A) \bmod{n}$</strong> (where $d_A$ is Alice’s private key and $k^{-1}$ is the multiplicative inverse of $k$ modulo $n$).</li>
 <li>If $s = 0$, then choose another $k$ and try again.</li>
 </ol>
 <p>The pair <strong>$(r, s)$ is the signature</strong>.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/ecdsa.png" alt="ECDSA" width="514" height="255">
-  <figcaption>Alice signs the hash $z$ using her private key $d_A$ and a random $k$. Bob verifies that the message has been correctly signed using Alice's public key $H_A$.</figcaption>
+<img alt="ECDSA" height="255" src="https://andrea.corbellini.name/images/ecdsa.png" width="514"/>
+<figcaption>Alice signs the hash $z$ using her private key $d_A$ and a random $k$. Bob verifies that the message has been correctly signed using Alice’s public key $H_A$.</figcaption>
 </figure>
-
-<p>In plain words, this algorithm first generates a secret ($k$). This secret is hidden in $r$ thanks to point multiplication (that, as we know, is "easy" one way, and "hard" the other way round). $r$ is then bound to the message hash by the equation $s = k^{-1} (z + rd_A) \bmod{n}$.</p>
-<p>Note that in order to calculate $s$, we have computed the inverse of $k$ modulo $n$. We have <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#p-must-be-prime">already said in the previous post</a> that this is guaranteed to work only if $n$ is a prime number. <strong>If a subgroup has a non-prime order, ECDSA can't be used.</strong> It's not by chance that almost all standardized curves have a prime order, and those that have a non-prime order are unsuitable for ECDSA.</p>
+<p>In plain words, this algorithm first generates a secret ($k$). This secret is hidden in $r$ thanks to point multiplication (that, as we know, is “easy” one way, and “hard” the other way round). $r$ is then bound to the message hash by the equation $s = k^{-1} (z + rd_A) \bmod{n}$.</p>
+<p>Note that in order to calculate $s$, we have computed the inverse of $k$ modulo $n$. We have <a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#p-must-be-prime">already said in the previous post</a> that this is guaranteed to work only if $n$ is a prime number. <strong>If a subgroup has a non-prime order, ECDSA can’t be used.</strong> It’s not by chance that almost all standardized curves have a prime order, and those that have a non-prime order are unsuitable for ECDSA.</p>
 <h3 id="verifying-signatures">Verifying signatures</h3>
-<p>In order to verify the signature we'll need Alice's public key $H_A$, the (truncated) hash $z$ and, obviously, the signature $(r, s)$.</p>
+<p>In order to verify the signature we’ll need Alice’s public key $H_A$, the (truncated) hash $z$ and, obviously, the signature $(r, s)$.</p>
 <ol>
 <li>Calculate the integer $u_1 = s^{-1} z \bmod{n}$.</li>
 <li>Calculate the integer $u_2 = s^{-1} r \bmod{n}$.</li>
@@ -203,7 +202,7 @@ Shared secret: (0x3e2ffbc3aa8a2836c1689e55cd169ba638b58a3a18803fcf7de153525b28c3
 <p>The signature is valid only if $r = x_P \bmod{n}$.</p>
 <h2 id="correctness-of-the-algorithm">Correctness of the algorithm</h2>
 <p>The logic behind this algorithm may not seem obvious at a first sight, however if we put together all the equations we have written so far, things will be clearer.</p>
-<p>Let's start from $P = u_1 G + u_2 H_A$. We know, from the definition of public key, that $H_A = d_A G$ (where $d_A$ is the private key). We can write:
+<p>Let’s start from $P = u_1 G + u_2 H_A$. We know, from the definition of public key, that $H_A = d_A G$ (where $d_A$ is the private key). We can write:
 $$\begin{align*}
   P &amp; = u_1 G + u_2 H_A \\
     &amp; = u_1 G + u_2 d_A G \\
@@ -215,7 +214,7 @@ $$\begin{align*}
     &amp; = (s^{-1} z + s^{-1} r d_A) G \\
     &amp; = s^{-1} (z + r d_A) G
 \end{align*}$$</p>
-<p>Here we have omitted "$\text{mod}\ n$" both for brevity, and because the cyclic subgroup generated by $G$ has order $n$, hence "$\text{mod}\ n$" is superfluous.</p>
+<p>Here we have omitted “$\text{mod}\ n$” both for brevity, and because the cyclic subgroup generated by $G$ has order $n$, hence “$\text{mod}\ n$” is superfluous.</p>
 <p>Previously, we defined $s = k^{-1} (z + rd_A) \bmod{n}$. Multiplying each side of the equation by $k$ and dividing by $s$, we get: $k = s^{-1} (z + rd_A) \bmod{n}$. Substituting this result in our equation for $P$, we get:
 $$\begin{align*}
   P &amp; = s^{-1} (z + r d_A) G \\
@@ -223,30 +222,29 @@ $$\begin{align*}
 \end{align*}$$</p>
 <p><strong>This is the same equation for $P$ we had at step 2 of the signature generation algorithm!</strong> When generating signatures and when verifying them, we are calculating the same point $P$, just with a different set of equations. This is why the algorithm works.</p>
 <h3 id="playing-with-ecdsa">Playing with ECDSA</h3>
-<p>Of course, I've created <strong><a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdsa.py">a Python script</a> for signature generation and verification</strong>. The code shares some parts with the ECDH script, in particular the domain parameters and the public/private key pair generation algorithm.</p>
+<p>Of course, I’ve created <strong><a href="https://github.com/andreacorbellini/ecc/blob/master/scripts/ecdsa.py">a Python script</a> for signature generation and verification</strong>. The code shares some parts with the ECDH script, in particular the domain parameters and the public/private key pair generation algorithm.</p>
 <p>Here is the kind of output produced by the script:</p>
 <div class="highlight"><pre><span></span><code>Curve: secp256k1
 Private key: 0x9f4c9eb899bd86e0e83ecca659602a15b2edb648e2ae4ee4a256b17bb29a1a1e
 Public key: (0xabd9791437093d377ca25ea974ddc099eafa3d97c7250d2ea32af6a1556f92a, 0x3fe60f6150b6d87ae8d64b78199b13f26977407c801f233288c97ddc4acca326)
 
-Message: b&#39;Hello!&#39;
+Message: b'Hello!'
 Signature: (0xddcb8b5abfe46902f2ac54ab9cd5cf205e359c03fdf66ead1130826f79d45478, 0x551a5b2cd8465db43254df998ba577cb28e1ee73c5530430395e4fba96610151)
 Verification: signature matches
 
-Message: b&#39;Hi there!&#39;
+Message: b'Hi there!'
 Verification: invalid signature
 
-Message: b&#39;Hello!&#39;
+Message: b'Hello!'
 Public key: (0xc40572bb38dec72b82b3efb1efc8552588b8774149a32e546fb703021cf3b78a, 0x8c6e5c5a9c1ea4cad778072fe955ed1c6a2a92f516f02cab57e0ba7d0765f8bb)
 Verification: invalid signature
 </code></pre></div>
-
-<p>As you can see, the script first signs a message (the byte string "Hello!"), then verifies the signature. Afterwards, it tries to verify the same signature against another message ("Hi there!") and verification fails. Lastly, it tries to verify the signature against the correct message, but using another random public key and verification fails again.</p>
+<p>As you can see, the script first signs a message (the byte string “Hello!”), then verifies the signature. Afterwards, it tries to verify the same signature against another message (“Hi there!”) and verification fails. Lastly, it tries to verify the signature against the correct message, but using another random public key and verification fails again.</p>
 <h2 id="ecdsa-k">The importance of <em>k</em></h2>
 <p>When generating ECDSA signatures, it is important to keep the secret $k$ really secret. If we used the same $k$ for all signatures, or if our random number generator were somewhat predictable, <strong>an attacker would be able to find out the private key</strong>!</p>
-<p><a href="http://www.bbc.com/news/technology-12116051">This is the kind of mistake made by Sony a few years ago.</a> Basically, the PlayStation 3 game console can run only games signed by Sony with ECDSA. This way, if I wanted to create a new game for PlayStation 3, I couldn't distribute it to the public without a signature from Sony. The problem is: all the signatures made by Sony were generated using a static $k$.</p>
-<p>(Apparently, Sony's random number generator was inspired by either <a href="http://xkcd.com/221/">XKCD</a> or <a href="http://dilbert.com/strip/2001-10-25">Dilbert</a>.)</p>
-<p>In this situation, we could easily recover Sony's private key $d_S$ by buying just two signed games, extracting their hashes ($z_1$ and $z_2$) and their signatures ($(r_1, s_1)$ and $(r_2, s_2)$), together with the domain parameters. Here's how:</p>
+<p><a href="http://www.bbc.com/news/technology-12116051">This is the kind of mistake made by Sony a few years ago.</a> Basically, the PlayStation 3 game console can run only games signed by Sony with ECDSA. This way, if I wanted to create a new game for PlayStation 3, I couldn’t distribute it to the public without a signature from Sony. The problem is: all the signatures made by Sony were generated using a static $k$.</p>
+<p>(Apparently, Sony’s random number generator was inspired by either <a href="http://xkcd.com/221/">XKCD</a> or <a href="http://dilbert.com/strip/2001-10-25">Dilbert</a>.)</p>
+<p>In this situation, we could easily recover Sony’s private key $d_S$ by buying just two signed games, extracting their hashes ($z_1$ and $z_2$) and their signatures ($(r_1, s_1)$ and $(r_2, s_2)$), together with the domain parameters. Here’s how:</p>
 <ul>
 <li>First off, note that $r_1 = r_2$ (because $r = x_P \bmod{n}$ and $P = kG$ is the same for both signatures).</li>
 <li>Consider that $(s_1 - s_2) \bmod{n} = k^{-1} (z_1 - z_2) \bmod{n}$ (this result comes directly from the equation for $s$).</li>
@@ -257,31 +255,19 @@ Verification: invalid signature
 $$s = k^{-1}(z + rd_S) \bmod{n}\ \ \Rightarrow\ \ d_S = r^{-1} (sk - z) \bmod{n}$$</p>
 <p>Similar techniques may be employed if $k$ is not static but predictable in some way.</p>
 <h1 id="have-a-great-weekend">Have a great weekend</h1>
-<p>I really hope you enjoyed what I've written here. As usual, don't hesitate to leave a comment or send me a poke if you need help with something.</p>
-<p>Next week I'll publish the fourth and last article of this series. It'll be about techniques for solving discrete logarithms, some important problems of Elliptic Curve cryptography, and how ECC compares with RSA. Don't miss it!</p>
-<p><strong><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">Read the next post of the series &raquo;</a></strong></p></div>
+<p>I really hope you enjoyed what I’ve written here. As usual, don’t hesitate to leave a comment or send me a poke if you need help with something.</p>
+<p>Next week I’ll publish the fourth and last article of this series. It’ll be about techniques for solving discrete logarithms, some important problems of Elliptic Curve cryptography, and how ECC compares with RSA. Don’t miss it!</p>
+<p><strong><a href="https://andrea.corbellini.name/2015/06/08/elliptic-curve-cryptography-breaking-security-and-a-comparison-with-rsa/">Read the next post of the series »</a></strong></p></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "elliptic-curve-cryptography-ecdh-and-ecdsa";
-      var disqus_title = "Elliptic Curve Cryptography: ECDH and ECDSA";
-      var disqus_url = "https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>

@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,20 +18,27 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "lets-encrypt-is-going-to-start-soon";
+        var disqus_title = "Let\u0027s Encrypt is going to start soon";
+        var disqus_url = "https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="ecdsa">
       <meta name="tags" content="let&#39;s encrypt">
       <meta name="tags" content="rsa">
@@ -43,71 +48,56 @@
     <title>Let&#39;s Encrypt is going to start soon - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/" rel="bookmark" title="Let&#39;s Encrypt is going to start soon">Let&#39;s Encrypt is going to start soon</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-06-16T18:20:00+00:00">June 16, 2015</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/#disqus_thread" title="Comments" data-disqus-identifier="lets-encrypt-is-going-to-start-soon">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2015-06-16T18:20:00+00:00">June 16, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="lets-encrypt-is-going-to-start-soon">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><p><a href="https://letsencrypt.org/">Let's Encrypt</a> (the free, automated and open certificate authority) has just <a href="https://letsencrypt.org/2015/06/16/lets-encrypt-launch-schedule.html">announced its launch schedule</a>. According to it, certificates will be released to the public starting from the <strong>week of September 14, 2015</strong>.</p>
-<p>Their intermediate certificates, which <a href="https://letsencrypt.org/2015/06/04/isrg-ca-certs.html">were generated a few days ago</a>, will be signed by <a href="https://www.identrustssl.com/">IdenTrust</a>. What this means is that if you browse a web page secured by Let's Encrypt, you won't get any scary message, but the usual green lock.</p>
+        <div class="article-body"><p><a href="https://letsencrypt.org/">Let’s Encrypt</a> (the free, automated and open certificate authority) has just <a href="https://letsencrypt.org/2015/06/16/lets-encrypt-launch-schedule.html">announced its launch schedule</a>. According to it, certificates will be released to the public starting from the <strong>week of September 14, 2015</strong>.</p>
+<p>Their intermediate certificates, which <a href="https://letsencrypt.org/2015/06/04/isrg-ca-certs.html">were generated a few days ago</a>, will be signed by <a href="https://www.identrustssl.com/">IdenTrust</a>. What this means is that if you browse a web page secured by Let’s Encrypt, you won’t get any scary message, but the usual green lock.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/green-lock.png" alt="Green lock" width="612" height="188">
-  <figcaption><strong>You will see this...</strong></figcaption>
+<img alt="Green lock" height="188" src="https://andrea.corbellini.name/images/green-lock.png" width="612"/>
+<figcaption><strong>You will see this...</strong></figcaption>
 </figure>
-
 <figure>
-  <img src="https://andrea.corbellini.name/images/red-lock.png" alt="Red lock" width="612" height="300">
-  <figcaption><strong>... not this.</strong></figcaption>
+<img alt="Red lock" height="300" src="https://andrea.corbellini.name/images/red-lock.png" width="612"/>
+<figcaption><strong>... not this.</strong></figcaption>
 </figure>
-
 <p>In case you are curious: the root certificate is a 4096-bit RSA key, the two intermediate certificates are both 2048-bit RSA keys. But they are also <a href="https://letsencrypt.org/certificates/">planning to generate ECDSA keys later this year</a> as well.</p>
-<p>Technical aspects aside, this will be a great opportunity for the entire web. As I have <a href="https://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/">already written</a>, I always dreamed of an encrypted web, and I truly believe that Let's Encrypt — or at least its approach to the problem — is the way to go.</p>
-<p>So, will you get a Let's Encrypt certificate when the time comes? I will do. Not for this blog (I can't put a certificate without paying), but for other websites I manage.</p>
-<p>Perhaps I'll also show a "Proudly secured by Let's Encrypt" badge.</p></div>
+<p>Technical aspects aside, this will be a great opportunity for the entire web. As I have <a href="https://andrea.corbellini.name/2015/04/12/lets-encrypt-the-road-towards-a-better-web/">already written</a>, I always dreamed of an encrypted web, and I truly believe that Let’s Encrypt — or at least its approach to the problem — is the way to go.</p>
+<p>So, will you get a Let’s Encrypt certificate when the time comes? I will do. Not for this blog (I can’t put a certificate without paying), but for other websites I manage.</p>
+<p>Perhaps I’ll also show a “Proudly secured by Let’s Encrypt” badge.</p></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "lets-encrypt-is-going-to-start-soon";
-      var disqus_title = "Let\u0027s Encrypt is going to start soon";
-      var disqus_url = "https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>

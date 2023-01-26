@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,20 +18,27 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "hello-pelican";
+        var disqus_title = "Hello Pelican!";
+        var disqus_url = "https://andrea.corbellini.name/2015/08/02/hello-pelican/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="blog">
       <meta name="tags" content="pelican">
       <meta name="tags" content="wordpress">
@@ -41,70 +46,57 @@
     <title>Hello Pelican! - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2015/08/02/hello-pelican/" rel="bookmark" title="Hello Pelican!">Hello Pelican!</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-08-02T18:55:00+00:00">August 02, 2015</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/08/02/hello-pelican/#disqus_thread" title="Comments" data-disqus-identifier="hello-pelican">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2015-08-02T18:55:00+00:00">August 02, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/08/02/hello-pelican/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="hello-pelican">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><p>Today I switched from WordPress.com to <a href="http://getpelican.com/">Pelican</a> and <a href="https://pages.github.com/">GitHub Pages</a>.</p>
+        <div class="article-body"><p>Today I switched from WordPress.com to <a href="http://getpelican.com/">Pelican</a> and <a href="https://pages.github.com/">GitHub Pages</a>.</p>
 <p>First off, let me say: almost all URLs that were previously working should still work. Only the feed URLs are broken, and this is not something I can fix. If you were following my blog via a feed reader, you should update to the new feed. Sorry for the inconvenience.</p>
-<p>Having said that, I'd like to share with you the motivation that made me move and the details of the migration.</p>
+<p>Having said that, I’d like to share with you the motivation that made me move and the details of the migration.</p>
 <h1 id="the-bad-things-of-wordpress">The bad things of WordPress</h1>
-<p>Now, this doesn't want to be a rant, so I'll be pretty concise. WordPress, the content management system, is an excellent platform for blogging. Easy to start with, easy to maintain, easy to use. WordPress.com makes things even easier. It also comes with many useful features, like comments and social networks integration.</p>
-<p>The problem is: you can't customize things or add features without paying. Of course, this is business, and I do not want to discuss business decisions made at WordPress.com. Not only that, but I could live fine with most of the major limitations. Also, I was perfectly conscious of this kind of problems with WordPress.com when I started (after all, this is not <a href="https://andrea.corbellini.name/2015/02/15/new-blog-again/">the first blog I started</a>).</p>
-<p>I actually become upset of WordPress.com when writing the series of blog posts about <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">Elliptic Curve Cryptography</a>. When writing these articles, I spent a lot of time employing workarounds to overcome WordPress.com limitations. Being used to Vim and its advanced features, I also found the editors (both the old and the new one) as a great obstacle for getting things done quickly. I do not want to enter the details of the problems I'm referring to, what matters is that, eventually, I gave up and I realized it was time to move on and seek for an alternative.</p>
+<p>Now, this doesn’t want to be a rant, so I’ll be pretty concise. WordPress, the content management system, is an excellent platform for blogging. Easy to start with, easy to maintain, easy to use. WordPress.com makes things even easier. It also comes with many useful features, like comments and social networks integration.</p>
+<p>The problem is: you can’t customize things or add features without paying. Of course, this is business, and I do not want to discuss business decisions made at WordPress.com. Not only that, but I could live fine with most of the major limitations. Also, I was perfectly conscious of this kind of problems with WordPress.com when I started (after all, this is not <a href="https://andrea.corbellini.name/2015/02/15/new-blog-again/">the first blog I started</a>).</p>
+<p>I actually become upset of WordPress.com when writing the series of blog posts about <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">Elliptic Curve Cryptography</a>. When writing these articles, I spent a lot of time employing workarounds to overcome WordPress.com limitations. Being used to Vim and its advanced features, I also found the editors (both the old and the new one) as a great obstacle for getting things done quickly. I do not want to enter the details of the problems I’m referring to, what matters is that, eventually, I gave up and I realized it was time to move on and seek for an alternative.</p>
 <h1 id="why-pelican">Why Pelican</h1>
-<p>Pelican is a static site generator. I've always thought that a static site had too many limitations for me. But while seeking an alternative to WordPress.com, I realized that many of those limitations were not affecting me in any way. Actually, with a static site I can do everything I want: edit my articles with Vim, render my equations with MathJax, customize my theme, version control my content, write scripts to post process my content.</p>
-<p>The only bad thing about Pelican is that it does not come with any theme I truly like. I decided to make my own. I'm not entirely satisfied with it, as I feel it is too "anonymous", but I believe it is fully responsive, fast, readable and offers all the features I want. Perhaps I'll tweak it a little more to make it more "personal".</p>
+<p>Pelican is a static site generator. I’ve always thought that a static site had too many limitations for me. But while seeking an alternative to WordPress.com, I realized that many of those limitations were not affecting me in any way. Actually, with a static site I can do everything I want: edit my articles with Vim, render my equations with MathJax, customize my theme, version control my content, write scripts to post process my content.</p>
+<p>The only bad thing about Pelican is that it does not come with any theme I truly like. I decided to make my own. I’m not entirely satisfied with it, as I feel it is too “anonymous”, but I believe it is fully responsive, fast, readable and offers all the features I want. Perhaps I’ll tweak it a little more to make it more “personal”.</p>
 <p>Setting up Pelican and migrating everything required some time, but at least this time I worked on true solutions, not on ugly hacks and workarounds like I did with WordPress. This implies that when writing articles I will be able to focus more on content than other details.</p>
 <h1 id="why-not-other-static-site-generators">Why not other static site generators</h1>
-<p>In short: Pelican is written in Python and to my eyes it looked better than the other Python static site generators. I'll be honest and say that I did not truly evaluate all of the alternatives: I knew <a href="...">list.org</a> switched to Pelican and that made me try Pelican before all other solutions.</p>
+<p>In short: Pelican is written in Python and to my eyes it looked better than the other Python static site generators. I’ll be honest and say that I did not truly evaluate all of the alternatives: I knew <a href="...">list.org</a> switched to Pelican and that made me try Pelican before all other solutions.</p>
 <h1 id="conclusion">Conclusion</h1>
-<p>In the end I decided to leave WordPress for Pelican hosted on GitHub Pages. I'm pretty satisfied with the result I got. The nature of GitHub Pages prevents me from using HTTP redirects (and therefore the old feed links are broken), however in exchange I've got much more freedom, and this is what matters to me.</p></div>
+<p>In the end I decided to leave WordPress for Pelican hosted on GitHub Pages. I’m pretty satisfied with the result I got. The nature of GitHub Pages prevents me from using HTTP redirects (and therefore the old feed links are broken), however in exchange I’ve got much more freedom, and this is what matters to me.</p></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "hello-pelican";
-      var disqus_title = "Hello Pelican!";
-      var disqus_url = "https://andrea.corbellini.name/2015/08/02/hello-pelican/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>

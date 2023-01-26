@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
       <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1,user-scalable=0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?704e0f70">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?34f6d164">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.10.2/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" defer></script>
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -20,20 +18,27 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
-    <script src="//andreacorbellini.disqus.com/count.js" defer></script>
+    <script src="https://andreacorbellini.disqus.com/count.js" defer></script>
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         tocbot.init({
-          tocSelector: '#toc nav',
-          contentSelector: 'article .body',
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
           headingSelector: 'h1, h2, h3, h4, h5, h6',
           activeLinkClass: 'active',
         });
       });
     </script>
+      <script>
+        var disqus_shortname = "andreacorbellini";
+        var disqus_identifier = "elliptic-curve-cryptography-finite-fields-and-discrete-logarithms";
+        var disqus_title = "Elliptic Curve Cryptography: finite fields and discrete logarithms";
+        var disqus_url = "https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/";
+      </script>
+      <script src="https://andreacorbellini.disqus.com/embed.js" defer></script>
       <meta name="tags" content="ecc">
       <meta name="tags" content="math">
       <meta name="tags" content="security">
@@ -41,41 +46,40 @@
     <title>Elliptic Curve Cryptography: finite fields and discrete logarithms - Andrea Corbellini</title>
   </head>
   <body>
-    <header class="main-header">  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <button class="visible-xs-block" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="fas fa-bars" aria-hidden="true"></span></button>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="https://andrea.corbellini.name/">Andrea Corbellini</a>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
       </div>
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="https://andrea.corbellini.name/">Home</a></li>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
             <li><a href="https://andrea.corbellini.name/about/">About</a></li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 </header>
-      <div class="main-container container">
-        <main id="content">    <article>
+<main id="content">    <article class="article">
       <header>
         <h1><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/" rel="bookmark" title="Elliptic Curve Cryptography: finite fields and discrete logarithms">Elliptic Curve Cryptography: finite fields and discrete logarithms</a></h1>
-<div class="details small">
-  <span><span class="far fa-calendar" aria-hidden="true"></span><time datetime="2015-05-23T14:08:00+00:00">May 23, 2015</time></span>
-  <span><span class="far fa-comments" aria-hidden="true"></span><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#disqus_thread" title="Comments" data-disqus-identifier="elliptic-curve-cryptography-finite-fields-and-discrete-logarithms">Comments</a></span>
-</div>      </header>
-      <div class="wrapper">
-        <aside id="toc">
+<ul class="article-details">
+  <li><time datetime="2015-05-23T14:08:00+00:00">May 23, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/#disqus_thread" title="Comments" class="comments" data-disqus-identifier="elliptic-curve-cryptography-finite-fields-and-discrete-logarithms">Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
           <nav></nav>
         </aside>
-        <div class="body"><p><strong>This post is the second in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
+        <div class="article-body"><p><strong>This post is the second in the series <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">ECC: a gentle introduction</a>.</strong></p>
 <p>In the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/">previous post</a>, we have seen how elliptic curves over the real numbers can be used to define a group. Specifically, we have defined a rule for <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#group-law">point addition</a>: given three aligned points, their sum is zero ($P + Q + R = 0$). We have derived a <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#geometric-addition">geometric method</a> and an <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#algebraic-addition">algebraic method</a> for computing point additions.</p>
-<p>We then introduced <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#scalar-multiplication">scalar multiplication</a> ($nP = P + P + \cdots + P$) and we found out an "easy" algorithm for computing scalar multiplication: <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add</a>.</p>
+<p>We then introduced <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#scalar-multiplication">scalar multiplication</a> ($nP = P + P + \cdots + P$) and we found out an “easy” algorithm for computing scalar multiplication: <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add</a>.</p>
 <p><strong>Now we will restrict our elliptic curves to finite fields</strong>, rather than the set of real numbers, and see how things change.</p>
 <h1 id="the-field-of-integers-modulo-p">The field of integers modulo <em>p</em></h1>
 <p>A finite field is, first of all, a set with a finite number of elements. An example of finite field is the set of integers modulo $p$, where $p$ is a prime number. It is generally denoted as $\mathbb{Z}/p$, $GF(p)$ or $\mathbb{F}_p$. We will use the latter notation.</p>
-<p>In fields we have two binary operations: addition (+) and multiplication (&middot;). Both are closed, associative and commutative. For both operations, there exist a unique identity element, and for every element there's a unique inverse element. Finally, multiplication is distributive over the addition: $x \cdot (y + z) = x \cdot y + x \cdot z$.</p>
-<p>The set of <strong>integers modulo $p$ consists of all the integers from 0 to $p - 1$</strong>. Addition and multiplication work as in <a href="http://en.wikipedia.org/wiki/Modular_arithmetic">modular arithmetic</a> (also known as "clock arithmetic"). Here are a few examples of operations in $\mathbb{F}_{23}$:</p>
+<p>In fields we have two binary operations: addition (+) and multiplication (·). Both are closed, associative and commutative. For both operations, there exist a unique identity element, and for every element there’s a unique inverse element. Finally, multiplication is distributive over the addition: $x \cdot (y + z) = x \cdot y + x \cdot z$.</p>
+<p>The set of <strong>integers modulo $p$ consists of all the integers from 0 to $p - 1$</strong>. Addition and multiplication work as in <a href="http://en.wikipedia.org/wiki/Modular_arithmetic">modular arithmetic</a> (also known as “clock arithmetic”). Here are a few examples of operations in $\mathbb{F}_{23}$:</p>
 <ul>
 <li>Addition: $(18 + 9) \bmod{23} = 4$</li>
 <li>Subtraction: $(7 - 14) \bmod{23} = 16$</li>
@@ -89,21 +93,21 @@
 <p>Indeed: $9 \cdot 9^{-1} \bmod{23} = 9 \cdot 18 \bmod{23} = 1$</p>
 </li>
 </ul>
-<p>If these equations don't look familiar to you and you need a primer on modular arithmetic, check out <a href="https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/what-is-modular-arithmetic">Khan Academy</a>.</p>
+<p>If these equations don’t look familiar to you and you need a primer on modular arithmetic, check out <a href="https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/what-is-modular-arithmetic">Khan Academy</a>.</p>
 <p>As we already said, the integers modulo $p$ are a field, and therefore all the properties listed above hold. <span id="p-must-be-prime">Note that the requirement for $p$ to be prime is important!</span> The set of integers modulo 4 is not a field: 2 has no multiplicative inverse (i.e. the equation $2 \cdot x \bmod{4} = 1$ has no solutions).</p>
 <h2 id="division-modulo-p">Division modulo <em>p</em></h2>
 <p>We will soon define elliptic curves over $\mathbb{F}_p$, but before doing so we need a clear idea of what $x / y$ means in $\mathbb{F}_p$. Simply put: $x / y = x \cdot y^{-1}$, or, in plain words, $x$ over $y$ is equal to $x$ times the multiplicative inverse of $y$. This fact is not surprising, but gives us a basic method to perform division: <strong>find the multiplicative inverse of a number and then perform a single multiplication</strong>.</p>
-<p>Computing the multiplicative inverse can be "easily" done with the <strong><a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended Euclidean algorithm</a></strong>, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.</p>
-<p>We won't enter the details of the extended Euclidean algorithm, as it is off-topic, however here's a working Python implementation:</p>
+<p>Computing the multiplicative inverse can be “easily” done with the <strong><a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended Euclidean algorithm</a></strong>, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.</p>
+<p>We won’t enter the details of the extended Euclidean algorithm, as it is off-topic, however here’s a working Python implementation:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">"""</span>
 <span class="sd">    Returns a three-tuple (gcd, x, y) such that</span>
 <span class="sd">    a * x + b * y == gcd, where gcd is the greatest</span>
 <span class="sd">    common divisor of a and b.</span>
 
 <span class="sd">    This function implements the extended Euclidean</span>
 <span class="sd">    algorithm and runs in O(log b) in the worst case.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">s</span><span class="p">,</span> <span class="n">old_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
     <span class="n">t</span><span class="p">,</span> <span class="n">old_t</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
     <span class="n">r</span><span class="p">,</span> <span class="n">old_r</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span>
@@ -118,25 +122,24 @@
 
 
 <span class="k">def</span> <span class="nf">inverse_of</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">"""</span>
 <span class="sd">    Returns the multiplicative inverse of</span>
 <span class="sd">    n modulo p.</span>
 
 <span class="sd">    This function returns an integer m such that</span>
 <span class="sd">    (n * m) % p == 1.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">gcd</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
     <span class="k">assert</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span> <span class="o">==</span> <span class="n">gcd</span>
 
     <span class="k">if</span> <span class="n">gcd</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># Either n is 0, or p is not a prime number.</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has no multiplicative inverse &#39;</span>
-            <span class="s1">&#39;modulo </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+            <span class="s1">'</span><span class="si">{}</span><span class="s1"> has no multiplicative inverse '</span>
+            <span class="s1">'modulo </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">p</span>
 </code></pre></div>
-
 <h1 id="elliptic-curves-in-mathbbf_p">Elliptic curves in $\mathbb{F}_p$</h1>
 <p>Now we have all the necessary elements to restrict elliptic curves over $\mathbb{F}_p$. The set of points, that in the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">previous post</a> was:
 $$\begin{array}{rcl}
@@ -150,24 +153,21 @@ $$\begin{array}{rcl}
 \end{array}$$</p>
 <p>where 0 is still the point at infinity, and $a$ and $b$ are two integers in $\mathbb{F}_p$.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/elliptic-curves-mod-p.png" alt="Elliptic curves in Fp" width="608" height="608">
-  <figcaption>The curve $y^2 \equiv x^3 - 7x + 10 \pmod{p}$ with $p = 19, 97, 127, 487$. Note that, for every $x$, there are at most two points. Also note the symmetry about $y = p / 2$.</figcaption>
+<img alt="Elliptic curves in Fp" height="608" src="https://andrea.corbellini.name/images/elliptic-curves-mod-p.png" width="608"/>
+<figcaption>The curve $y^2 \equiv x^3 - 7x + 10 \pmod{p}$ with $p = 19, 97, 127, 487$. Note that, for every $x$, there are at most two points. Also note the symmetry about $y = p / 2$.</figcaption>
 </figure>
-
 <figure>
-  <img src="https://andrea.corbellini.name/images/singular-mod-p.png" alt="Singular curve in Fp" width="300" height="300">
-  <figcaption>The curve $y^2 \equiv x^3 \pmod{29}$ is singular and has a triple point in $(0, 0)$. It is not a valid elliptic curve.</figcaption>
+<img alt="Singular curve in Fp" height="300" src="https://andrea.corbellini.name/images/singular-mod-p.png" width="300"/>
+<figcaption>The curve $y^2 \equiv x^3 \pmod{29}$ is singular and has a triple point in $(0, 0)$. It is not a valid elliptic curve.</figcaption>
 </figure>
-
 <p>What previously was a continuous curve is now a set of disjoint points in the $xy$-plane. But we can prove that, even if we have restricted our domain, <strong>elliptic curves in $\mathbb{F}_p$ still form an abelian group</strong>.</p>
 <h1 id="point-addition">Point addition</h1>
 <p>Clearly, we need to change a bit our definition of addition in order to make it work in $\mathbb{F}_p$. With reals, we said that the sum of three aligned points was zero ($P + Q + R = 0$). We can keep this definition, but what does it mean for three points to be aligned in $\mathbb{F}_p$?</p>
-<p>We can say that <strong>three points are aligned if there's a line that connects all of them</strong>. Now, of course, lines in $\mathbb{F}_p$ are not the same as lines in $\mathbb{R}$. We can say, informally, that a line in $\mathbb{F}_p$ is the set of points $(x, y)$ that satisfy the equation $ax + by + c \equiv 0 \pmod{p}$ (this is the standard line equation, with the addition of "$(\text{mod}\ p)$").</p>
+<p>We can say that <strong>three points are aligned if there’s a line that connects all of them</strong>. Now, of course, lines in $\mathbb{F}_p$ are not the same as lines in $\mathbb{R}$. We can say, informally, that a line in $\mathbb{F}_p$ is the set of points $(x, y)$ that satisfy the equation $ax + by + c \equiv 0 \pmod{p}$ (this is the standard line equation, with the addition of “$(\text{mod}\ p)$”).</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/point-addition-mod-p.png" alt="Point addition for elliptic curves in Z/p" width="523" height="528">
-  <figcaption>Point addition over the curve $y^2 \equiv x^3 - x + 3 \pmod{127}$, with $P = (16, 20)$ and $Q = (41, 120)$. Note how the line $y \equiv 4x + 83 \pmod{127}$ that connects the points "repeats" itself in the plane.</figcaption>
+<img alt="Point addition for elliptic curves in Z/p" height="528" src="https://andrea.corbellini.name/images/point-addition-mod-p.png" width="523"/>
+<figcaption>Point addition over the curve $y^2 \equiv x^3 - x + 3 \pmod{127}$, with $P = (16, 20)$ and $Q = (41, 120)$. Note how the line $y \equiv 4x + 83 \pmod{127}$ that connects the points “repeats” itself in the plane.</figcaption>
 </figure>
-
 <p>Given that we are in a group, point addition retains the properties we already know:</p>
 <ul>
 <li>$Q + 0 = 0 + Q = Q$ (from the definition of identity element).</li>
@@ -176,7 +176,7 @@ $$\begin{array}{rcl}
 <li>Also, $P + (-P) = 0$ (from the definition of inverse element).</li>
 </ul>
 <h1 id="algebraic-sum">Algebraic sum</h1>
-<p><strong>The equations for calculating point additions are exactly the same as in the previous post</strong>, except for the fact that we need to add "$\text{mod}\ p$" at the end of every expression. Therefore, given $P = (x_P, y_P)$, $Q = (x_Q, y_Q)$ and $R = (x_R, y_R)$, we can calculate $P + Q = -R$ as follows:
+<p><strong>The equations for calculating point additions are exactly the same as in the previous post</strong>, except for the fact that we need to add “$\text{mod}\ p$” at the end of every expression. Therefore, given $P = (x_P, y_P)$, $Q = (x_Q, y_Q)$ and $R = (x_R, y_R)$, we can calculate $P + Q = -R$ as follows:
 $$\begin{align*}
   x_R &amp; = (m^2 - x_P - x_Q) \bmod{p} \\
   y_R &amp; = [y_P + m(x_R - x_P)] \bmod{p} \\
@@ -186,24 +186,23 @@ $$\begin{align*}
 $$m = (y_P - y_Q)(x_P - x_Q)^{-1} \bmod{p}$$</p>
 <p>Else, if $P = Q$, we have:
 $$m = (3 x_P^2 + a)(2 y_P)^{-1} \bmod{p}$$</p>
-<p>It's not a coincidence that the equations have not changed: in fact, these equations work in every field, finite or infinite (with the exception of $\mathbb{F}_2$ and $\mathbb{F}_3$, which are special cased). Now I feel I have to provide a justification for this fact. The problem is: proofs for the group law generally involve complex mathematical concepts. However, I found a <a href="https://arxiv.org/pdf/1710.00214">proof from Stefan Friedl</a> that uses only elementary concepts. Read it if you are interested in why these equations work in (almost) every field.</p>
-<p>Back to us — we won't define a geometric method: in fact, there are a few problems with that. For example, in the previous post, we said that to compute $P + P$ we needed to take the tangent to the curve in $P$. But without continuity, the word "tangent" does not make any sense. We can workaround this and other problems, however a pure geometric method would just be too complicated and not practical at all.</p>
-<p>Instead, you can play with the <strong><a href="https://andrea.corbellini.name/ecc/interactive/modk-add.html">interactive tool</a> I've written for computing point additions</strong>.</p>
+<p>It’s not a coincidence that the equations have not changed: in fact, these equations work in every field, finite or infinite (with the exception of $\mathbb{F}_2$ and $\mathbb{F}_3$, which are special cased). Now I feel I have to provide a justification for this fact. The problem is: proofs for the group law generally involve complex mathematical concepts. However, I found a <a href="https://arxiv.org/pdf/1710.00214">proof from Stefan Friedl</a> that uses only elementary concepts. Read it if you are interested in why these equations work in (almost) every field.</p>
+<p>Back to us — we won’t define a geometric method: in fact, there are a few problems with that. For example, in the previous post, we said that to compute $P + P$ we needed to take the tangent to the curve in $P$. But without continuity, the word “tangent” does not make any sense. We can workaround this and other problems, however a pure geometric method would just be too complicated and not practical at all.</p>
+<p>Instead, you can play with the <strong><a href="https://andrea.corbellini.name/ecc/interactive/modk-add.html">interactive tool</a> I’ve written for computing point additions</strong>.</p>
 <h1 id="the-order-of-an-elliptic-curve-group">The order of an elliptic curve group</h1>
 <p>We said that an elliptic curve defined over a finite field has a finite number of points. An important question that we need to answer is: <strong>how many points are there exactly?</strong></p>
-<p>Firstly, let's say that the number of points in a group is called the <strong>order of the group</strong>.</p>
-<p>Trying all the possible values for $x$ from 0 to $p - 1$ is not a feasible way to count the points, as it would require $O(p)$ steps, and this is "hard" if $p$ is a large prime.</p>
-<p>Luckily, there's a faster algorithm for computing the order: <a href="https://en.wikipedia.org/wiki/Schoof%27s_algorithm">Schoof's algorithm</a>. I won't enter the details of the algorithm — what matters is that it runs in polynomial time, and this is what we need.</p>
+<p>Firstly, let’s say that the number of points in a group is called the <strong>order of the group</strong>.</p>
+<p>Trying all the possible values for $x$ from 0 to $p - 1$ is not a feasible way to count the points, as it would require $O(p)$ steps, and this is “hard” if $p$ is a large prime.</p>
+<p>Luckily, there’s a faster algorithm for computing the order: <a href="https://en.wikipedia.org/wiki/Schoof%27s_algorithm">Schoof’s algorithm</a>. I won’t enter the details of the algorithm — what matters is that it runs in polynomial time, and this is what we need.</p>
 <h1 id="scalar-multiplication">Scalar multiplication and cyclic subgroups</h1>
 <p>As with reals, multiplication can be defined as:
 $$n P = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
-<p>And, again, we can use the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add algorithm</a> to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I've written an <strong><a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html">interactive tool</a> for scalar multiplication</strong> too.</p>
+<p>And, again, we can use the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add algorithm</a> to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I’ve written an <strong><a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html">interactive tool</a> for scalar multiplication</strong> too.</p>
 <p>Multiplication over points for elliptic curves in $\mathbb{F}_p$ has an interesting property. Take the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the point $P = (3, 6)$. Now <a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html">calculate</a> all the multiples of $P$:</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/cyclic-subgroup.png" alt="Cyclic subgroup" width="322" height="255">
-  <figcaption>The multiples of $P = (3, 6)$ are just five distinct points ($0$, $P$, $2P$, $3P$, $4P$) and they are repeating cyclically. It's easy to spot the similarity between scalar multiplication on elliptic curves and addition in modular arithmetic.</figcaption>
+<img alt="Cyclic subgroup" height="255" src="https://andrea.corbellini.name/images/cyclic-subgroup.png" width="322"/>
+<figcaption>The multiples of $P = (3, 6)$ are just five distinct points ($0$, $P$, $2P$, $3P$, $4P$) and they are repeating cyclically. It’s easy to spot the similarity between scalar multiplication on elliptic curves and addition in modular arithmetic.</figcaption>
 </figure>
-
 <ul>
 <li>$0P = 0$</li>
 <li>$1P = (3, 6)$</li>
@@ -225,34 +224,34 @@ $$n P = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
 <li>$(5k + 3)P = 3P$</li>
 <li>$(5k + 4)P = 4P$</li>
 </ul>
-<p>for every integer $k$. Note that these five equations can be "compressed" into a single one, thanks to the modulo operator: $kP = (k \bmod{5})P$.</p>
+<p>for every integer $k$. Note that these five equations can be “compressed” into a single one, thanks to the modulo operator: $kP = (k \bmod{5})P$.</p>
 <p>Not only that, but we can immediately verify that <strong>these five points are closed under addition</strong>. Which means: however I add $0$, $P$, $2P$, $3P$ or $4P$, the result is always one of these five points. Again, the other points of the elliptic curve never appear in the results.</p>
 <p>The same holds for every point, not just for $P = (3, 6)$. In fact, if we take a generic $P$:
 $$nP + mP = \underbrace{P + \cdots + P}_{n\ \text{times}} + \underbrace{P + \cdots + P}_{m\ \text{times}} = (n + m)P$$</p>
 <p>Which means: <strong>if we add two multiples of $P$, we obtain a multiple of $P$</strong> (i.e. multiples of $P$ are closed under addition). This is enough to <a href="https://en.wikipedia.org/wiki/Subgroup#Basic_properties_of_subgroups">prove</a> that <strong>the set of the multiples of $P$ is a cyclic subgroup</strong> of the group formed by the elliptic curve.</p>
-<p>A "subgroup" is a group which is a subset of another group. A "cyclic subgroup" is a subgroup which elements are repeating cyclically, like we have shown in the previous example. <span id="base-point">The point $P$ is called <strong>generator</strong> or <strong>base point</strong> of the cyclic subgroup</span>.</p>
+<p>A “subgroup” is a group which is a subset of another group. A “cyclic subgroup” is a subgroup which elements are repeating cyclically, like we have shown in the previous example. <span id="base-point">The point $P$ is called <strong>generator</strong> or <strong>base point</strong> of the cyclic subgroup</span>.</p>
 <p>Cyclic subgroups are the foundations of ECC and other cryptosystems. We will see why in the next post.</p>
 <h2 id="subgroup-order">Subgroup order</h2>
-<p>We can ask ourselves <strong>what the order of a subgroup generated by a point $P$ is</strong> (or, equivalently, what the order of $P$ is). To answer this question we can't use Schoof's algorithm, because that algorithm only works on whole elliptic curves, not on subgroups. Before approaching the problem, we need a few more bits:</p>
+<p>We can ask ourselves <strong>what the order of a subgroup generated by a point $P$ is</strong> (or, equivalently, what the order of $P$ is). To answer this question we can’t use Schoof’s algorithm, because that algorithm only works on whole elliptic curves, not on subgroups. Before approaching the problem, we need a few more bits:</p>
 <ul>
 <li>So far, we have the defined the order as the number of points of a group. This definition is still valid, but within a cyclic subgroup we can give a new, equivalent definition: <strong>the order of $P$ is the smallest positive integer $n$ such that $nP = 0$</strong>.
   In fact, if you look at the previous example, our subgroup contained five points, and we had $5P = 0$.</li>
-<li>The order of $P$ is linked to the order of the elliptic curve by <a href="https://en.wikipedia.org/wiki/Lagrange%27s_theorem_(group_theory)">Lagrange's theorem</a>, which states that <strong>the order of a subgroup is a divisor of the order of the parent group</strong>.
+<li>The order of $P$ is linked to the order of the elliptic curve by <a href="https://en.wikipedia.org/wiki/Lagrange%27s_theorem_(group_theory)">Lagrange’s theorem</a>, which states that <strong>the order of a subgroup is a divisor of the order of the parent group</strong>.
   In other words, if an elliptic curve contains $N$ points and one of its subgroups contains $n$ points, then $n$ is a divisor of $N$.</li>
 </ul>
 <p>These two information together give us a way to find out the order of a subgroup with base point $P$:</p>
 <ol>
-<li>Calculate the elliptic curve's order $N$ using Schoof's algorithm.</li>
+<li>Calculate the elliptic curve’s order $N$ using Schoof’s algorithm.</li>
 <li>Find out all the divisors of $N$.</li>
 <li>For every divisor $n$ of $N$, compute $nP$.</li>
 <li>The smallest $n$ such that $nP = 0$ is the order of the subgroup.</li>
 </ol>
 <p>For example, the curve $y^2 = x^3 - x + 3$ over the field $\mathbb{F}_{37}$ has order $N = 42$. Its subgroups may have order $n = 1$, $2$, $3$, $6$, $7$, $14$, $21$ or $42$. If <a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html?a=-1&amp;b=3&amp;p=37&amp;px=2&amp;py=3">we try $P = (2, 3)$</a> we can see that $P \ne 0$, $2P \ne 0$, ..., $7P = 0$, hence the order of $P$ is $n = 7$.</p>
-<p>Note that <strong>it's important to take the smallest divisor, not a random one</strong>. If we proceeded randomly, we could have taken $n = 14$, which is not the order of the subgroup, but one of its multiples.</p>
+<p>Note that <strong>it’s important to take the smallest divisor, not a random one</strong>. If we proceeded randomly, we could have taken $n = 14$, which is not the order of the subgroup, but one of its multiples.</p>
 <p>Another example: the elliptic curve defined by the equation $y^2 = x^3 - x + 1$ over the field $\mathbb{F}_{29}$ has order $N = 37$, which is a prime. Its subgroups may only have order $n = 1$ or $37$. As you can easily guess, when $n = 1$, the subgroup contains only the point at infinity; when $n = N$, the subgroup contains all the points of the elliptic curve.</p>
 <h2 id="finding-a-base-point">Finding a base point</h2>
-<p>For our ECC algorithms, we want subgroups with a high order. So in general we will choose an elliptic curve, calculate its order ($N$), choose a high divisor as the subgroup order ($n$) and eventually find a suitable base point. That is: we won't choose a base point and then calculate its order, but we'll do the opposite: we will first choose an order that looks good enough and then we will hunt for a suitable base point. How do we do that?</p>
-<p><span id="cofactor">Firstly, we need to introduce one more term. Lagrange's theorem implies that the number <strong>$h = N / n$ is always an integer</strong> (because $n$ is a divisor of $N$). The number $h$ has a name: it's the <strong>cofactor of the subgroup</strong>.</span></p>
+<p>For our ECC algorithms, we want subgroups with a high order. So in general we will choose an elliptic curve, calculate its order ($N$), choose a high divisor as the subgroup order ($n$) and eventually find a suitable base point. That is: we won’t choose a base point and then calculate its order, but we’ll do the opposite: we will first choose an order that looks good enough and then we will hunt for a suitable base point. How do we do that?</p>
+<p><span id="cofactor">Firstly, we need to introduce one more term. Lagrange’s theorem implies that the number <strong>$h = N / n$ is always an integer</strong> (because $n$ is a divisor of $N$). The number $h$ has a name: it’s the <strong>cofactor of the subgroup</strong>.</span></p>
 <p>Now consider that for every point of an elliptic curve we have $NP = 0$. This happens because $N$ is a multiple of any candidate $n$. Using the definition of cofactor, we can write:
 $$n(hP) = 0$$</p>
 <p>Now suppose that $n$ is a prime number (for reason that will be explained in the next post, we prefer prime orders). This equation, written in this form, is telling us that the point $G = hP$ generates a subgroup of order $n$ (except when $G = hP = 0$, in which case the subgroup has order 1).</p>
@@ -265,39 +264,27 @@ $$n(hP) = 0$$</p>
 <li>Compute $G = hP$.</li>
 <li>If $G$ is 0, then go back to step 4. Otherwise we have found a generator of a subgroup with order $n$ and cofactor $h$.</li>
 </ol>
-<p>Note that this algorithm only works if $n$ is a prime. If $n$ wasn't a prime, then the order of $G$ could be one of the divisors of $n$.</p>
+<p>Note that this algorithm only works if $n$ is a prime. If $n$ wasn’t a prime, then the order of $G$ could be one of the divisors of $n$.</p>
 <h1 id="discrete-logarithm">Discrete logarithm</h1>
 <p>As we did when working with continuous elliptic curves, we are now going to discuss the question: <strong>if we know $P$ and $Q$, what is $k$ such that $Q = kP$?</strong></p>
-<p>This problem, which is known as the <strong>discrete logarithm problem</strong> for elliptic curves, is believed to be a "hard" problem, in that there is no known polynomial time algorithm that can run on a classical computer. There are, however, no mathematical proofs for this belief.</p>
-<p>This problem is also analogous to the discrete logarithm problem used with other cryptosystems such as the Digital Signature Algorithm (DSA), the Diffie-Hellman key exchange (D-H) and the ElGamal algorithm — it's not a coincidence that they have the same name. The difference is that, with those algorithms, we use modulo exponentiation instead of scalar multiplication. Their discrete logarithm problem can be stated as follows: if we know $a$ and $b$, what's $k$ such that $b = a^k \bmod{p}$?</p>
-<p>Both these problems are "discrete" because they involve finite sets (more precisely, cyclic subgroups). And they are "logarithms" because they are analogous to ordinary logarithms.</p>
-<p>What makes ECC interesting is that, as of today, the discrete logarithm problem for elliptic curves seems to be "harder" if compared to other similar problems used in cryptography. This implies that we need fewer bits for the integer $k$ in order to achieve the same level of security as with other cryptosystems, as we will see in details in the fourth and last post of this series.</p>
+<p>This problem, which is known as the <strong>discrete logarithm problem</strong> for elliptic curves, is believed to be a “hard” problem, in that there is no known polynomial time algorithm that can run on a classical computer. There are, however, no mathematical proofs for this belief.</p>
+<p>This problem is also analogous to the discrete logarithm problem used with other cryptosystems such as the Digital Signature Algorithm (DSA), the Diffie-Hellman key exchange (D-H) and the ElGamal algorithm — it’s not a coincidence that they have the same name. The difference is that, with those algorithms, we use modulo exponentiation instead of scalar multiplication. Their discrete logarithm problem can be stated as follows: if we know $a$ and $b$, what’s $k$ such that $b = a^k \bmod{p}$?</p>
+<p>Both these problems are “discrete” because they involve finite sets (more precisely, cyclic subgroups). And they are “logarithms” because they are analogous to ordinary logarithms.</p>
+<p>What makes ECC interesting is that, as of today, the discrete logarithm problem for elliptic curves seems to be “harder” if compared to other similar problems used in cryptography. This implies that we need fewer bits for the integer $k$ in order to achieve the same level of security as with other cryptosystems, as we will see in details in the fourth and last post of this series.</p>
 <h1 id="more-next-week">More next week!</h1>
-<p>Enough for today! I really hope you enjoyed this post. Leave a comment if you didn't.</p>
-<p>Next week's post will be the third in this series and will be about ECC algorithms: key pair generation, ECDH and ECDSA. That will be one of the most interesting parts of this series. Don't miss it!</p>
-<p><strong><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Read the next post of the series &raquo;</a></strong></p></div>
+<p>Enough for today! I really hope you enjoyed this post. Leave a comment if you didn’t.</p>
+<p>Next week’s post will be the third in this series and will be about ECC algorithms: key pair generation, ECDH and ECDSA. That will be one of the most interesting parts of this series. Don’t miss it!</p>
+<p><strong><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Read the next post of the series »</a></strong></p></div>
       </div>
+        <section>
+          <div class="comments">
+            <div id="disqus_thread"></div>
+            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
+          </div>
+        </section>
     </article>
-      <section>
-        <div class="comments">
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </div>
-      </section>
-</main>
-      </div>
-    <footer class="main-footer small">  <div class="container">
-  <p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
-  <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
-  <p>Generated using <a href="https://getpelican.com/" title="Pelican">Pelican</a>. Hosted on <a href="https://pages.github.com/" title="GitHub pages">GitHub pages</a>. Uses <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://fontawesome.io/" title="Font Awesome">Font Awesome</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a>.</p>
-</div>
-    <script>
-      var disqus_shortname = "andreacorbellini";
-      var disqus_identifier = "elliptic-curve-cryptography-finite-fields-and-discrete-logarithms";
-      var disqus_title = "Elliptic Curve Cryptography: finite fields and discrete logarithms";
-      var disqus_url = "https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/";
-    </script>
-    <script src="//andreacorbellini.disqus.com/embed.js" defer></script>
-</footer>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
 </html>
