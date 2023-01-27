@@ -8,17 +8,16 @@ logger = logging.getLogger(__name__)
 REDIRECT_TEMPLATE = """<!doctype html>
 <html>
   <head>
+    <script>window.location.replace('{{ SITEURL|e }}/{{ redirect_url|e }}');</script>
+    <meta http-equiv="refresh" content="0;url='{{ SITEURL|e }}/{{ redirect_url|e }}'">
     <title>{{ title|e }}</title>
     <link ref="canonical" href="{{ SITEURL|e }}/{{ redirect_url|e }}">
-    <meta http-equiv="refresh" \
-content="0;url='{{ SITEURL|e }}/{{ redirect_url|e }}'">
     <meta name="robots" content="noindex">
   </head>
   <body>
     <p>This page has moved to \
 <a href="{{ SITEURL|e }}/{{ redirect_url|e }}">\
 {{ SITEURL|e }}/{{ redirect_url|e }}</a></p>
-    <script>window.url = '{{ SITEURL|e }}/{{ redirect_url|e }}';</script>
   </body>
 </html>"""
 
