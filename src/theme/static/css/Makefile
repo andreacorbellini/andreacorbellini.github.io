@@ -1,4 +1,5 @@
 sources := style.less \
+           comments.less \
            about.less \
            colors.less \
            content.less \

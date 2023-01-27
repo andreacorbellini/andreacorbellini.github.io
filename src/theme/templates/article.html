@@ -52,11 +52,10 @@
         <div class="article-body">{{ article.content|safe }}</div>
       </div>
       {% if DISQUS_SITENAME %}
-        <section>
-          <div class="comments">
-            <div id="disqus_thread"></div>
-            <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-          </div>
+        <section class="comments">
+          <h1>Comments</h1>
+          <div id="disqus_thread"></div>
+          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
         </section>
       {% endif %}
     </article>
