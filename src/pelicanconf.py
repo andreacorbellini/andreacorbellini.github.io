@@ -93,7 +93,6 @@ MARKDOWN = {
             'guess_lang': False,
         },
         'markdown.extensions.extra': {},
-        'markdown.extensions.meta': {},
         'markdown.extensions.toc': {},
     },
 }
