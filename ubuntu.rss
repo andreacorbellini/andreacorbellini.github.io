@@ -553,9 +553,9 @@ $$\begin{align*}
     C_2 - s C_1 &amp;amp; = (t P + M) - (t P) \\
                 &amp;amp; = M
 \end{align*}$$&lt;/p&gt;
-&lt;p&gt;There’s however a big problem with this scheme: how can we perform step 1 of
-both the encryption and the decryption algorithms? How do we map a message to a
-point, and vice versa?&lt;/p&gt;
+&lt;p&gt;There’s however a big problem with this scheme: how do we map a message to a
+point, and vice versa? How can we perform step 1 of the encryption algorithm,
+or step 2 of the decryption algorithm?&lt;/p&gt;
 &lt;h1 id="mapping-a-message-to-a-point"&gt;Mapping a message to a point&lt;/h1&gt;
 &lt;p&gt;A message can be an arbitrary byte string. An elliptic curve point is,
 generally speaking, a pair of integers $(x, y)$ belonging to the elliptic curve
@@ -611,7 +611,7 @@ a valid elliptic curve point. Another curve like that is
 &lt;a href="https://en.wikipedia.org/wiki/Curve448"&gt;Curve448&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;It’s also important to note that the padding does not need to be truly random.
 In the image above I show a padding that is simply a constantly increasing
-sequence of numbers: 0, 1, 2, ... That’s enough to find a valid point.&lt;/p&gt;
+sequence of numbers: 1, 2, 3, ... That’s enough to find a valid point.&lt;/p&gt;
 &lt;h1 id="putting-everything-together"&gt;Putting everything together&lt;/h1&gt;
 &lt;p&gt;We have seen how to map a message to a point and how ElGamal works, so now we
 have all the elements to write some working code. I’m choosing
