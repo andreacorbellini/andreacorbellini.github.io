@@ -87,9 +87,9 @@ $$\begin{align\*}
                 & = M
 \end{align\*}$$
 
-There's however a big problem with this scheme: how can we perform step 1 of
-both the encryption and the decryption algorithms? How do we map a message to a
-point, and vice versa?
+There's however a big problem with this scheme: how do we map a message to a
+point, and vice versa? How can we perform step 1 of the encryption algorithm,
+or step 2 of the decryption algorithm?
 
 # Mapping a message to a point
 
@@ -156,7 +156,7 @@ a valid elliptic curve point. Another curve like that is
 
 It's also important to note that the padding does not need to be truly random.
 In the image above I show a padding that is simply a constantly increasing
-sequence of numbers: 0, 1, 2, ... That's enough to find a valid point.
+sequence of numbers: 1, 2, 3, ... That's enough to find a valid point.
 
 # Putting everything together
 
