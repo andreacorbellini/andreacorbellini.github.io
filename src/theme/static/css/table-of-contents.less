@@ -4,7 +4,7 @@
 @toc-bullet-border: 0.3em;
 @toc-bullet-diameter: 0.8em;
 
-@toc-link-height: 2em;
+@toc-link-height: 1.8em;
 @toc-link-padding: 1em;
 
 main#content {
@@ -38,8 +38,7 @@ main#content {
 
           a {
             display: inline-block;
-            padding-top: (@toc-link-height - 1em) / 2;
-            padding-bottom: $padding-top;
+            margin-block: (@toc-link-height - 1em) / 2;
 
             .underline-on-hover;
             color: @color-main-toc-link;
@@ -62,20 +61,6 @@ main#content {
               }
             }
           }
-        }
-      }
-
-      & > ol > li:first-child a {
-        padding-top: 0 !important;
-        a.active::before {
-          margin-top: -@toc-bullet-border / 2 !important;
-        }
-      }
-
-      & > ol > li:last-child a {
-        padding-bottom: 0 !important;
-        a.active::before {
-          margin-top: -@toc-bullet-border / 2 !important;
         }
       }
     }
