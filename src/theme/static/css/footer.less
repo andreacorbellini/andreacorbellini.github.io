@@ -22,7 +22,10 @@ footer#main-footer {
     }
   }
 
-  @media not (min-width: @screen-width-small) {
+  // The proper media query would be:
+  //   @media not (min-width: @screen-width-small)
+  // but `media not` is not supported on WebKit yet
+  @media (max-width: (@screen-width-small - 1px)) {
     padding-left: @footer-small-screen-horizontal-padding;
     padding-right: $padding-left;
   }

@@ -182,7 +182,10 @@ main#content {
     }
   }
 
-  @media not (min-width: @screen-width-small) {
+  // The proper media query would be:
+  //   @media not (min-width: @screen-width-small)
+  // but `media not` is not supported on WebKit yet
+  @media (max-width: (@screen-width-small - 1px)) {
     padding-left: @main-content-small-screen-horizontal-padding;
     padding-right: $padding-left;
   }
