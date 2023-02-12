@@ -14,15 +14,6 @@
         });
       });
     </script>
-    {% if DISQUS_SITENAME %}
-      <script>
-        var disqus_shortname = {{ DISQUS_SITENAME|tojson }};
-        var disqus_identifier = {{ article.slug|tojson }};
-        var disqus_title = {{ article.title|tojson }};
-        var disqus_url = {{ (SITEURL + '/' + article.url)|tojson }};
-      </script>
-      <script src="https://{{ DISQUS_SITENAME }}.disqus.com/embed.js" defer></script>
-    {% endif %}
     {% for keyword in article.keywords %}
       <meta name="keywords" content="{{ keyword }}">
     {% endfor %}
@@ -51,13 +42,6 @@
         </aside>
         <div class="article-body">{{ article.content|safe }}</div>
       </div>
-      {% if DISQUS_SITENAME %}
-        <section class="comments">
-          <h2>Comments</h2>
-          <div id="disqus_thread"></div>
-          <noscript>Comments are powered by <a href="https://disqus.com/?ref_noscript">Disqus</a>. Enable JavaScript to see them.</noscript>
-        </section>
-      {% endif %}
     </article>
   {% endautoescape %}
 {% endblock %}

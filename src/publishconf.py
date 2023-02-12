@@ -17,10 +17,6 @@ MINIFY_CSS = True
 MINIFY_JS = True
 
 
-# Comments.
-DISQUS_SITENAME = 'andreacorbellini'
-
-
 # Stats.
 GOATCOUNTER_URL = 'https://cor.goatcounter.com/count'
 
