@@ -17,6 +17,10 @@ MINIFY_CSS = True
 MINIFY_JS = True
 
 
+# Comments.
+CACTUS_SITENAME = 'andrea.corbellini.name'
+
+
 # Stats.
 GOATCOUNTER_URL = 'https://cor.goatcounter.com/count'
 

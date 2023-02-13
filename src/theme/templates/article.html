@@ -14,6 +14,21 @@
         });
       });
     </script>
+    {% if CACTUS_SITENAME %}
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
+      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+      <script defer>
+        window.addEventListener('DOMContentLoaded', function() {
+          initComments({
+            node: document.getElementById('cactus-comments-thread'),
+            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
+            serverName: 'cactus.chat',
+            siteName: {{ CACTUS_SITENAME|tojson }},
+            commentSectionId: {{ article.slug|tojson }}
+          })
+        });
+      </script>
+    {% endif %}
     {% for keyword in article.keywords %}
       <meta name="keywords" content="{{ keyword }}">
     {% endfor %}
@@ -42,6 +57,13 @@
         </aside>
         <div class="article-body">{{ article.content|safe }}</div>
       </div>
+      {% if CACTUS_SITENAME %}
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="cactus-comments-thread"></div>
+          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+        </section>
+      {% endif %}
     </article>
   {% endautoescape %}
 {% endblock %}
