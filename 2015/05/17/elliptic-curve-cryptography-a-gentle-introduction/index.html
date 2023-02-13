@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a53bd25">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?48dafaf6">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
@@ -31,6 +31,19 @@
         });
       });
     </script>
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
+      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+      <script defer>
+        window.addEventListener('DOMContentLoaded', function() {
+          initComments({
+            node: document.getElementById('cactus-comments-thread'),
+            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
+            serverName: 'cactus.chat',
+            siteName: "andrea.corbellini.name",
+            commentSectionId: "elliptic-curve-cryptography-a-gentle-introduction"
+          })
+        });
+      </script>
       <meta name="tags" content="bitcoin">
       <meta name="tags" content="dh">
       <meta name="tags" content="dsa">
@@ -66,6 +79,7 @@
         <h1><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/" rel="bookmark" title="Elliptic Curve Cryptography: a gentle introduction">Elliptic Curve Cryptography: a gentle introduction</a></h1>
 <ul class="article-details">
   <li><time datetime="2015-05-17T11:24:00+00:00">May 17, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#comments" title="Comments" class="comments">Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -259,6 +273,11 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 <p>That’s all for today, I hope you enjoyed this post! Next week we will discover <strong>finite fields</strong> and the <strong><em>discrete</em> logarithm problem</strong>, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!</p>
 <p><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series »</a></strong></p></div>
       </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="cactus-comments-thread"></div>
+          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+        </section>
     </article>
 </main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>

@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a53bd25">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?48dafaf6">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
@@ -31,6 +31,19 @@
         });
       });
     </script>
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
+      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+      <script defer>
+        window.addEventListener('DOMContentLoaded', function() {
+          initComments({
+            node: document.getElementById('cactus-comments-thread'),
+            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
+            serverName: 'cactus.chat',
+            siteName: "andrea.corbellini.name",
+            commentSectionId: "ubuntu-global-dns"
+          })
+        });
+      </script>
       <meta name="tags" content="ubuntu">
       <meta name="tags" content="systemd">
       <meta name="tags" content="resolved">
@@ -62,6 +75,7 @@
         <h1><a href="https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/" rel="bookmark" title="How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)">How to use the same DNS for all connections in Ubuntu (and other network privacy tricks)</a></h1>
 <ul class="article-details">
   <li><time datetime="2020-04-28T06:30:00+00:00">April 28, 2020</time></li>
+  <li><a href="https://andrea.corbellini.name/2020/04/28/ubuntu-global-dns/#comments" title="Comments" class="comments">Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -171,6 +185,11 @@ wifi.cloned-mac-address=random
 <div class="highlight"><pre><span></span><code>ip link
 </code></pre></div></div>
       </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="cactus-comments-thread"></div>
+          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+        </section>
     </article>
 </main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>

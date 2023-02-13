@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a53bd25">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?48dafaf6">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
@@ -31,6 +31,19 @@
         });
       });
     </script>
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
+      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+      <script defer>
+        window.addEventListener('DOMContentLoaded', function() {
+          initComments({
+            node: document.getElementById('cactus-comments-thread'),
+            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
+            serverName: 'cactus.chat',
+            siteName: "andrea.corbellini.name",
+            commentSectionId: "cookie-law"
+          })
+        });
+      </script>
       <meta name="tags" content="blog">
       <meta name="tags" content="cookie-law">
     <link rel="canonical" href="https://andrea.corbellini.name/2015/09/22/cookie-law/">
@@ -57,6 +70,7 @@
         <h1><a href="https://andrea.corbellini.name/2015/09/22/cookie-law/" rel="bookmark" title="When bureaucracy hits the web: the cookie law">When bureaucracy hits the web: the cookie law</a></h1>
 <ul class="article-details">
   <li><time datetime="2015-09-22T18:35:00+00:00">September 22, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/09/22/cookie-law/#comments" title="Comments" class="comments">Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -73,6 +87,11 @@
 <p>I’d like to do <a href="http://nocookielaw.com/">what Silktide did</a>: actively protesting against the law, but I wouldn’t be so happy if I were sued. I’d like to read “the cookie law was a joke” in the news, but I’m starting to believe that it’s not going to happen any time soon. It seems that accepting the sadness of the reality is the only option I’m left with.</p>
 <p>End of rant, let’s move on.</p></div>
       </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="cactus-comments-thread"></div>
+          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+        </section>
     </article>
 </main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>

@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a53bd25">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?48dafaf6">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
@@ -31,6 +31,19 @@
         });
       });
     </script>
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
+      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+      <script defer>
+        window.addEventListener('DOMContentLoaded', function() {
+          initComments({
+            node: document.getElementById('cactus-comments-thread'),
+            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
+            serverName: 'cactus.chat',
+            siteName: "andrea.corbellini.name",
+            commentSectionId: "11-years-of-ubuntu-membership"
+          })
+        });
+      </script>
       <meta name="tags" content="ubuntu">
     <link rel="canonical" href="https://andrea.corbellini.name/2018/05/12/11-years-of-ubuntu-membership/">
     <title>11 years of Ubuntu membership - Andrea Corbellini</title>
@@ -56,6 +69,7 @@
         <h1><a href="https://andrea.corbellini.name/2018/05/12/11-years-of-ubuntu-membership/" rel="bookmark" title="11 years of Ubuntu membership">11 years of Ubuntu membership</a></h1>
 <ul class="article-details">
   <li><time datetime="2018-05-12T21:30:00+00:00">May 12, 2018</time></li>
+  <li><a href="https://andrea.corbellini.name/2018/05/12/11-years-of-ubuntu-membership/#comments" title="Comments" class="comments">Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -65,6 +79,11 @@
 <p>So much time has passed since then. So many things have changed both in my life and around me, for better or worse. So many that I cannot even <a href="https://en.wikipedia.org/wiki/Cantor%27s_diagonal_argument">enumerate</a> all of them. Nonetheless, deep inside of me, I still feel like that young kid: curious, always ready to experiment, full of hopes and uncertain (but never scared) about the future.</p>
 <p>Through the years I received the support of a bunch of people who believed in me, and I thank them all. But if today I feel so hopeful it’s undoubtedly thanks to one person in particular, a person who holds a special place in my life. A big thank you goes to you.</p></div>
       </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="cactus-comments-thread"></div>
+          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+        </section>
     </article>
 </main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>

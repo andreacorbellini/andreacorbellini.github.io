@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a53bd25">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?48dafaf6">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
@@ -31,6 +31,19 @@
         });
       });
     </script>
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
+      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+      <script defer>
+        window.addEventListener('DOMContentLoaded', function() {
+          initComments({
+            node: document.getElementById('cactus-comments-thread'),
+            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
+            serverName: 'cactus.chat',
+            siteName: "andrea.corbellini.name",
+            commentSectionId: "curious-ssd-badblocks"
+          })
+        });
+      </script>
       <meta name="tags" content="ubuntu">
       <meta name="tags" content="storage">
       <meta name="tags" content="ssd">
@@ -59,6 +72,7 @@
         <h1><a href="https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/" rel="bookmark" title="The curious case of bad blocks on an SSD, and how I got rid of them">The curious case of bad blocks on an SSD, and how I got rid of them</a></h1>
 <ul class="article-details">
   <li><time datetime="2022-12-29T04:00:00+00:00">December 29, 2022</time></li>
+  <li><a href="https://andrea.corbellini.name/2022/12/29/curious-ssd-badblocks/#comments" title="Comments" class="comments">Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -239,6 +253,11 @@ error-correcting-codes of the SSD. Discarding the blocks reset both the data
 cells and the ECC cells, removing all the inconsistencies.</p>
 <p>Do you have a better explanation? Let me know in the comments!</p></div>
       </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="cactus-comments-thread"></div>
+          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+        </section>
     </article>
 </main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>

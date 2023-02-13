@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?9a53bd25">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?48dafaf6">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?f511bd04" defer></script>
   <script>
@@ -31,6 +31,19 @@
         });
       });
     </script>
+      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
+      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+      <script defer>
+        window.addEventListener('DOMContentLoaded', function() {
+          initComments({
+            node: document.getElementById('cactus-comments-thread'),
+            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
+            serverName: 'cactus.chat',
+            siteName: "andrea.corbellini.name",
+            commentSectionId: "lets-encrypt-is-going-to-start-soon"
+          })
+        });
+      </script>
       <meta name="tags" content="ecdsa">
       <meta name="tags" content="let&#39;s encrypt">
       <meta name="tags" content="rsa">
@@ -60,6 +73,7 @@
         <h1><a href="https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/" rel="bookmark" title="Let&#39;s Encrypt is going to start soon">Let&#39;s Encrypt is going to start soon</a></h1>
 <ul class="article-details">
   <li><time datetime="2015-06-16T18:20:00+00:00">June 16, 2015</time></li>
+  <li><a href="https://andrea.corbellini.name/2015/06/16/lets-encrypt-is-going-to-start-soon/#comments" title="Comments" class="comments">Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -80,6 +94,11 @@
 <p>So, will you get a Let’s Encrypt certificate when the time comes? I will do. Not for this blog (I can’t put a certificate without paying), but for other websites I manage.</p>
 <p>Perhaps I’ll also show a “Proudly secured by Let’s Encrypt” badge.</p></div>
       </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="cactus-comments-thread"></div>
+          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+        </section>
     </article>
 </main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
