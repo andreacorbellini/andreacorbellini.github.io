@@ -127,6 +127,7 @@ errors</strong>.</p>
 [ 1108.194748] I/O error, dev sda, sector 0 op 0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
 ...
 </code></pre></div>
+
 <p>These logs show that the SSD was returning errors (exceptions) to the operating
 system, and also that the SSD would sometimes become so slow to respond that
 the kernel would attempt to reset it (which didn’t really work, I can tell
@@ -169,6 +170,7 @@ ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_
 250 Read_Retry_Count        0x0032   096   096   000    Old_age   Always       -       176835377
 ...
 </code></pre></div>
+
 <p>This table show various attributes for the operational status of the SSD. The
 meaning of the numeric values is pretty much vendor-specific, so trying to
 understand those number exactly is quite a challenge, but what matters is that
@@ -207,6 +209,7 @@ Error 1875 occurred at disk power-on lifetime: 1737 hours (72 days + 9 hours)
 
 ...
 </code></pre></div>
+
 <p>Give the lack of concrete signs of old age or extended damage to the SSD, I
 wondered if it could be a link problem: maybe I did not insert the drive
 correctly, or maybe a pin was dirty. But no: upon inspection I did not find any
@@ -220,6 +223,7 @@ Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA
 # 4  Extended captive    Interrupted (host reset)      90%      1730         -
 # 5  Short captive       Interrupted (host reset)      90%      1730         -
 </code></pre></div>
+
 <p>The first two tests were interrupted by Linux, which tried to reset the device
 while the tests were running. A self-test (as the name suggests) is completely
 self contained and does not involve sharing of data between the SSD and the
@@ -242,6 +246,7 @@ Num  Test_Description    Status                  Remaining  LifeTime(hours)  LBA
 # 1  Extended offline    Completed without error       00%      1740         -
 # 2  Short offline       Completed without error       00%      1738         -
 </code></pre></div>
+
 <p>All the read errors, exceptions and the hanging problem that kept appearing
 before disappeared!</p>
 <p>I’m not fully sure how to explain how this happened, but I did some research

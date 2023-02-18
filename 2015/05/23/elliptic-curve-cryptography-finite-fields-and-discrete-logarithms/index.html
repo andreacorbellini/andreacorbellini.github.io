@@ -83,7 +83,7 @@
 <p><strong>Now we will restrict our elliptic curves to finite fields</strong>, rather than the set of real numbers, and see how things change.</p>
 <h1 id="the-field-of-integers-modulo-p">The field of integers modulo <em>p</em></h1>
 <p>A finite field is, first of all, a set with a finite number of elements. An example of finite field is the set of integers modulo $p$, where $p$ is a prime number. It is generally denoted as $\mathbb{Z}/p$, $GF(p)$ or $\mathbb{F}_p$. We will use the latter notation.</p>
-<p>In fields we have two binary operations: addition (+) and multiplication (·). Both are closed, associative and commutative. For both operations, there exist a unique identity element, and for every element there’s a unique inverse element. Finally, multiplication is distributive over the addition: $x \cdot (y + z) = x \cdot y + x \cdot z$.</p>
+<p>In fields we have two binary operations: addition (+) and multiplication (&middot;). Both are closed, associative and commutative. For both operations, there exist a unique identity element, and for every element there’s a unique inverse element. Finally, multiplication is distributive over the addition: $x \cdot (y + z) = x \cdot y + x \cdot z$.</p>
 <p>The set of <strong>integers modulo $p$ consists of all the integers from 0 to $p - 1$</strong>. Addition and multiplication work as in <a href="http://en.wikipedia.org/wiki/Modular_arithmetic">modular arithmetic</a> (also known as “clock arithmetic”). Here are a few examples of operations in $\mathbb{F}_{23}$:</p>
 <ul>
 <li>Addition: $(18 + 9) \bmod{23} = 4$</li>
@@ -105,14 +105,14 @@
 <p>Computing the multiplicative inverse can be “easily” done with the <strong><a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended Euclidean algorithm</a></strong>, which is $O(\log p)$ (or $O(k)$ if we consider the bit length) in the worst case.</p>
 <p>We won’t enter the details of the extended Euclidean algorithm, as it is off-topic, however here’s a working Python implementation:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a three-tuple (gcd, x, y) such that</span>
 <span class="sd">    a * x + b * y == gcd, where gcd is the greatest</span>
 <span class="sd">    common divisor of a and b.</span>
 
 <span class="sd">    This function implements the extended Euclidean</span>
 <span class="sd">    algorithm and runs in O(log b) in the worst case.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span><span class="p">,</span> <span class="n">old_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
     <span class="n">t</span><span class="p">,</span> <span class="n">old_t</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
     <span class="n">r</span><span class="p">,</span> <span class="n">old_r</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span>
@@ -127,24 +127,25 @@
 
 
 <span class="k">def</span> <span class="nf">inverse_of</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the multiplicative inverse of</span>
 <span class="sd">    n modulo p.</span>
 
 <span class="sd">    This function returns an integer m such that</span>
 <span class="sd">    (n * m) % p == 1.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gcd</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">extended_euclidean_algorithm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
     <span class="k">assert</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span> <span class="o">==</span> <span class="n">gcd</span>
 
     <span class="k">if</span> <span class="n">gcd</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># Either n is 0, or p is not a prime number.</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s1">'</span><span class="si">{}</span><span class="s1"> has no multiplicative inverse '</span>
-            <span class="s1">'modulo </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has no multiplicative inverse &#39;</span>
+            <span class="s1">&#39;modulo </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="n">p</span>
 </code></pre></div>
+
 <h1 id="elliptic-curves-in-mathbbf_p">Elliptic curves in $\mathbb{F}_p$</h1>
 <p>Now we have all the necessary elements to restrict elliptic curves over $\mathbb{F}_p$. The set of points, that in the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#elliptic-curves">previous post</a> was:
 $$\begin{array}{rcl}
@@ -158,21 +159,24 @@ $$\begin{array}{rcl}
 \end{array}$$</p>
 <p>where 0 is still the point at infinity, and $a$ and $b$ are two integers in $\mathbb{F}_p$.</p>
 <figure>
-<img alt="Elliptic curves in Fp" height="608" src="https://andrea.corbellini.name/images/elliptic-curves-mod-p.png" width="608"/>
-<figcaption>The curve $y^2 \equiv x^3 - 7x + 10 \pmod{p}$ with $p = 19, 97, 127, 487$. Note that, for every $x$, there are at most two points. Also note the symmetry about $y = p / 2$.</figcaption>
+  <img src="https://andrea.corbellini.name/images/elliptic-curves-mod-p.png" alt="Elliptic curves in Fp" width="608" height="608">
+  <figcaption>The curve $y^2 \equiv x^3 - 7x + 10 \pmod{p}$ with $p = 19, 97, 127, 487$. Note that, for every $x$, there are at most two points. Also note the symmetry about $y = p / 2$.</figcaption>
 </figure>
+
 <figure>
-<img alt="Singular curve in Fp" height="300" src="https://andrea.corbellini.name/images/singular-mod-p.png" width="300"/>
-<figcaption>The curve $y^2 \equiv x^3 \pmod{29}$ is singular and has a triple point in $(0, 0)$. It is not a valid elliptic curve.</figcaption>
+  <img src="https://andrea.corbellini.name/images/singular-mod-p.png" alt="Singular curve in Fp" width="300" height="300">
+  <figcaption>The curve $y^2 \equiv x^3 \pmod{29}$ is singular and has a triple point in $(0, 0)$. It is not a valid elliptic curve.</figcaption>
 </figure>
+
 <p>What previously was a continuous curve is now a set of disjoint points in the $xy$-plane. But we can prove that, even if we have restricted our domain, <strong>elliptic curves in $\mathbb{F}_p$ still form an abelian group</strong>.</p>
 <h1 id="point-addition">Point addition</h1>
 <p>Clearly, we need to change a bit our definition of addition in order to make it work in $\mathbb{F}_p$. With reals, we said that the sum of three aligned points was zero ($P + Q + R = 0$). We can keep this definition, but what does it mean for three points to be aligned in $\mathbb{F}_p$?</p>
 <p>We can say that <strong>three points are aligned if there’s a line that connects all of them</strong>. Now, of course, lines in $\mathbb{F}_p$ are not the same as lines in $\mathbb{R}$. We can say, informally, that a line in $\mathbb{F}_p$ is the set of points $(x, y)$ that satisfy the equation $ax + by + c \equiv 0 \pmod{p}$ (this is the standard line equation, with the addition of “$(\text{mod}\ p)$”).</p>
 <figure>
-<img alt="Point addition for elliptic curves in Z/p" height="528" src="https://andrea.corbellini.name/images/point-addition-mod-p.png" width="523"/>
-<figcaption>Point addition over the curve $y^2 \equiv x^3 - x + 3 \pmod{127}$, with $P = (16, 20)$ and $Q = (41, 120)$. Note how the line $y \equiv 4x + 83 \pmod{127}$ that connects the points “repeats” itself in the plane.</figcaption>
+  <img src="https://andrea.corbellini.name/images/point-addition-mod-p.png" alt="Point addition for elliptic curves in Z/p" width="523" height="528">
+  <figcaption>Point addition over the curve $y^2 \equiv x^3 - x + 3 \pmod{127}$, with $P = (16, 20)$ and $Q = (41, 120)$. Note how the line $y \equiv 4x + 83 \pmod{127}$ that connects the points "repeats" itself in the plane.</figcaption>
 </figure>
+
 <p>Given that we are in a group, point addition retains the properties we already know:</p>
 <ul>
 <li>$Q + 0 = 0 + Q = Q$ (from the definition of identity element).</li>
@@ -205,9 +209,10 @@ $$n P = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
 <p>And, again, we can use the <a href="https://andrea.corbellini.name/2015/05/17/elliptic-curve-cryptography-a-gentle-introduction/#double-and-add">double and add algorithm</a> to perform multiplication in $O(\log n)$ steps (or $O(k)$, where $k$ is the number of bits of $n$). I’ve written an <strong><a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html">interactive tool</a> for scalar multiplication</strong> too.</p>
 <p>Multiplication over points for elliptic curves in $\mathbb{F}_p$ has an interesting property. Take the curve $y^2 \equiv x^3 + 2x + 3 \pmod{97}$ and the point $P = (3, 6)$. Now <a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html">calculate</a> all the multiples of $P$:</p>
 <figure>
-<img alt="Cyclic subgroup" height="255" src="https://andrea.corbellini.name/images/cyclic-subgroup.png" width="322"/>
-<figcaption>The multiples of $P = (3, 6)$ are just five distinct points ($0$, $P$, $2P$, $3P$, $4P$) and they are repeating cyclically. It’s easy to spot the similarity between scalar multiplication on elliptic curves and addition in modular arithmetic.</figcaption>
+  <img src="https://andrea.corbellini.name/images/cyclic-subgroup.png" alt="Cyclic subgroup" width="322" height="255">
+  <figcaption>The multiples of $P = (3, 6)$ are just five distinct points ($0$, $P$, $2P$, $3P$, $4P$) and they are repeating cyclically. It's easy to spot the similarity between scalar multiplication on elliptic curves and addition in modular arithmetic.</figcaption>
 </figure>
+
 <ul>
 <li>$0P = 0$</li>
 <li>$1P = (3, 6)$</li>
@@ -219,7 +224,7 @@ $$n P = \underbrace{P + P + \cdots + P}_{n\ \text{times}}$$</p>
 <li>$7P = (80, 10)$</li>
 <li>$8P = (80, 87)$</li>
 <li>$9P = (3, 91)$</li>
-<li>...</li>
+<li>…</li>
 </ul>
 <p>Here we can immediately spot two things: firstly, the multiples of $P$ are just five: the other points of the elliptic curve never appear. Secondly, they are <strong>repeating cyclically</strong>. We can write:</p>
 <ul>
@@ -251,7 +256,7 @@ $$nP + mP = \underbrace{P + \cdots + P}_{n\ \text{times}} + \underbrace{P + \cdo
 <li>For every divisor $n$ of $N$, compute $nP$.</li>
 <li>The smallest $n$ such that $nP = 0$ is the order of the subgroup.</li>
 </ol>
-<p>For example, the curve $y^2 = x^3 - x + 3$ over the field $\mathbb{F}_{37}$ has order $N = 42$. Its subgroups may have order $n = 1$, $2$, $3$, $6$, $7$, $14$, $21$ or $42$. If <a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html?a=-1&amp;b=3&amp;p=37&amp;px=2&amp;py=3">we try $P = (2, 3)$</a> we can see that $P \ne 0$, $2P \ne 0$, ..., $7P = 0$, hence the order of $P$ is $n = 7$.</p>
+<p>For example, the curve $y^2 = x^3 - x + 3$ over the field $\mathbb{F}_{37}$ has order $N = 42$. Its subgroups may have order $n = 1$, $2$, $3$, $6$, $7$, $14$, $21$ or $42$. If <a href="https://andrea.corbellini.name/ecc/interactive/modk-mul.html?a=-1&amp;b=3&amp;p=37&amp;px=2&amp;py=3">we try $P = (2, 3)$</a> we can see that $P \ne 0$, $2P \ne 0$, …, $7P = 0$, hence the order of $P$ is $n = 7$.</p>
 <p>Note that <strong>it’s important to take the smallest divisor, not a random one</strong>. If we proceeded randomly, we could have taken $n = 14$, which is not the order of the subgroup, but one of its multiples.</p>
 <p>Another example: the elliptic curve defined by the equation $y^2 = x^3 - x + 1$ over the field $\mathbb{F}_{29}$ has order $N = 37$, which is a prime. Its subgroups may only have order $n = 1$ or $37$. As you can easily guess, when $n = 1$, the subgroup contains only the point at infinity; when $n = N$, the subgroup contains all the points of the elliptic curve.</p>
 <h2 id="finding-a-base-point">Finding a base point</h2>
@@ -279,7 +284,7 @@ $$n(hP) = 0$$</p>
 <h1 id="more-next-week">More next week!</h1>
 <p>Enough for today! I really hope you enjoyed this post. Leave a comment if you didn’t.</p>
 <p>Next week’s post will be the third in this series and will be about ECC algorithms: key pair generation, ECDH and ECDSA. That will be one of the most interesting parts of this series. Don’t miss it!</p>
-<p><strong><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Read the next post of the series »</a></strong></p></div>
+<p><strong><a href="https://andrea.corbellini.name/2015/05/30/elliptic-curve-cryptography-ecdh-and-ecdsa/">Read the next post of the series &raquo;</a></strong></p></div>
       </div>
         <section id="comments" class="comments">
           <h2>Comments</h2>

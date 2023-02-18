@@ -81,9 +81,10 @@
 <p>LXC and Docker are used not only to achieve modular architecture design, but also as a way to run untrusted code in an isolated environment.</p>
 <p>We can agree that the LXC and Docker ecosystems are great and work well, but there’s an important question that I believe everyone should ask, but too few people are asking: <strong>are LXC and Docker secure?</strong></p>
 <figure>
-<img alt="Broken Chain" src="https://andrea.corbellini.name/images/broken-chain.jpg"/>
-<figcaption>A system is as safe as its weakest component.</figcaption>
+  <img src="https://andrea.corbellini.name/images/broken-chain.jpg" alt="Broken Chain">
+  <figcaption>A system is as safe as its weakest component.</figcaption>
 </figure>
+
 <p>In order to answer this question, I won’t go deep into the details of what LXC and Docker are. The web is full of information on <a href="http://en.wikipedia.org/wiki/Cgroups#NAMESPACE-ISOLATION">namespaces</a> and <a href="http://en.wikipedia.org/wiki/Cgroups">cgroups</a>. Rather, I’d like to show what LXC and Docker can do, what they cannot do, and what their default configuration allows them to do. My hope is to provide a quick checklist for those who want to go with LXC/Docker, but are unsure on what they need to pay attention to.</p>
 <h1 id="what-lxc-and-docker-can-do">What LXC and Docker can do</h1>
 <p>As we all know, LXC confines processes mainly thanks to two Linux kernel features: namespaces and cgroups. These provide ways to control and limit access to resource such as memory or filesystem. So, for example, you can limit the bandwidth used by processes inside a container, you can limit the priority of the CPU scheduler, and so on.</p>
@@ -91,24 +92,25 @@
 <ul>
 <li>directly interact with the host processes, or with other LXC containers;</li>
 <li>access the root filesystem, unless configured otherwise;</li>
-<li>access special devices (block devices, network interfaces, ...), unless configured otherwise;</li>
+<li>access special devices (block devices, network interfaces, …), unless configured otherwise;</li>
 <li>mount arbitrary filesystems;</li>
 <li>execute special <code>ioctl</code>s, special syscalls or special interrupts, that would affect the behavior host.</li>
 </ul>
 <p>And at the same time, processes inside an LXC guest can find an environment that is perfectly suitable to run a working operating system: I can run init, I can read from <code>/proc</code>, I can access the internet.</p>
 <p>This is most of what LXC can do, and it’s also what you get by default. Docker (when used with the LXC backend) is a wrapper around LXC that provides utilities for easy deployment and management of the containers, so <strong>everything that applies to LXC, applies to Docker too</strong>.</p>
-<p>If this sounds great, then beware that there are the things you should know...</p>
+<p>If this sounds great, then beware that there are the things you should know…</p>
 <h1 id="you-need-a-security-context">You need a security context</h1>
 <p>LXC is somewhat incomplete. What I mean is that some parts of special filesystems like procfs or sysfs are not faked. For example, as of now, I can successfully change the value of host’s <code>/proc/sys/kernel/panic</code> or <code>/sys/class/thermal/cooling_device0/cur_state</code>.</p>
-<p>The reason why LXC is “incomplete” doesn’t really matter (it’s actually the kernel to be incomplete, but anyhow...). What matters is that certain nasty actions can be forbade, not by LXC itself, but by an AppArmor/SELinux profile that blocks read and write access certain <code>/proc</code> and <code>/sys</code> components. The AppArmor rules were shipped in Ubuntu since 12.10 (Quantal), and have been included upstream since early 2014, together with the SELinux rules.</p>
+<p>The reason why LXC is “incomplete” doesn’t really matter (it’s actually the kernel to be incomplete, but anyhow…). What matters is that certain nasty actions can be forbade, not by LXC itself, but by an AppArmor/SELinux profile that blocks read and write access certain <code>/proc</code> and <code>/sys</code> components. The AppArmor rules were shipped in Ubuntu since 12.10 (Quantal), and have been included upstream since early 2014, together with the SELinux rules.</p>
 <p>Therefore, <strong>a security context like AppArmor or SELinux is required to run LXC safely</strong>. Without it, the root user inside a guest can take control of the host.</p>
 <p>Check that AppArmor or SELinux are running and are configured properly. If you want to go with Grsecurity, then remember to configure it manually.</p>
 <h1 id="limit-resource-consumption">Limit resource consumption</h1>
 <p>LXC offers ways to limit resource usage, but no special restrictions are put in place by default. <strong>You have to configure them by yourself.</strong></p>
 <p>With the default configuration, I can run fork-bombs, request huge memory maps, keep all CPUs busy, doing high loads of I/O. All of this without special privileges. Remember this when running untrusted code.</p>
 <figure>
-<img alt="Uncontrolled memory consumption" src="https://andrea.corbellini.name/images/memory-usage.png"/>
+  <img src="https://andrea.corbellini.name/images/memory-usage.png" alt="Uncontrolled memory consumption">
 </figure>
+
 <p>To limit resource consumption in LXC, open the configuration file for your container and set the <code>lxc.cgroup.&lt;system&gt;</code> values you need.</p>
 <p>For example, if you want to limit the container memory usage to 512 MiB, set <code>lxc.cgroup.memory.limit_in_bytes = 512M</code>. Note that the container with that option, once it exceeds the 512 MiB cap, will start using the swap without limits. If this is not what you want, then set <code>lxc.cgroup.memory.memsw.max_usage_in_bytes = 512M</code>. Note that to use both options you may need to add <code>cgroup_enable=memory</code> and <code>swapaccount=1</code> to the kernel command line.</p>
 <p>To have an overview of all possible options, check out <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/ch-Subsystems_and_Tunable_Parameters.html">Red Hat’s documentation</a> or the <a href="https://www.kernel.org/doc/Documentation/cgroups/">Kernel documentation</a>.</p>

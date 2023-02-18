@@ -178,6 +178,7 @@ $x$-coordinates. To see this, let’s take a look at an example: the curve
 <code>secp384r1</code>. This is a Weierstrass curve that has the following order:</p>
 <div class="highlight"><pre><span></span><code>0xffffffffffffffffffffffffffffffffffffffffffffffffc7634d81f4372ddf581a0db248b0a77aecec196accc52973
 </code></pre></div>
+
 <p>I remind you that the order is the number of valid points that belong to the
 elliptic curve group. Because this is a Weierstrass curve, for each $x$ there
 are 2 possible points, so the number of valid $x$-coordinates is <code>order / 2</code>.
@@ -193,9 +194,10 @@ Given that there’s 50% chance of finding a valid $x$ coordinate, this method
 will find a valid $x$-coordinate very quickly: on average, this will happen on
 the first or the second try.</p>
 <figure>
-<img alt="Padding a message to obtain a valid elliptic curve point" height="120" src="https://andrea.corbellini.name/images/ec-elgamal-padding.svg" width="500"/>
-<figcaption>Example of how to use padding to obtain a valid elliptic curve point from an arbitrary message.</figcaption>
+  <img src="https://andrea.corbellini.name/images/ec-elgamal-padding.svg" alt="Padding a message to obtain a valid elliptic curve point" width="500" height="120">
+  <figcaption>Example of how to use padding to obtain a valid elliptic curve point from an arbitrary message.</figcaption>
 </figure>
+
 <p>This operation can be easily <strong>reversed</strong>: if you have a point $(x, y)$, in
 order to recover the message that generated it, just take the $x$ coordinate
 and remove the padding. That’s it!</p>
@@ -207,7 +209,7 @@ a valid elliptic curve point. Another curve like that is
 <a href="https://en.wikipedia.org/wiki/Curve448">Curve448</a>.</p>
 <p>It’s also important to note that the padding does not need to be truly random.
 In the image above I show a padding that is simply a constantly increasing
-sequence of numbers: 1, 2, 3, ... That’s enough to find a valid point.</p>
+sequence of numbers: 1, 2, 3, … That’s enough to find a valid point.</p>
 <h1 id="putting-everything-together">Putting everything together</h1>
 <p>We have seen how to map a message to a point and how ElGamal works, so now we
 have all the elements to write some working code. I’m choosing
@@ -229,12 +231,12 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="n">max_message_size</span> <span class="o">=</span> <span class="n">coordinate_size</span> <span class="o">-</span> <span class="n">min_padding_size</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_message_size</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Message too long'</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Message too long&#39;</span><span class="p">)</span>
 
     <span class="c1"># Add a padding long enough to ensure that the resulting padded message has</span>
     <span class="c1"># the same size as a point coordinate. Initially the padding is all 0</span>
     <span class="n">padding_size</span> <span class="o">=</span> <span class="n">coordinate_size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-    <span class="n">padded_message</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">'</span><span class="se">\0</span><span class="s1">'</span> <span class="o">*</span> <span class="n">padding_size</span>
+    <span class="n">padded_message</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span> <span class="o">*</span> <span class="n">padding_size</span>
 
     <span class="c1"># Put a delimiter between the message and the padding, so that we can</span>
     <span class="c1"># properly remove the padding at decrypt time</span>
@@ -243,7 +245,7 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="c1"># Convert the padded message to an integer, which may or may not be a</span>
         <span class="c1"># valid x-coordinate</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">padded_message</span><span class="p">,</span> <span class="s1">'little'</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">padded_message</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
         <span class="c1"># Calculate the corresponding y-coordinate (if it exists)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">curve</span><span class="o">.</span><span class="n">y_recover</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -271,7 +273,7 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="c1"># Number of bytes to represent a coordinate of a point</span>
     <span class="n">coordinate_size</span> <span class="o">=</span> <span class="n">curve</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">8</span>
     <span class="c1"># Convert the x-coordinate of the point to a byte string</span>
-    <span class="n">padded_message</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">coordinate_size</span><span class="p">,</span> <span class="s1">'little'</span><span class="p">)</span>
+    <span class="n">padded_message</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">coordinate_size</span><span class="p">,</span> <span class="s1">&#39;little&#39;</span><span class="p">)</span>
     <span class="c1"># Find the padding delimiter</span>
     <span class="n">message_size</span> <span class="o">=</span> <span class="n">padded_message</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="mh">0xff</span><span class="p">)</span>
     <span class="c1"># Remove the padding and return the resulting message</span>
@@ -291,26 +293,29 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="c1"># Convert the message point to a message and return it</span>
     <span class="k">return</span> <span class="n">point_to_message</span><span class="p">(</span><span class="n">message_point</span><span class="p">)</span>
 </code></pre></div>
+
 <p>And here is an usage example:</p>
-<div class="highlight"><pre><span></span><code><span class="n">curve</span> <span class="o">=</span> <span class="n">Curve</span><span class="o">.</span><span class="n">get_curve</span><span class="p">(</span><span class="s1">'secp384r1'</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">curve</span> <span class="o">=</span> <span class="n">Curve</span><span class="o">.</span><span class="n">get_curve</span><span class="p">(</span><span class="s1">&#39;secp384r1&#39;</span><span class="p">)</span>
 
 <span class="n">secret_key</span> <span class="o">=</span> <span class="mh">0x123456789abcdef</span>
 <span class="n">public_key</span> <span class="o">=</span> <span class="n">secret_key</span> <span class="o">*</span> <span class="n">curve</span><span class="o">.</span><span class="n">generator</span>
 
-<span class="n">message</span> <span class="o">=</span> <span class="s1">'hello'</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'  Message:'</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+<span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;hello&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Message:&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 
-<span class="n">encrypted</span> <span class="o">=</span> <span class="n">encrypt</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Encrypted:'</span><span class="p">,</span> <span class="n">encrypted</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
+<span class="n">encrypted</span> <span class="o">=</span> <span class="n">encrypt</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Encrypted:&#39;</span><span class="p">,</span> <span class="n">encrypted</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
 
-<span class="n">decrypted</span> <span class="o">=</span> <span class="n">decrypt</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">encrypted</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Decrypted:'</span><span class="p">,</span> <span class="n">decrypted</span><span class="p">)</span>
+<span class="n">decrypted</span> <span class="o">=</span> <span class="n">decrypt</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">,</span> <span class="n">encrypted</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Decrypted:&#39;</span><span class="p">,</span> <span class="n">decrypted</span><span class="p">)</span>
 </code></pre></div>
+
 <p>Which produces the following output:</p>
 <div class="highlight"><pre><span></span><code>  Message: hello
 Encrypted: 04fa333c6a03994c5bce4627de4447c5cdd358415f8db2745b67836932a0d5e81f19...
 Decrypted: hello
 </code></pre></div>
+
 <h1 id="some-considerations-on-padding-and-security">Some considerations on padding and security</h1>
 <p>It’s important to note that padding is a very delicate problem in cryptography.
 There exist many <a href="https://en.wikipedia.org/wiki/Padding_(cryptography)">padding

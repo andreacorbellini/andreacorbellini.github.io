@@ -78,42 +78,46 @@
         </aside>
         <div class="article-body"><p>I’m a XKCD fan, and I look it up regularly. There’s a comic that I particularly enjoyed: <a href="http://xkcd.com/10/">Pi Equals</a>.</p>
 <figure>
-<a href="http://xkcd.com/10/"><img alt="Pi Equals" height="247" src="http://imgs.xkcd.com/comics/pi.jpg" width="469"/></a>
-<figcaption>The comic <a href="http://xkcd.com/10/" title="Pi Equals">Pi Equals</a>, from XKCD.com (CC-BY-NC 2.5).</figcaption>
+  <a href="http://xkcd.com/10/"><img src="http://imgs.xkcd.com/comics/pi.jpg" width="469" height="247" alt="Pi Equals"></a>
+  <figcaption>The comic <a href="http://xkcd.com/10/" title="Pi Equals">Pi Equals</a>, from XKCD.com (CC-BY-NC 2.5).</figcaption>
 </figure>
+
 <p>Well, it appears that Randall was right in that there’s a help message hidden somewhere. And I just found it in a prime number:</p>
 <div class="highlight"><pre><span></span><code>245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249
 </code></pre></div>
+
 <p>That number corresponds to the ASCII encoding of this message:</p>
-<div class="highlight"><pre><span></span><code>help!! i'm trapped in a universe factory!!!!!!
+<div class="highlight"><pre><span></span><code>help!! i&#39;m trapped in a universe factory!!!!!!
 </code></pre></div>
+
 <p>Apparently, universe factory workers speak English and write ASCII. Nice coincidence, huh?</p>
 <h1 id="the-discovery">The discovery</h1>
 <p>Yesterday I was playing with the two <a href="https://en.wikipedia.org/wiki/Illegal_prime">illegal primes</a> listed on Wikipedia. I was already aware of them, but I had never decoded them till yesterday. While doing so I wondered: how many prime numbers can be directly mapped to an executable file? Also, how many prime numbers can be directly mapped to plain English texts? Perhaps, while digging prime numbers, could we find something like the Iliad or a fully working operating system?</p>
 <p>Well, while asking myself those highly philosophical questions, Randall’s comic quickly came to my mind, and I decided to start looking for help requests hidden in primes. You can’t imagine how many of them I found!</p>
 <p>At first I tried looking for all prime numbers corresponding to strings starting with <code>HELP! I'M TRAPPED IN A UNIVERSE FACTORY!</code>, with an arbitrary suffix. I found many of them, but I wasn’t satisfied with the result: I wanted something that was purely English/ASCII, without any garbage. Therefore I tried appending hashtags like <code>#help</code> or <code>#universe</code>, but could not find any interesting combination that was also a prime number (apparently, use of Twitter is forbidden inside universe factories).</p>
 <p>So I decided to change approach: I looked for all primes corresponding to <code>HELP</code>, followed by a variable number of exclamation marks, followed by <code>I'M TRAPPED IN A UNIVERSE FACTORY</code>, followed by other exclamation marks. I could not find anything.</p>
-<p>But then I tried with a lower case string, and... I found lots of such primes!</p>
-<div class="highlight"><pre><span></span><code>help i'm trapped in a universe factory!!!!!!!
-help! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!! i'm trapped in a universe factory!!!!!!
-help!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!! i'm trapped in a universe factory!!!!
-help!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!! i'm trapped in a universe factory!
-help!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!
-help!!!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-help!!!!!!!!!!!!!!!!!!!!!!!!!!! i'm trapped in a universe factory!!!!!!!
+<p>But then I tried with a lower case string, and… I found lots of such primes!</p>
+<div class="highlight"><pre><span></span><code>help i&#39;m trapped in a universe factory!!!!!!!
+help! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!! i&#39;m trapped in a universe factory!!!!!!
+help!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!! i&#39;m trapped in a universe factory!!!!
+help!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!! i&#39;m trapped in a universe factory!
+help!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!
+help!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+help!!!!!!!!!!!!!!!!!!!!!!!!!!! i&#39;m trapped in a universe factory!!!!!!!
 ...
 </code></pre></div>
+
 <p>I picked the one I liked most and verified its primality with <a href="http://www.wolframalpha.com/input/?i=is+245178888024581899558766786108789912235672909204719666025638877624752119760547413887830514281649480308707369249+prime%3F">Wolfram|Alpha</a> and <a href="http://www.numberempire.com/primenumbers.php">numberempire.com</a>.</p>
 <p>I’m not 100% sure that all the others are primes, as I used <a href="https://en.wikipedia.org/wiki/Fermat_primality_test">Fermat primality test</a>. However I’m impressed by what I found. Now I can’t stop wondering how much literature, physics or technology could be hidden in prime numbers, in plain English and UTF-8 encoded. :D</p>
 <p>(Obviously, I’m perfectly conscious on what’s happening here, but I though this was a nice fact to share. It could also be a nice number to print on a shirt.)</p>

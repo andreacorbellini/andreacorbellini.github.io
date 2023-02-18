@@ -103,13 +103,15 @@
 $$y^2 = x^3 + ax + b$$</p>
 <p>where $4a^3 + 27b^2 \ne 0$ (this is required to exclude <a href="https://en.wikipedia.org/wiki/Singularity_(mathematics)">singular curves</a>). The equation above is what is called <em>Weierstrass normal form</em> for elliptic curves.</p>
 <figure>
-<img alt="Different shapes for different elliptic curves" height="450" src="https://andrea.corbellini.name/images/curves.png" width="440"/>
-<figcaption>Different shapes for different elliptic curves ($b = 1$, $a$ varying from 2 to -3).</figcaption>
+  <img src="https://andrea.corbellini.name/images/curves.png" alt="Different shapes for different elliptic curves" width="440" height="450">
+  <figcaption>Different shapes for different elliptic curves ($b = 1$, $a$ varying from 2 to -3).</figcaption>
 </figure>
+
 <figure>
-<img alt="Types of singularities" height="220" src="https://andrea.corbellini.name/images/singularities.png" width="300"/>
-<figcaption>Types of singularities: on the left, a curve with a cusp ($y^2 = x^3$). On the right, a curve with a self-intersection ($y^2 = x^3 - 3x + 2$). None of them is a valid elliptic curve.</figcaption>
+  <img src="https://andrea.corbellini.name/images/singularities.png" alt="Types of singularities" width="300" height="220">
+  <figcaption>Types of singularities: on the left, a curve with a cusp ($y^2 = x^3$). On the right, a curve with a self-intersection ($y^2 = x^3 - 3x + 2$). None of them is a valid elliptic curve.</figcaption>
 </figure>
+
 <p>Depending on the value of $a$ and $b$, elliptic curves may assume different shapes on the plane. As it can be easily seen and verified, elliptic curves are symmetric about the $x$-axis.</p>
 <p>For our aims, <strong>we will also need a <a href="https://en.wikipedia.org/wiki/Point_at_infinity">point at infinity</a></strong> (also known as ideal point) to be part of our curve. From now on, we will denote our point at infinity with the symbol 0 (zero).</p>
 <p>If we want to explicitly take into account the point at infinity, we can refine our definition of elliptic curve as follows:
@@ -124,8 +126,9 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 </ol>
 <p>If we add a fifth requirement:</p>
 <ol start="5">
-<li><strong>commutativity:</strong> $a + b = b + a$,</li>
+  <li><strong>commutativity:</strong> $a + b = b + a$,</li>
 </ol>
+
 <p>then the group is called <em>abelian group</em>.</p>
 <p>With the usual notion of addition, the set of integer numbers $\mathbb{Z}$ is a group (moreover, it’s an abelian group). The set of natural numbers $\mathbb{N}$ however is not a group, as the fourth property can’t be satisfied.</p>
 <p>Groups are nice because, if we can demonstrate that those four properties hold, we get some other properties for free. For example: <strong>the identity element is unique</strong>; also the <strong>inverses are unique</strong>, that is: for every $a$ there exists only one $b$ such that $a + b = 0$ (and we can write $b$ as $-a$). Either directly or indirectly, these and other facts about groups will be very important for us later.</p>
@@ -138,35 +141,37 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 <li><strong>addition</strong> is given by the following rule: <strong>given three aligned, non-zero points $P$, $Q$ and $R$, their sum is $P + Q + R = 0$</strong>.</li>
 </ul>
 <figure>
-<img alt="Three aligned points" height="300" src="https://andrea.corbellini.name/images/three-aligned-points.png" width="300"/>
-<figcaption>The sum of three aligned point is 0.</figcaption>
+  <img src="https://andrea.corbellini.name/images/three-aligned-points.png" alt="Three aligned points" width="300" height="300">
+  <figcaption>The sum of three aligned point is 0.</figcaption>
 </figure>
+
 <p>Note that with the last rule, we only require three aligned points, and three points are aligned without respect to order. This means that, if $P$, $Q$ and $R$ are aligned, then $P + (Q + R) = Q + (P + R) = R + (P + Q) = \cdots = 0$. This way, we have intuitively proved that <strong>our + operator is both associative and commutative: we are in an abelian group</strong>.</p>
 <p>So far, so great. But how do we actually compute the sum of two arbitrary points?</p>
 <h1 id="geometric-addition">Geometric addition</h1>
 <p>Thanks to the fact that we are in an abelian group, we can write $P + Q + R = 0$ as $P + Q = -R$. This equation, in this form, lets us derive a geometric method to compute the sum between two points $P$ and $Q$: <strong>if we draw a line passing through $P$ and $Q$, this line will intersect a third point on the curve, $R$</strong> (this is implied by the fact that $P$, $Q$ and $R$ are aligned). <strong>If we take the inverse of this point, $-R$, we have found the result of $P + Q$</strong>.</p>
 <figure>
-<img alt="Point addition" height="300" src="https://andrea.corbellini.name/images/point-addition.png" width="287"/>
-<figcaption>Draw the line through $P$ and $Q$. The line intersects a third point $R$. The point symmetric to it, $-R$, is the result of $P + Q$.</figcaption>
+  <img src="https://andrea.corbellini.name/images/point-addition.png" alt="Point addition" width="287" height="300">
+  <figcaption>Draw the line through $P$ and $Q$. The line intersects a third point $R$. The point symmetric to it, $-R$, is the result of $P + Q$.</figcaption>
 </figure>
+
 <p>This geometric method works but needs some refinement. Particularly, we need to answer a few questions:</p>
 <ul>
 <li><strong>What if $P = 0$ or $Q = 0$?</strong> Certainly, we can’t draw any line (0 is not on the $xy$-plane). But given that we have defined 0 as the identity element, $P + 0 = P$ and $0 + Q = Q$, for any $P$ and for any $Q$.</li>
 <li><strong>What if $P = -Q$?</strong> In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.</li>
 <li><strong>What if $P = Q$?</strong> In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q’ \ne P$. What happens if we make $Q’$ approach $P$, getting closer and closer to it?
- <br/>
+ <br />
 <figure>
-<img alt="The result of P + Q as Q is approaching P" height="300" src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300"/>
-<figcaption>As the two points become closer together, the line passing through them becomes tangent to the curve.</figcaption>
-</figure></li>
+     <img src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P">
+     <figcaption>As the two points become closer together, the line passing through them becomes tangent to the curve.</figcaption>
+   </figure></li>
 </ul>
 <p>As $Q’$ tends towards $P$, the line passing through $P$ and $Q’$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.
 * <strong>What if $P \ne Q$, but there is no third point $R$?</strong> We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
- <br/>
+ <br />
 <figure>
-<img alt="The result of P + Q as Q is approaching P" height="300" src="https://andrea.corbellini.name/images/animation-tangent-line.gif" width="300"/>
-<figcaption>If our line intersects just two points, then it means that it’s tangent to the curve. It’s easy to see how the result of the sum becomes symmetric to one of the two points.</figcaption>
-</figure></p>
+     <img src="https://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300">
+     <figcaption>If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.</figcaption>
+   </figure></p>
 <p>Let’s assume that $P$ is the tangency point. In the previous case, we would have written $P + P = -Q$. That equation now becomes $P + Q = -P$. If, on the other hand, $Q$ were the tangency point, the correct equation would have been $P + Q = -Q$.</p>
 <p>The geometric method is now complete and covers all cases. With a pencil and a ruler we are able to perform addition involving every point of any elliptic curve. If you want to try, <strong>take a look at the <a href="https://andrea.corbellini.name/ecc/interactive/reals-add.html">HTML5/JavaScript visual tool</a> I’ve built for computing sums on elliptic curves!</strong></p>
 <h1 id="algebraic-addition">Algebraic addition</h1>
@@ -234,26 +239,26 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 <li>Don’t perform any addition involving $2^3P$.</li>
 <li><em>Double</em> $2^3P$ to get $2^4P$.</li>
 <li><em>Add</em> it to our result (so that we get $2^4P + 2^2P + 2^1P + 2^0P$).</li>
-<li>...</li>
+<li>…</li>
 </ul>
 <p>In the end, we can compute $151 \cdot P$ performing just seven doublings and four additions.</p>
 <p>If this is not clear enough, here’s a Python script that implements the algorithm:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">bits</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates the binary digits of n, starting</span>
 <span class="sd">    from the least significant bit.</span>
 
 <span class="sd">    bits(151) -&gt; 1, 1, 1, 0, 1, 0, 0, 1</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">while</span> <span class="n">n</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">n</span> <span class="o">&amp;</span> <span class="mi">1</span>
         <span class="n">n</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
 
 <span class="k">def</span> <span class="nf">double_and_add</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the result of n * x, computed using</span>
 <span class="sd">    the double and add algorithm.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">addend</span> <span class="o">=</span> <span class="n">x</span>
 
@@ -264,6 +269,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
+
 <p>If doubling and adding are both $O(1)$ operations, then <strong>this algorithm is $O(\log n)$</strong> (or $O(k)$ if we consider the bit length), which is pretty good. Surely much better than the initial $O(n)$ algorithm!</p>
 <h1 id="logarithm">Logarithm</h1>
 <p>Given $n$ and $P$, we now have at least one polynomial time algorithm for computing $Q = nP$. But what about the other way round? <strong>What if we know $Q$ and $P$ and need to find out $n$</strong>? This problem is known as the <strong>logarithm problem</strong>. We call it “logarithm” instead of “division” for conformity with other cryptosystems (where instead of multiplication we have exponentiation).</p>
@@ -271,7 +277,7 @@ $$151 \cdot P = 2^7 P + 2^4 P + 2^2 P + 2^1 P + 2^0 P$$</p>
 <p>But there’s a variant of the logarithm problem: the <em>discrete</em> logarithm problem. As we will see in the next post, if we reduce the domain of our elliptic curves, <strong>scalar multiplication remains “easy”, while the discrete logarithm becomes a “hard” problem</strong>. This duality is the key brick of elliptic curve cryptography.</p>
 <h1 id="see-you-next-week">See you next week</h1>
 <p>That’s all for today, I hope you enjoyed this post! Next week we will discover <strong>finite fields</strong> and the <strong><em>discrete</em> logarithm problem</strong>, along with examples and tools to play with. If this stuff sounds interesting to you, then stay tuned!</p>
-<p><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series »</a></strong></p></div>
+<p><strong><a href="https://andrea.corbellini.name/2015/05/23/elliptic-curve-cryptography-finite-fields-and-discrete-logarithms/">Read the next post of the series &raquo;</a></strong></p></div>
       </div>
         <section id="comments" class="comments">
           <h2>Comments</h2>

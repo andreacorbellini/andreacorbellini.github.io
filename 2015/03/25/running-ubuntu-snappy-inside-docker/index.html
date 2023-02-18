@@ -84,41 +84,48 @@
 <h1 id="creating-the-docker-image">Creating the Docker image</h1>
 <h2 id="step-1-get-the-latest-ubuntu-core">Step 1: get the latest Ubuntu Core</h2>
 <p>As of writing, the latest Ubuntu Core image is alpha 3 and can be downloaded with:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>wget http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>wget<span class="w"> </span>http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 </code></pre></div>
+
 <p>(If you browse to <a href="http://cdimage.ubuntu.com/ubuntu-core/releases/alpha-3/">cdimage.ubuntu.com</a>, you can also find the signed hashsums.)</p>
 <p>The downloaded image is XZ-compressed and we need to extract it:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>unxz ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>unxz<span class="w"> </span>ubuntu-core-WEBDM-alpha-03_amd64-generic.img.xz
 </code></pre></div>
+
 <h2 id="step-2-connect-the-image-using-qemu-nbd">Step 2: connect the image using qemu-nbd</h2>
 <p>The file we have just downloaded and extracted is a filesystem dump. The previous version of the image (Alpha 2) was a QCOW2 image (the format used by QEMU). In order to access its contents, we have a few options. Here I’ll show one that works with both filesystem dumps and QCOW2 images. The trick consists in using <code>qemu-nbd</code> (a tool from the <a href="https://apps.ubuntu.com/cat/applications/qemu-utils/">qemu-utils</a> package):</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>qemu-nbd -rc /dev/nbd0 ubuntu-core-WEBDM-alpha-03_amd64-generic.img
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>qemu-nbd<span class="w"> </span>-rc<span class="w"> </span>/dev/nbd0<span class="w"> </span>ubuntu-core-WEBDM-alpha-03_amd64-generic.img
 </code></pre></div>
-<p>This command will create a virtual device named <code>/dev/nbd0</code>, with virtual partitions named <code>/dev/nbd0p1</code>, <code>/dev/nbd0p2</code>, ... Use <code>fdisk -l /dev/nbd0</code> to get an idea of what partitions are inside the QCOW2 image.</p>
+
+<p>This command will create a virtual device named <code>/dev/nbd0</code>, with virtual partitions named <code>/dev/nbd0p1</code>, <code>/dev/nbd0p2</code>, … Use <code>fdisk -l /dev/nbd0</code> to get an idea of what partitions are inside the QCOW2 image.</p>
 <h2 id="step-3-mount-the-filesystem">Step 3: mount the filesystem</h2>
 <p>The partition we are interested in is <code>/dev/nbd0p3</code>, so we need to mount it:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>mkdir nbd0p3
-<span class="gp"># </span>mount -r /dev/nbd0p3 nbd0p3
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>mkdir<span class="w"> </span>nbd0p3
+<span class="gp"># </span>mount<span class="w"> </span>-r<span class="w"> </span>/dev/nbd0p3<span class="w"> </span>nbd0p3
 </code></pre></div>
+
 <h2 id="step-4-create-a-base-docker-image">Step 4: create a base Docker image</h2>
 <p>As suggested on the <a href="https://docs.docker.com/articles/baseimages/">Docker documentation</a>, creating a base Docker image from a directory is pretty straightforward:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>tar -C nbd0p3 -c . <span class="p">|</span> docker import - ubuntu-core alpha-3
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>tar<span class="w"> </span>-C<span class="w"> </span>nbd0p3<span class="w"> </span>-c<span class="w"> </span>.<span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>import<span class="w"> </span>-<span class="w"> </span>ubuntu-core<span class="w"> </span>alpha-3
 </code></pre></div>
+
 <p>Our newly created image will now appear when running <code>docker images</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker images
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker<span class="w"> </span>images
 <span class="go">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span>
 <span class="go">ubuntu-core         alpha-3             f6df3c0e2d74        5 seconds ago       543.5 MB</span>
 </code></pre></div>
+
 <p>Let’s verify if we did a good job:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker run ubuntu-core:alpha-3 snappy
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker<span class="w"> </span>run<span class="w"> </span>ubuntu-core:alpha-3<span class="w"> </span>snappy
 <span class="go">Usage:snappy [-h] [-v]</span>
 <span class="go">             {info,versions,search,update-versions,update,rollback,install,uninstall,tags,config,build,booted,chroot,framework,fake-version,nap}</span>
 <span class="go">             ...</span>
 </code></pre></div>
+
 <p>Yes! We have successfully added Ubuntu Core to the available Docker images and we have run our first snappy container!</p>
 <h1 id="installing-and-running-software">Installing and running software</h1>
 <p>Without wasting too many words, here’s how to install and run the <code>xkcd-webserver</code> snappy package inside docker:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker run -p <span class="m">8000</span>:80 ubuntu-core:alpha-3 /bin/sh -c <span class="s1">'snappy install xkcd-webserver &amp;&amp; cd /apps/xkcd-webserver/0.3.1 &amp;&amp; ./bin/xkcd-webserver'</span>
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:80<span class="w"> </span>ubuntu-core:alpha-3<span class="w"> </span>/bin/sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;snappy install xkcd-webserver &amp;&amp; cd /apps/xkcd-webserver/0.3.1 &amp;&amp; ./bin/xkcd-webserver&#39;</span>
 <span class="go">WARN: AppArmor not available when processing AppArmor hook</span>
 <span class="go">Failed to get D-Bus connection: Operation not permitted</span>
 <span class="go">Failed to get D-Bus connection: Operation not permitted</span>
@@ -129,27 +136,32 @@
 <span class="go">Part            Tag   Installed  Available  Fingerprint     Active</span>
 <span class="go">xkcd-webserver  edge  0.3.1      -          3a9152b8bff494  *</span>
 </code></pre></div>
+
 <p>Now, if you visit http://localhost:8000/ you should see a random XKCD comic.</p>
 <p>If you have payed attention, you may have noticed a few warnings about AppArmor, DBus and logind. The reason why you are seeing these warnings is pretty simple: we did not start neither AppArmor nor DBus nor logind. Now, generally speaking, we could run init inside Docker and fix these and other warnings. However that’s not what Docker is meant for. So if you want to run AppArmor or similar stuff <em>from inside</em> Docker or LXC, then probably you should consider virtualization.</p>
 <h1 id="dockerfile">Dockerfile</h1>
 <p>Once you have created the base Docker image, you can start creating some <code>Dockerfile</code>s, if you need to. Here’s an example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu-core:alpha-3</span>
-<span class="k">RUN</span><span class="w"> </span>snappy install xkcd-webserver
+<span class="k">RUN</span><span class="w"> </span>snappy<span class="w"> </span>install<span class="w"> </span>xkcd-webserver
 <span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000:80</span>
-<span class="k">CMD</span><span class="w"> </span><span class="nb">cd</span> /apps/xkcd-webserver/0.3.1 <span class="o">&amp;&amp;</span> ./bin/xkcd-webserver
+<span class="k">CMD</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>/apps/xkcd-webserver/0.3.1<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./bin/xkcd-webserver
 </code></pre></div>
+
 <p>This <code>Dockerfile</code> does the same job as the previous command: it installs and runs <code>xkcd-webserver</code> on port 8000. In order to use it, first build it:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker build -t xkcd-webserver .
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>xkcd-webserver<span class="w"> </span>.
 </code></pre></div>
+
 <p>Check that it has been correctly installed:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker images
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker<span class="w"> </span>images
 <span class="go">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span>
 <span class="go">xkcd-webserver      latest              260e0116e9e3        3 minutes ago       543.5 MB</span>
 <span class="go">ubuntu-core         alpha-3             f6df3c0e2d74        About an hour ago   543.5 MB</span>
 </code></pre></div>
+
 <p>Then run it:</p>
-<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker run xkcd-webserver
+<div class="highlight"><pre><span></span><code><span class="gp"># </span>docker<span class="w"> </span>run<span class="w"> </span>xkcd-webserver
 </code></pre></div>
+
 <p>Again, you should see a random XKCD comic on <a href="http://localhost:8000/">http://localhost:8000/</a>.</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>That’s all folks! I hope you enjoyed this tiny guide, and if you need help, please ask a question on Ask Ubuntu with the <a href="http://askubuntu.com/questions/tagged/ubuntu-core">ubuntu-core tag</a>, which I’m subscribed to.</p></div>
