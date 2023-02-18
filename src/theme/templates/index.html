@@ -7,6 +7,19 @@
 
 {% block content %}
   {% autoescape true %}
+    {% if pinned_articles and not articles_previous_page %}
+      <article class="article-list pinned">
+        <h1>Popular articles</h1>
+        <ul class="article-list">
+          {% for article in pinned_articles %}
+            <li>
+              <h2><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
+              {% include "_includes/article-details.html" %}
+            </li>
+          {% endfor %}
+        </ul>
+      </article>
+    {% endif %}
     <article class="article-list latest">
       <h1>Latest articles</h1>
       <ul class="article-list">

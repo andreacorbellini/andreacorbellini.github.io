@@ -80,6 +80,7 @@ PLUGIN_PATHS = [
 
 PLUGINS = [
     'pelican.plugins.webassets',
+    'pinned',
     'redirects',
     'spellcheck',
     'ubuntuplanet',
