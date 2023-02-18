@@ -1,0 +1,36 @@
+main#content {
+  table {
+    margin: 0 auto;
+    margin-block: 1em;
+    border-collapse: collapse;
+
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    overflow-x: auto;
+
+    thead {
+      tr {
+        color: @color-white;
+        background: @color-tango-orange-3;
+        text-align: left;
+      }
+    }
+
+    tbody {
+      tr:nth-child(odd) {
+        background: lighten(@color-tango-aluminium-1, 5%);
+      }
+
+      tr:nth-child(even) {
+        background: lighten(@color-tango-aluminium-1, 3%);
+      }
+    }
+
+    td, th {
+      padding: 0.3em 1em;
+      &:last-child {
+      }
+    }
+  }
+}

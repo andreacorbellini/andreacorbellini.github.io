@@ -1,13 +1,14 @@
 sources := style.less \
-           comments.less \
            about.less \
            colors.less \
+           comments.less \
            content.less \
            footer.less \
            header.less \
            images.less \
            pygments.css \
-           table-of-contents.less
+           table-of-contents.less \
+           tables.less
 
 intermediate := pygments.css
 
