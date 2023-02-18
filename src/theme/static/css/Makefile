@@ -3,6 +3,7 @@ sources := style.less \
            colors.less \
            comments.less \
            content.less \
+           details.less \
            footer.less \
            header.less \
            images.less \

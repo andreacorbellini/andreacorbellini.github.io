@@ -45,10 +45,11 @@
   {% endif %}
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
   {% if MINIFY_JS %}
-    {% assets filters="jsmin", output="js/scripts.min.js", "js/navbar.js" %}
+    {% assets filters="jsmin", output="js/scripts.min.js", "js/details.js", "js/navbar.js" %}
       <script src="{{ SITEURL }}/{{ ASSET_URL }}" defer></script>
     {% endassets %}
   {% else %}
+    <script src="{{ SITEURL }}/theme/js/details.js" defer></script>
     <script src="{{ SITEURL }}/theme/js/navbar.js" defer></script>
   {% endif %}
   <script>

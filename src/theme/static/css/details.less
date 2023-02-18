@@ -1,0 +1,21 @@
+main#content {
+  details {
+    margin-block: 1em;
+    padding: 0.2em 1em;
+    .boxed(@color-details-border);
+    background: @color-details-background;
+
+    summary {
+      color: @color-details-summary;
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      &::after {
+        content: '…';
+      }
+    }
+  }
+}
