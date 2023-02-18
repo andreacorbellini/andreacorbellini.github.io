@@ -83,7 +83,6 @@ PLUGINS = [
     'redirects',
     'spellcheck',
     'ubuntuplanet',
-    'uniquotes',
 ]
 
 MARKDOWN = {
@@ -93,6 +92,19 @@ MARKDOWN = {
             'guess_lang': False,
         },
         'markdown.extensions.extra': {},
+        'markdown.extensions.smarty': {
+            'substitutions': {
+                'mdash': '—',
+                'ndash': '–',
+                'ellipsis': '…',
+                'left-angle-quote': '«',
+                'right-angle-quote': '»',
+                'left-single-quote': '‘',
+                'right-single-quote': '’',
+                'left-double-quote': '“',
+                'right-double-quote': '”',
+            },
+        },
         'markdown.extensions.toc': {},
     },
 }
