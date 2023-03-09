@@ -100,6 +100,7 @@ header#main-header {
           padding-right: $padding-left;
 
           overflow-y: clip;
+          visibility: hidden;
 
           transition: height 300ms;
 
@@ -117,6 +118,7 @@ header#main-header {
           &.expanded {
             height: @navbar-height;
             overflow-y: auto;
+            visibility: visible;
           }
         }
 
