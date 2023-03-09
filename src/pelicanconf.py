@@ -108,6 +108,7 @@ MARKDOWN = {
         },
         'markdown.extensions.toc': {},
     },
+    'output_format': 'html5',
 }
 
 
