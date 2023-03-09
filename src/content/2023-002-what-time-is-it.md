@@ -5,7 +5,6 @@ Category: time
 Tags: time, relativity, performance, clocks, ntp, ptp
 Slug: what-time-is-it
 Image: images/ntp-sync-algorithm.svg
-Pin: 1
 Status: published
 
 Ever wondered how your computer or your phone displays the current date and
