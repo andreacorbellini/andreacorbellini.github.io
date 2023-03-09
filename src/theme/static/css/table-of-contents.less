@@ -38,13 +38,20 @@ main#content {
 
           a {
             display: inline-block;
-            margin-block: (@toc-link-height - 1em) / 2;
+            padding: 0.4em 0.8em;
 
-            .underline-on-hover;
+            border-radius: 1em;
+
+            text-decoration: none;
             color: @color-main-toc-link;
 
+            &:hover, &:focus {
+              background: lighten(@color-main-toc-link, 50%);
+            }
+
             &.active {
-              font-weight: bold;
+              color: @color-main-background;
+              background: lighten(@color-main-toc-link, 10%);
 
               &::before {
                 content: '';
@@ -60,6 +67,34 @@ main#content {
                 background: @color-main-toc-bullet;
               }
             }
+          }
+        }
+      }
+
+      & {
+        ol li a {
+          color: lighten(@color-main-toc-link, 10%);
+          transition: color 300ms;
+
+          &.active {
+            color: @color-main-background;
+            background: lighten(@color-main-toc-link, 20%);
+            transition: background 300ms;
+          }
+        }
+      }
+
+      &:hover, &:focus {
+        ol li a {
+          color: @color-main-toc-link;
+
+          &:hover, &:focus {
+            background: lighten(@color-main-toc-link, 50%);
+          }
+
+          &.active {
+            color: @color-main-background;
+            background: lighten(@color-main-toc-link, 10%);
           }
         }
       }
