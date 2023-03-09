@@ -39,8 +39,10 @@ main#content {
     .main-content-width;
     margin: 0 auto;
 
-    h1 {
-      padding-bottom: 1rem;
+    header {
+      h1 {
+        padding-bottom: 1rem;
+      }
     }
 
     ul.article-details {
@@ -78,7 +80,8 @@ main#content {
       line-height: 1.9;
 
       h1, h2, h3, h4, h5, h6 {
-        border-bottom: 0.1rem solid @color-section-divider;
+        color: @color-main-heading;
+        margin: 2rem 0;
       }
 
       a {
