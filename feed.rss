@@ -2209,7 +2209,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 &lt;li&gt;&lt;strong&gt;What if $P = 0$ or $Q = 0$?&lt;/strong&gt; Certainly, we can’t draw any line (0 is not on the $xy$-plane). But given that we have defined 0 as the identity element, $P + 0 = P$ and $0 + Q = Q$, for any $P$ and for any $Q$.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;What if $P = -Q$?&lt;/strong&gt; In this case, the line going through the two points is vertical, and does not intersect any third point. But if $P$ is the inverse of $Q$, then we have $P + Q = P + (-P) = 0$ from the definition of inverse.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;What if $P = Q$?&lt;/strong&gt; In this case, there are infinitely many lines passing through the point. Here things start getting a bit more complicated. But consider a point $Q’ \ne P$. What happens if we make $Q’$ approach $P$, getting closer and closer to it?
- &lt;br /&gt;
+ &lt;br&gt;
 &lt;figure&gt;
      &lt;img src="https://andrea.corbellini.name/images/animation-point-doubling.gif" width="300" height="300" alt="The result of P + Q as Q is approaching P"&gt;
      &lt;figcaption&gt;As the two points become closer together, the line passing through them becomes tangent to the curve.&lt;/figcaption&gt;
@@ -2217,7 +2217,7 @@ $$\left\{ (x, y) \in \mathbb{R}^2\ |\ y^2 = x^3 + ax + b,\ 4 a^3 + 27 b^2 \ne 0 
 &lt;/ul&gt;
 &lt;p&gt;As $Q’$ tends towards $P$, the line passing through $P$ and $Q’$ becomes tangent to the curve. In the light of this we can say that $P + P = -R$, where $R$ is the point of intersection between the curve and the line tangent to the curve in $P$.
 * &lt;strong&gt;What if $P \ne Q$, but there is no third point $R$?&lt;/strong&gt; We are in a case very similar to the previous one. In fact, we are in the case where the line passing through $P$ and $Q$ is tangent to the curve.
- &lt;br /&gt;
+ &lt;br&gt;
 &lt;figure&gt;
      &lt;img src="https://andrea.corbellini.name/images/animation-tangent-line.gif" alt="The result of P + Q as Q is approaching P" width="300" height="300"&gt;
      &lt;figcaption&gt;If our line intersects just two points, then it means that it's tangent to the curve. It's easy to see how the result of the sum becomes symmetric to one of the two points.&lt;/figcaption&gt;
