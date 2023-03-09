@@ -4,6 +4,7 @@ Author: andreacorbellini
 Category: time
 Tags: time, relativity, performance, clocks, ntp, ptp
 Slug: what-time-is-it
+Image: images/ntp-sync-algorithm.svg
 Pin: 1
 Status: published
 
