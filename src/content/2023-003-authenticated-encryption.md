@@ -64,7 +64,7 @@ the following example:
 The XOR operator acts as a toggle that can either flip bits or keep them
 unchanged. Let me explain with an example:
 
-* `a XOR 0 = 0`
+* `a XOR 0 = a`
 * `a XOR 1 = NOT a`
 
 If we XOR "something" with a 0 bit, we get "something" out; if we XOR
