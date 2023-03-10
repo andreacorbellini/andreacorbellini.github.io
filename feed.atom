@@ -57,7 +57,7 @@ the following example:&lt;/p&gt;
 &lt;p&gt;The XOR operator acts as a toggle that can either flip bits or keep them
 unchanged. Let me explain with an example:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;a XOR 0 = 0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;a XOR 0 = a&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;a XOR 1 = NOT a&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If we XOR “something” with a 0 bit, we get “something” out; if we XOR
