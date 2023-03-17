@@ -288,16 +288,22 @@ or use the wrong key, you won't get an error but instead a random result, which
 is not desiderable. A good padding scheme like OAEP will instead throw an error
 if decryption was unsuccessful.
 
+(Receiving an error when decryption is not successful is very important due to
+the fact that schemes like ElGamal are
+[malleable](https://en.wikipedia.org/wiki/Malleability_(cryptography)). Check
+out my post about [authenticated
+encryption]({filename}/2023-003-authenticated-encryption.md) for examples and
+details about why this is important.)
+
 # Cost of elliptic curve encryption
 
 With Elliptic Curve ElGamal, if we are using an _n_-bit elliptic curve, we can
 encrypt messages that are at most _n_-bit long (actually less than that,
-especially if we're using padding), and the output is at least _2n_-bit long
-(if the resulting points $C_1$ and $C_2$ are encoded using point compression).
-This means that encryption using Elliptic Curve ElGamal doubles the size of the
-data that we want to encrypt. It also requires a fair amount of compute
-resources, because it involves a random number generation and 2 point
-multiplications.
+if we're using padding), and the output is at least _2n_-bit long (if the
+resulting points $C_1$ and $C_2$ are encoded using point compression). This
+means that encryption using Elliptic Curve ElGamal doubles the size of the data
+that we want to encrypt. It also requires a fair amount of compute resources,
+because it involves a random number generation and 2 point multiplications.
 
 In short, Elliptic Curve ElGamal is expensive both in terms of space and in
 terms of time and compute power, and this makes it unattractive in applications
@@ -312,9 +318,9 @@ symmetric keys to encrypt our arbitrary data. Symmetric keys are relatively
 short (ranging from 128 to 256 bits nowadays), so they can be encrypted with
 one round of Elliptic Curve ElGamal with most curves. It's worth noting that
 this is the same approach that we use with
-[RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) encryption: we don't
-use RSA to encrypt data directly (not anymore), but rather we use RSA to
-encrypt symmetric keys which are later used for encrypting data.
+[RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)) encryption: for most
+applications, we don't use RSA to encrypt data directly, but rather we use RSA
+to encrypt symmetric keys which are later used for encrypting data.
 
 These are the reason why schemes like Elliptic Curve ElGamal, or other methods of
 encryption with elliptic curves, are not used in practice:
@@ -324,7 +330,7 @@ encryption with elliptic curves, are not used in practice:
 - elliptic curve key exchange is simpler and has fewer pitfalls than
   encryption.
 
-In conclusion, no practical use case benefits from elliptic curve encryption,
-and that's why we don't use it and prefer elliptic curve key exchange instead.
-However, the idea that elliptic curves cannot be used for encryption is a myth,
-and I hope this article will help clarify that confusion.
+In conclusion, there are no practical benefits from elliptic curve encryption
+compared to hybrid encryption with key agreement, and that's why we don't use
+it. However, the idea that elliptic curves cannot be used for encryption is a
+myth, and I hope this article will help clarify that confusion.
