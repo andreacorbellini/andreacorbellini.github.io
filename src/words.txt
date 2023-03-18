@@ -169,6 +169,7 @@ parametrization
 parametrizations
 performant
 plaintext
+preannounced
 primality
 proc
 procfs
