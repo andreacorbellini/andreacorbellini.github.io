@@ -152,6 +152,12 @@ UBUNTU_FEED_ATOM = None
 UBUNTU_FEED_RSS = None
 
 
+# rel="me" links
+REL_ME_LINKS = (
+    'https://ubuntu.social/@andrea',
+)
+
+
 # Spell checking
 SPELL_CHECKER_WORDS = os.path.join(PROJECT_PATH, 'words.txt')
 

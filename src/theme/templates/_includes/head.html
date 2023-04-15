@@ -63,4 +63,7 @@
   {% if GOATCOUNTER_URL %}
     <script src="https://gc.zgo.at/count.js" defer data-goatcounter="{{ GOATCOUNTER_URL }}"></script>
   {% endif %}
+  {% for link in REL_ME_LINKS %}
+    <link href="{{ link }}" rel="me">
+  {% endfor %}
 {% endautoescape %}
