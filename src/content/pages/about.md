@@ -5,8 +5,7 @@ Slug: about
 Status: published
 
 I'm a software developer from Italy, currently living in
-[Seattle](https://en.wikipedia.org/wiki/Seattle), and working on the [key
-management service](https://aws.amazon.com/kms/) at AWS.
+[Seattle](https://en.wikipedia.org/wiki/Seattle).
 
 I'm passionate about:
 
