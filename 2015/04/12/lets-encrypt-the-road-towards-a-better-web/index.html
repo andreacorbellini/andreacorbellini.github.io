@@ -32,19 +32,13 @@
         });
       });
     </script>
-      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
-      <script src="https://latest.cactus.chat/cactus.js" defer></script>
       <script>
-        window.addEventListener('DOMContentLoaded', function() {
-          initComments({
-            node: document.getElementById('cactus-comments-thread'),
-            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
-            serverName: 'cactus.chat',
-            siteName: "andrea.corbellini.name",
-            commentSectionId: "lets-encrypt-the-road-towards-a-better-web"
-          })
-        });
+        window.remark_config = {
+          host: "https://remark42.fly.dev",
+          site_id: "andrea.corbellini.name",
+        }
       </script>
+      <script src="https://remark42.fly.dev/web/embed.js" defer></script>
       <meta name="tags" content="security">
       <meta name="tags" content="tls">
       <meta name="tags" content="web">
@@ -106,8 +100,8 @@
       </div>
         <section id="comments" class="comments">
           <h2>Comments</h2>
-          <div id="cactus-comments-thread"></div>
-          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+          <div id="remark42"></div>
+          <noscript>Comments are powered by <a href="https://remark42.com/">Remark42</a>. Enable JavaScript to see them.</noscript>
         </section>
     </article>
 </main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
