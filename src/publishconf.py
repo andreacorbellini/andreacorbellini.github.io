@@ -18,7 +18,8 @@ MINIFY_JS = True
 
 
 # Comments.
-CACTUS_SITENAME = 'andrea.corbellini.name'
+REMARK42_URL = 'https://remark42.fly.dev'
+REMARK42_SITE_ID = 'andrea.corbellini.name'
 
 
 # Stats.

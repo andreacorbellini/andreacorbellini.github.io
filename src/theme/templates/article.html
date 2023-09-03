@@ -14,20 +14,14 @@
         });
       });
     </script>
-    {% if CACTUS_SITENAME %}
-      <link rel="stylesheet" href="https://latest.cactus.chat/style.css">
-      <script src="https://latest.cactus.chat/cactus.js" defer></script>
+    {% if REMARK42_URL %}
       <script>
-        window.addEventListener('DOMContentLoaded', function() {
-          initComments({
-            node: document.getElementById('cactus-comments-thread'),
-            defaultHomeserverUrl: 'https://matrix.cactus.chat:8448',
-            serverName: 'cactus.chat',
-            siteName: {{ CACTUS_SITENAME|tojson }},
-            commentSectionId: {{ article.slug|tojson }}
-          })
-        });
+        window.remark_config = {
+          host: {{ REMARK42_URL|tojson }},
+          site_id: {{ REMARK42_SITE_ID|tojson }},
+        }
       </script>
+      <script src="{{ REMARK42_URL }}/web/embed.js" defer></script>
     {% endif %}
     {% for keyword in article.keywords %}
       <meta name="keywords" content="{{ keyword }}">
@@ -65,11 +59,11 @@
         </aside>
         <div class="article-body">{{ article.content|safe }}</div>
       </div>
-      {% if CACTUS_SITENAME %}
+      {% if REMARK42_URL %}
         <section id="comments" class="comments">
           <h2>Comments</h2>
-          <div id="cactus-comments-thread"></div>
-          <noscript>Comments are powered by <a href="https://cactus.chat/">Cactus Comments</a>. Enable JavaScript to see them.</noscript>
+          <div id="remark42"></div>
+          <noscript>Comments are powered by <a href="https://remark42.com/">Remark42</a>. Enable JavaScript to see them.</noscript>
         </section>
       {% endif %}
     </article>
