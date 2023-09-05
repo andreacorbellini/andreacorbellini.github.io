@@ -14,15 +14,6 @@
         });
       });
     </script>
-    {% if REMARK42_URL %}
-      <script>
-        window.remark_config = {
-          host: {{ REMARK42_URL|tojson }},
-          site_id: {{ REMARK42_SITE_ID|tojson }},
-        }
-      </script>
-      <script src="{{ REMARK42_URL }}/web/embed.js" defer></script>
-    {% endif %}
     {% for keyword in article.keywords %}
       <meta name="keywords" content="{{ keyword }}">
     {% endfor %}
