@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
+    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?b569b40a">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?6c5f3521" defer></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ]
+      },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
+    <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
+    <link href="https://ubuntu.social/@andrea" rel="me">
+
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        tocbot.init({
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
+          headingSelector: 'h1, h2, h3, h4, h5, h6',
+          activeLinkClass: 'active',
+        });
+      });
+    </script>
+    <link rel="canonical" href="https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/">
+    <meta property="og:locale" content="en">
+    <meta property="og:title" content="My journey from Disqus to Remark42">
+    <meta property="og:author" content="Andrea Corbellini">
+      <script>
+        window.remark_config = {
+          host: "https://remark42.fly.dev",
+          site_id: "andrea.corbellini.name",
+        }
+      </script>
+      <script src="https://remark42.fly.dev/web/embed.js" defer></script>
+      <script src="https://remark42.fly.dev/web/counter.js" defer></script>
+    <title>My journey from Disqus to Remark42 - Andrea Corbellini</title>
+  </head>
+  <body>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
+      </div>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
+            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+<main id="content">    <article class="article">
+      <header>
+        <h1><a href="https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/" rel="bookmark" title="My journey from Disqus to Remark42">My journey from Disqus to Remark42</a></h1>
+<ul class="article-details">
+  <li><time datetime="2023-09-05T08:30:00+00:00">September 05, 2023</time></li>
+  <li><a href="https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/#comments" title="Comments" class="comments"><span class="remark42__counter" data-url="https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/"></span> Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
+          <nav></nav>
+        </aside>
+        <div class="article-body"><p>Readers of this blog might have noticed a few changes recently. For example,
+I’ve been working on improving the look of the blog (maybe with questionable
+results), as well as improving the experience on mobile. But one of the biggest
+changes that perhaps some have noticed is that all of the comments on all of my
+articles have suddenly disappeared since February 2023. Now, almost 7 months
+later, all comments have finally been restored.</p>
+<p>The reason for this 7 months blackout of comments is that I decided to change
+the platform that hosts comments: I got rid of <a href="https://disqus.com/">Disqus</a>,
+and eventually replaced it with <a href="https://remark42.com/">Remark42</a>. Here I will
+describe why I did it. There will be another (more technical) blog post about
+my new setup.</p>
+<h1 id="premise">Premise</h1>
+<p>My blog is a static website that has been using Disqus as a commenting platform
+for a long time: since at least 2015 (8 years ago), or maybe even more (back
+when my blog was on WordPress). Disqus at that time was gaining a lot of
+popularity, it was free, and it was very attractive to me because easy to set
+up. I might be wrong, but at that time, Disqus did not look to me like the
+data-savvy, privacy-invading, revenue-oriented company that it is today. Maybe
+I just naive, but so I kept using Disqus all these years without paying too
+much attention to it: after all, it worked, so why would I spend any time
+thinking about it?</p>
+<h1 id="advertisements-on-my-blog">Advertisements on my blog!?</h1>
+<p>Fast-forward to February 2023: one day, a person very close to me, with the
+utmost kindness that characterizes her, came to me and said: “the ads on your
+blog suck! They’re the worst kind of ads!”</p>
+<p>At the beginning I had no idea what she was talking about. I have never
+intentionally run any sort of advertisements on my blog. I hate advertisements!</p>
+<p>Then I realized what was going on: precisely because I hate advertisements, I
+run ad-blockers on all my devices. Maybe <em>there were</em> ads on my blog, but I
+never noticed because I block those ads. The only third-party service that I
+used to run on my blog was Disqus, so I immediately turned my attention to it.
+I disabled my ad-blockers, refreshed my blog, scrolled down to the comments
+section, and… the sad truth was revealed: Disqus was showing ads to my
+readers. And yes, those ads were some of the worst kind of ads.</p>
+<p>And I knew that, together with those ads, there was massive tracking,
+collection of data, and maybe even data sharing with third-parties. People who
+know me, know that I deeply care about privacy, and having Disqus on my blog
+tracking my readers was the complete opposite of what I wanted.</p>
+<p>I was extremely disappointed.</p>
+<h1 id="leaving-disqus">Leaving Disqus</h1>
+<p>I did some quick research and I discovered that (1) I could not disable Disqus
+ads without paying, and (2) Disqus was no longer that nice commenting platform
+that I met in 2015. It had mutated into something obsessed about revenue, and
+it was clear that their business model was completely based on ads. My fears
+about tracking were <a href="https://techcrunch.com/2021/05/05/disqus-facing-3m-fine-in-norway-for-tracking-users-without-consent/">quickly
+confirmed</a>.
+Let’s just say that Disqus turned out to something that does not really align
+with my values.</p>
+<p>I made the difficult decision to completely <a href="https://github.com/andreacorbellini/andreacorbellini.github.io/commit/4f0e450d31441cab387a0e70f884fb65f19693fd">remove
+Disqus</a>
+from my blog on the same day. But I firmly believe that <strong><a href="https://blog.codinghorror.com/a-blog-without-comments-is-not-a-blog/">a blog without
+comments is not a
+blog</a></strong>,
+and so I <em>had</em> to find an alternative.</p>
+<h1 id="looking-for-a-new-platform">Looking for a new platform</h1>
+<p>I quickly started to look for new commenting platforms that could replace
+Disqus. The basic criteria that this new platform had to meet were (in no
+particular order):</p>
+<ul>
+<li>be free of charge</li>
+<li>display only comments, no ads</li>
+<li>respect the privacy of users</li>
+<li>allow users to comment anonymously (at least to some extent)</li>
+</ul>
+<p>The last time that I searched for a commenting platform was in 2015. Back in
+those days, there were not many solutions, and that’s one reason why I ended up
+with Disqus. I thought: 8 years have passed since then, surely the space must
+have improved, and alternatives must be proliferating, right? Well, no, not
+really. I struggled to find a managed platform that met those criteria.</p>
+<p>I did find some solutions that were using Mastodon or GitHub as a backend to
+store comments, but I did not like at all the idea of forcing my readers to
+have a Mastodon or GitHub account to comment on my blog.</p>
+<h1 id="trying-cactus-comments">Trying Cactus Comments</h1>
+<p>One platform that came up multiple times during my search was <a href="https://cactus.chat/">Cactus
+Comments</a>. Quoting the homepage of the project:</p>
+<blockquote>
+<p>Cactus Comments is a federated comment system built on Matrix. It respects
+your privacy, and puts you in control. The entire thing is completely free
+and open source.</p>
+</blockquote>
+<p>That sounded interesting, although I did not really know what
+<a href="https://matrix.org/">Matrix</a> was to begin with (if you, like me earlier this
+year, do not know what Matrix is: it is a team communication platform, somewhat
+similar to <a href="https://slack.com/">Slack</a>). I thought that I could give Cactus a
+try. So, a few days after removing Disqus, I onboarded on Cactus Comments.</p>
+<p>Onboarding was not hard, but it was not trivial either, mostly because I was
+not familiar with Matrix. The frontend shown to readers was a bit
+disappointing: even though Matrix supports threads, Cactus Comments does not.
+Overall, the number of features that commenters could use was scarce: people
+could only post a comment, and not much else; they had no ability to edit their
+comments, or delete them. But it did allow people to post even without creating
+a Matrix account, and that was great for me.</p>
+<p>The “administrative interface” (if we can call it this way) was also
+disappointing. All the administration and moderation had to be done through
+Matrix, sometimes by communicating with a bot, and could not be done by
+clicking buttons on my blog. Every blog post had to have its own Matrix channel
+and I (the author) had to manually join each channel in order to get some sort
+of notification for new comments.</p>
+<p>I needed a Matrix client to spot new comments, and to perform moderation
+actions, and I chose <a href="https://element.io/">Element</a> for that purpose. Sadly,
+Element was totally unreadable on small displays like my phone. And apparently
+there’s no web-based Matrix client that works well on mobile. I could have
+installed an app for my phone, but I <em>hate</em> installing apps, especially for
+activities that can in theory be done through a web browser.</p>
+<p>Cactus Comments also did not support importing comments from Disqus, so moving
+to this platform meant that all the conversations that happened over the years
+on my blog were lost. But because Cactus Comments is free &amp; open source
+software, I thought that I could add support for importing comments from Disqus
+if I decided to settle with Cactus Comments, so this was not a deal breaker.</p>
+<p>Overall my experience with Cactus Comments was not great, but I was willing to
+accept that in exchange for a platform that was free, managed by someone else,
+and respecting the privacy of my readers.</p>
+<p>There was however one big problem that eventually led me to remove Cactus
+Comments from my blog: Cactus did not support sending email notifications. This
+meant that if you left a comment on this blog, I would not get notified. And if
+I responded to your comment, you would not get notified. In order to spot new
+comments, I had to check the Matrix channels periodically, and readers and to
+check my blog periodically. Maybe if I installed a Matrix app I could have
+received push notifications on my phone, but that’s not what I wanted, and this
+wouldn’t have solved the problem for my commenters anyway.</p>
+<p>I was pretty bad at checking for new comments on Cactus. What happened multiple
+times is that people would leave comments or questions on my blog, but I
+wouldn’t notice until 2 weeks later. At that point, it was pointless for me to
+respond because so much time had passed that those commenters surely wouldn’t
+be checking my blog for a response…</p>
+<p>I would say that with Cactus I had a blog that allowed <em>comments</em>, but did not
+allow <em>conversations</em>. Not allowing conversations made the comments pointless
+in my opinion. I might as well have had no comments at all: at least people
+would stop leaving questions there that were destined to be unanswered, and
+instead they would have emailed me directly.</p>
+<h1 id="meet-remark42">Meet Remark42</h1>
+<p>Between August and September 2023, I decided that I had to restart my quest for
+a commenting platform. This time I knew that I had to look for a solution that
+I had to install and manage myself. I was not super-excited about it, but from
+my first search for a Disqus alternative, I couldn’t find any managed solution
+that I really liked.</p>
+<p>Initially I thought about writing my own commenting platform in Rust with a
+key-value store, but then I figured that if I looked for a software to install
+instead of a managed platform, maybe I could find something I liked.</p>
+<p>After some research, I decided to go with <a href="https://remark42.com/">Remark42</a>.
+There were a few contenders, but Remark42 won because it looked like it had
+all of the features I needed, and more:</p>
+<ul>
+<li>it supports sending of email notifications, both to me, and to my readers;</li>
+<li>it supports various authentication mechanisms, including: email, GitHub,
+  Google, Facebook, etc (it’s nice to give commenters a choice);</li>
+<li>it supports leaving comments anonymously, without logging in or leaving an
+  email address;</li>
+<li>commenters can edit and delete comments;</li>
+<li>it supports importing comments from Disqus;</li>
+<li>in fact, it supports importing comments from any platform: the format it uses
+  for restoring backups is JSON-based and very easy to replicate (in theory I
+  could import the comments from Cactus, even though I have not done that yet);</li>
+<li>it’s privacy-focused, and it looks like it’s implemented with security in
+  mind.</li>
+</ul>
+<p>I decided to host it on <a href="https://fly.io/">Fly.io</a>, which offers some compute
+and storage capacity for free. I was introduced to Fly.io on Mastodon, but I
+had never used it before.</p>
+<p>For sending emails, I chose <a href="https://elasticemail.com/">Elastic Email</a>, which
+also offers the features I needed for free. I also had never used this service
+before, and did not know much about it: it showed up while searching for a free
+SMTP provider. Elastic Email describes itself as a marketing service, which
+does not sound great from the point of view of privacy, but I figured that all
+the emails being sent here contain only public information (all comments are
+public after all), so there’s not much to protect besides email addresses.  And
+people are free to use temporary email providers like
+<a href="https://www.mailinator.com/">Mailinator</a> if they don’t want to leave their
+real email, or even leave no email address at all. (Should I be concerned about
+Elastic Email, like I should have been concerned about Disqus? Let me know…
+in the <a href="#comments">comments</a> below.)</p>
+<p>Setting up Remark42 on Fly.io was relatively easy, but it took me way longer
+than I had expected, mostly because the Fly.io documentation was quite
+inconsistent and confusing, and also the Remark42 documentation was not fully
+clear. In the end I managed to make everything work and I’m pretty happy with
+the setup I ended up with. I’m going to publish details about my setup in a
+future blog post, in case you’re interested.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>That’s all I have to say for now! Remark42 has been running on my blog for a
+few days, so it’s too early for me to say whether I’ll stick with it or I will
+look for a new solution, but so far it looks very promising, and I’m very happy
+with it. I hope this is the beginning of a long journey!</p></div>
+      </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="remark42"></div>
+          <noscript>Comments are powered by <a href="https://remark42.com/">Remark42</a>. Enable JavaScript to see them.</noscript>
+        </section>
+    </article>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
+  </body>
+</html>
