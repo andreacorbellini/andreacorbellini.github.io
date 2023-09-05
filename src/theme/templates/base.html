@@ -3,14 +3,14 @@
   <head>
     {% block head %}{% include "_includes/head.html" %}{% endblock %}
     {% if REMARK42_URL %}
-      <script src="{{ REMARK42_URL }}/web/embed.js" defer></script>
-      <script src="{{ REMARK42_URL }}/web/counter.js" defer></script>
       <script>
         window.remark_config = {
           host: {{ REMARK42_URL|tojson }},
           site_id: {{ REMARK42_SITE_ID|tojson }},
         }
       </script>
+      <script src="{{ REMARK42_URL }}/web/embed.js" defer></script>
+      <script src="{{ REMARK42_URL }}/web/counter.js" defer></script>
     {% endif %}
     <title>{% block title %}{{ SITENAME|e }}{% endblock %}</title>
   </head>
