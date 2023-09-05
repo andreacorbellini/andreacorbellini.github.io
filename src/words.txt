@@ -41,12 +41,14 @@ Hafele
 Heartbleed
 IdenTrust
 ImageMagick
+JSON
 KMS
 Keating
 KiB
 Koblitz
 LXC's
 LinkedIn
+Mailinator
 MathJax
 MathWorld
 McGrew
@@ -67,6 +69,7 @@ PTP
 RGB
 SELinux
 SIV
+SMTP
 SSD
 SV
 Schoof
@@ -102,6 +105,7 @@ ciphertext
 ciphertexts
 cmd
 cofactor
+commenters
 conf
 counterintuitive
 cpu
@@ -137,12 +141,14 @@ fdisk
 filesystem
 filesystems
 fp
+frontend
 grandmaster
 grsecurity
 hyperelliptic
 img
 indistinguishability
 init
+io
 jitter
 kB
 latencies
@@ -163,6 +169,8 @@ nbd
 nonces
 numberempire
 octillions
+onboarded
+onboarding
 overlayfs
 parallelized
 parametrization
