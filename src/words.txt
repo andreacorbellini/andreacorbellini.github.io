@@ -39,6 +39,8 @@ HTTP
 HTTPS
 Hafele
 Heartbleed
+IPs
+IPv
 IdenTrust
 ImageMagick
 JSON
@@ -92,12 +94,14 @@ analytics
 authenticator
 authenticators
 backend
+balancer
 bitmask
 bitwise
 blowfish
 broadcasted
 brtfs
 caesium
+certbot
 cgroup
 cgroups
 chroot
@@ -144,6 +148,7 @@ fp
 frontend
 grandmaster
 grsecurity
+heh
 hyperelliptic
 img
 indistinguishability
@@ -177,6 +182,7 @@ parametrization
 parametrizations
 performant
 plaintext
+pre
 preannounced
 primality
 proc

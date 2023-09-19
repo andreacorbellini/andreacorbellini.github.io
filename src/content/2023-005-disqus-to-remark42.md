@@ -211,7 +211,8 @@ than I had expected, mostly because the Fly.io documentation was quite
 inconsistent and confusing, and also the Remark42 documentation was not fully
 clear. In the end I managed to make everything work and I'm pretty happy with
 the setup I ended up with. I'm going to publish details about my setup in a
-future blog post, in case you're interested.
+future blog post, in case you're interested (update: said blog post is now
+[published]({filename}/2023-006-running-remark42-on-flyio.md)).
 
 # Conclusion
 
