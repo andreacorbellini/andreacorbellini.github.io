@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
+    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?b569b40a">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700%7COpen+Sans:400,700">
+      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?6c5f3521" defer></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [ [ '$', '$' ], [ '\\(','\\)' ] ]
+      },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js" defer></script>
+    <script src="https://gc.zgo.at/count.js" defer data-goatcounter="https://cor.goatcounter.com/count"></script>
+    <link href="https://ubuntu.social/@andrea" rel="me">
+
+    <script src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" defer></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        tocbot.init({
+          tocSelector: '.article-toc nav',
+          contentSelector: 'main .article-body',
+          headingSelector: 'h1, h2, h3, h4, h5, h6',
+          activeLinkClass: 'active',
+        });
+      });
+    </script>
+    <link rel="canonical" href="https://andrea.corbellini.name/2023/09/19/running-remark42-on-flyio/">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://andrea.corbellini.name/2023/09/19/running-remark42-on-flyio/">
+    <meta property="og:locale" content="en">
+    <meta property="og:title" content="How to run Remark42 on Fly.io">
+    <meta property="og:author" content="Andrea Corbellini">
+      <meta property="og:image" content="https://andrea.corbellini.name/images/remark42-setup.svg">
+      <script>
+        window.remark_config = {
+          host: "https://remark42.fly.dev",
+          site_id: "andrea.corbellini.name",
+        }
+      </script>
+      <script src="https://remark42.fly.dev/web/embed.js" defer></script>
+      <script src="https://remark42.fly.dev/web/counter.js" defer></script>
+    <title>How to run Remark42 on Fly.io - Andrea Corbellini</title>
+  </head>
+  <body>
+    <header id="main-header">  <div class="main-navbar-wrapper">
+    <nav class="main-navbar">
+      <button type="button" class="main-navbar-expand"></button>
+      <div class="main-navbar-sitename">
+        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
+      </div>
+      <div class="main-navbar-links">
+        <ul>
+          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
+            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+<main id="content">    <article class="article">
+      <header>
+        <h1><a href="https://andrea.corbellini.name/2023/09/19/running-remark42-on-flyio/" rel="bookmark" title="How to run Remark42 on Fly.io">How to run Remark42 on Fly.io</a></h1>
+<ul class="article-details">
+  <li><time datetime="2023-09-19T02:12:00+00:00">September 19, 2023</time></li>
+  <li><a href="https://andrea.corbellini.name/2023/09/19/running-remark42-on-flyio/#comments" title="Comments" class="comments"><span class="remark42__counter" data-url="https://andrea.corbellini.name/2023/09/19/running-remark42-on-flyio/"></span> Comments</a></li>
+</ul>      </header>
+      <div class="article-wrapper">
+        <aside class="article-toc">
+          <nav></nav>
+        </aside>
+        <div class="article-body"><p>As I wrote on my <a href="https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/">previous post</a>, I
+recently switched from <a href="https://disqus.com/">Disqus</a> to
+<a href="https://remark42.com/">Remark42</a> for the comments on my blog. Here I will
+explain how I set it up on <a href="https://fly.io/">Fly.io</a>.</p>
+<h1 id="overview">Overview</h1>
+<p>The setup that I ended up with looks like the following:</p>
+<figure>
+  <img src="https://andrea.corbellini.name/images/remark42-setup.svg" alt="Diagram of the components for the Remark42 setup">
+</figure>
+
+<p>Something to note about this setup is that the “machine” (more on that later)
+and the storage volume are both a single instance. This is not a distributed
+setup. This is because Remark42 stores comments in a single file and does not
+make use of a distributed database. This is listed as a “feature” on the
+<a href="https://remark42.com/">Remark42 website</a>. How one is supposed to implement
+replication? I have no idea. Thankfully Fly.io seems to be fast to provision
+machines, and the Remark42 daemon also seems fast to start, so hopefully if a
+problem occurs (or when updates are required), the downtime will be minimal.</p>
+<p>It is imperative however to understand that, because of the
+non-distributed/non-replicated nature of this setup, backups should be made
+periodically to avoid the risk of losing your comments forever.</p>
+<h1 id="preliminaries">Preliminaries</h1>
+<p>Before setting up Remark42, I had never used <a href="https://fly.io/">Fly.io</a> before.
+As Fly.io newbie, I would describe it as a cloud provider focused on Docker
+containers. Fly.io uses some concepts (like “apps” and “machines”) that make
+sense after you practice a bit with them, but as a beginner they are not the
+easiest to learn.  Most of the complexity I think comes from the fact that the
+Fly.io documentation is poorly written. On top of that, it appears that Fly.io
+is migrating their offering from “V1 apps” to “V2 apps”, and today some
+documentation applies only to “V1 apps”, other pieces apply only to “V2 apps”,
+resulting in a big mess. The error messages you get are also far from clear.</p>
+<p>But don’t get too scared: once you get to know Fly.io, it can actually be fun
+to use.</p>
+<p>Creating resources on Fly.io requires installing their command line client:
+<code>flyctl</code>. Because I do not like to run unknown software unconfined, I <a href="https://snapcraft.io/andrea-flyctl">packaged
+it as a snap</a> that you can install using:</p>
+<div class="highlight"><pre><span></span><code>snap<span class="w"> </span>install<span class="w"> </span>andrea-flyctl
+</code></pre></div>
+
+<p>Another source of confusion that I had the beginning was that, by reading the
+documentation, it looked like a second command line tool named <code>fly</code> was needed
+in addition to <code>flyctl</code>. It turns out that <code>fly</code> and <code>flyctl</code> are the same
+thing, it’s just that they’re transitioning from a name to another. If you
+installed the tool through the snap, you can set up these aliases so that you
+can copy and paste commands without trouble:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">alias</span><span class="w"> </span><span class="nv">fly</span><span class="o">=</span>/snap/bin/andrea-flyctl.fly
+<span class="nb">alias</span><span class="w"> </span><span class="nv">flyctl</span><span class="o">=</span>/snap/bin/andrea-flyctl.fly
+</code></pre></div>
+
+<p>According to the documentation (and assuming it’s up-to-date), <code>flyctl</code> does
+not support everything that Fly.io supports, so sometimes <code>curl</code> is used to
+interact directly with the Fly.io API. In order to use that, you’ll need to
+download an authentication token from the Fly.io interface and store it in a
+file (that I’ll call <code>~/fly-token</code> from now on).</p>
+<p>I’m going to skip over the steps to create and configure a Fly.io account,
+obtaining an authentication token, as those were easy steps in my opinion.</p>
+<h1 id="creating-a-machine">Creating a machine</h1>
+<p>A Fly.io “machine” is a virtual machine running a single Docker container with
+a persistent volume attached to it. In order to create my Fly.io machine to run
+Remark42 in it,  I loosely followed this page from the Fly.io documentation:
+<a href="https://fly.io/docs/machines/guides-examples/functions-with-machines/">Run User Code on Fly Machines
+</a>.
+“Loosely” because it turned out that some pieces on that page are not fully
+correct, but anyway…</p>
+<p>Before creating a machine, you first need to create an “app”. A Fly.io app is
+basically an endpoint, which consists of a DNS name (in the form
+<code>${app_name}.fly.dev</code>), and a set of IP addresses. Behind these IP addresses
+there are Fly.io load balancers that will forward requests to the machines
+inside the app.</p>
+<p>You can do that through the API like this:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>&lt;~/fly-token<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;https://api.machines.dev/v1/apps&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{ &quot;app_name&quot;: &quot;${app_name}&quot;, &quot;org_slug&quot;: &quot;personal&quot; }&#39;</span>
+</code></pre></div>
+
+<p>(Replace <code>${app_name}</code> with some identifier of your choice; I chose <code>remark42</code>
+without knowing that this would have removed the possibility for other people
+to register an app with the same name.)</p>
+<p>IP addresses need to be manually allocated:</p>
+<div class="highlight"><pre><span></span><code>fly<span class="w"> </span>ips<span class="w"> </span>allocate-v4<span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span>--shared
+fly<span class="w"> </span>ips<span class="w"> </span>allocate-v6<span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span>
+</code></pre></div>
+
+<p>The <code>--shared</code> option to <code>allocate-v4</code> tells Fly.io to allocate an IP address
+that may be shared with other Fly.io apps, even outside of your
+account/organization. Remove <code>--shared</code> if you want to use a dedicated IP, but
+note that dedicated IPv4 addresses is a paid feature.</p>
+<p>Allocating IPs is an important step: it can be done later, after creating the
+machine, but it must be done, otherwise your machine will be unreachable and it
+won’t be obvious why.</p>
+<p>You should now create a persistent volume for your machine:</p>
+<div class="highlight"><pre><span></span><code>fly<span class="w"> </span>volume<span class="w"> </span>create<span class="w"> </span>remark42_db_0<span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span>--size<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+
+<p>This will display a warning about replication, but you can ignore it because,
+sadly, Remark42 does not support replication.</p>
+<p>Remark42 needs to be given a secret key (I guess for the purpose of signing
+<a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JWT tokens</a>). Fly.io has a handy
+feature to manage secrets, and make them available to machines, albeit poorly
+documented. You can set the Remark42 secret like this:</p>
+<div class="highlight"><pre><span></span><code>fly<span class="w"> </span>secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span><span class="nv">SECRET</span><span class="o">=</span><span class="s1">&#39;a very secret string&#39;</span>
+</code></pre></div>
+
+<p>(You can generate a random secret string with a command like <code>cat /dev/urandom
+| tr -Cd 'a-zA-Z0-9' | head -c64</code>, which means: get some random bytes, keep
+only alphanumeric characters, get the first 64 characters.)</p>
+<p>You may be wondering: how is the container running inside the machine supposed
+to access this secret? The Fly.io documentation doesn’t say a word about it,
+but after experimenting I was able to find that all the app secrets are passed
+as environment variables, which is great, because this is exactly what Remark42
+expects.</p>
+<p><strong>Note: it’s important to set <code>SECRET</code> before creating the machine, or Remark42
+will refuse to start.</strong></p>
+<p>Now you’re ready to spin up the machine: create a configuration file for it…</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;remark42-0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;umputun/remark42:latest&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;SITE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;andrea.corbellini.name&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;REMARK_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://${app_name}.fly.dev&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;ALLOWED_HOSTS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&#39;self&#39;,https://andrea.corbellini.name&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;AUTH_SAME_SITE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;AUTH_ANON&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;AUTH_EMAIL_ENABLE&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;AUTH_EMAIL_FROM&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Andrea&#39;s Blog &lt;hi@andrea.corbellini.name&gt;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;AUTH_EMAIL_SUBJ&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Andrea&#39;s Blog - Email Confirmation&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;NOTIFY_USERS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;email&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;NOTIFY_ADMINS&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;email&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;NOTIFY_EMAIL_FROM&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Andrea&#39;s Blog &lt;hi@andrea.corbellini.name&gt;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;ADMIN_SHARED_EMAIL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;corbellini.andrea@gmail.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;mounts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;volume&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${volume_id}&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/srv/var&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;services&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;ports&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">443</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;handlers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="s2">&quot;tls&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="s2">&quot;http&quot;</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;handlers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="s2">&quot;http&quot;</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;internal_port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;checks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;httpget&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;/ping&quot;</span>
+<span class="w">        </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;15s&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10s&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;fly_platform_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>…and give it to Fly.io:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>&lt;~/fly-token<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;https://api.machines.dev/v1/apps/</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="s2">/machines&quot;</span>
+<span class="w">  </span>-d<span class="w"> </span>@config.json
+</code></pre></div>
+
+<p>There’s a lot here, so let me break it down for you:</p>
+<ul>
+<li>
+<p><code>"image": "umputun/remark42:latest"</code>: this is the Docker image for Remark42.</p>
+</li>
+<li>
+<p><code>"env": { ... }</code>: these are all the environment variables to pass to our
+  container. They are briefly documented on the <a href="https://remark42.com/docs/configuration/parameters/">Remark42
+  website</a>, and here’s a
+  bit more detailed explanation of some of them:</p>
+<ul>
+<li>
+<p><code>"SITE": "andrea.corbellini.name"</code>: this is the internal identifier for the
+  site, it can be an arbitrary string, it won’t be visible, and you can omit
+  it.</p>
+</li>
+<li>
+<p><code>"REMARK_URL": "https://${app_name}.fly.dev"</code>: this is the URL where
+  Remark42 will be serving requests from. I set it to the Fly.io app
+  endpoint. It’s <strong>important that you do not put a trailing slash</strong>, or
+  Remark42 will error out later on. It’s also important that the protocol
+  (http or https) matches your blog’s protocol, or Remark42 will refuse to
+  display comments (this makes local testing a bit annoying).</p>
+</li>
+<li>
+<p><code>"ALLOWED_HOSTS": "'self',https://andrea.corbellini.name"</code>: this is the
+  list of sources that will be put into the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors"><code>Content-Security-Policy:
+  frame-ancestors</code>
+  header</a>)
+  of HTTP responses. Essentially, this defines where the Remark42 comments
+  can be displayed.</p>
+</li>
+<li>
+<p><code>"AUTH_SAME_SITE": "none"</code>: this disable the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value">“same site” policy for
+  cookies</a>.
+  Disabling it is necessary because, in my setup, comments are served from
+  one domain (<code>remark42.fly.dev</code>) to another domain
+  (<code>andrea.corbellini.name</code>).</p>
+</li>
+<li>
+<p><code>"AUTH_ANON": "true"</code>: allows anonymous commenters. You may or may not
+  want it.</p>
+</li>
+<li>
+<p><code>"AUTH_EMAIL_ENABLE": "true"</code> and friends: allows email-based
+  authentication of commenters.</p>
+</li>
+<li>
+<p><code>"NOTIFY_USERS" "email"</code>: allows readers and commenters to be notified of
+  new comments via email.</p>
+</li>
+<li>
+<p><code>"NOTIFY_ADMINS" "email"</code> and <code>"ADMIN_SHARED_EMAIL":
+  "corbellini.andrea@gmail.com"</code>: makes Remark42 send me an email every
+  time there’s a new comment.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>"mounts": [ ... ]</code>: this tells Fly.io to attach the volume that you created
+  earlier to the container at the path <code>/srv/var</code>, which is what Remark42 uses
+  to store its database as well as daily backups.</p>
+</li>
+<li>
+<p><code>"services": [ ... ]</code>: this tells Fly.io what to expose through the load
+  balancer. With the configuration that I provided, the Fly.io endpoint
+  (<code>${app_name}.fly.dev</code>) will provide both HTTP and HTTPS to the internet.
+  However, the load balancer will talk to the machine over plain HTTP on port
+  8080 (meaning that TLS is terminated at the load balancer).</p>
+<p>I think in the future I will setup <a href="https://certbot.eff.org/">certbot</a>
+inside the container so that I can do TLS termination on the machine, but
+not today.</p>
+</li>
+<li>
+<p><code>"checks": { ... }</code>: this tells Fly.io to check if the Remark42 daemon is
+  healthy by using its <code>/ping</code>endpoint.</p>
+</li>
+<li>
+<p><code>"metadata": { "fly_platform_version": "v2" }</code>: this tells Fly.io to use a
+  “V2 machine”, or something like that. <strong>Setting this metadata is very
+  important, or certain things won’t work later on.</strong> The Fly.io documentation
+  doesn’t tell you to do it, but this is needed if you need to update the
+  environment variables or the secrets inside the machine.</p>
+</li>
+</ul>
+<p>Note that all of this configuration can be changed at any time, so if you make
+any mistakes or you just want to experiment, you don’t have to overly worry.
+You can even destroy your machine and recreate it from scratch if you want.</p>
+<p>To view the configuration of an existing machine use the following:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>&lt;~/fly-token<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;https://api.machines.dev/v1/apps/</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="s2">/machines/</span><span class="si">${</span><span class="nv">machine_id</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<p>And to update it:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>&lt;~/fly-token<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;https://api.machines.dev/v1/apps/</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="s2">/machines/</span><span class="si">${</span><span class="nv">machine_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span>@new-config.json
+</code></pre></div>
+
+<p>I was also successful at changing configuration using <code>fly machines update</code>,
+although it can’t be used for everything (for example: it can be used to <em>add</em>
+or <em>change</em> environment variables, but not to <em>remove</em> them).</p>
+<h1 id="testing-the-setup">Testing the setup</h1>
+<p>If everything went well, you should be able to interact with Remark42 at
+<code>https://${app_name}.fly.dev/web</code>. This should let you read and post new
+comments.</p>
+<h1 id="configuring-remark42-to-send-emails">Configuring Remark42 to send emails</h1>
+<p>For sending emails, I chose to use <a href="https://elasticemail.com/">Elastic Email</a>,
+which is an email-delivery service that supports SMTP with STARTTLS. Creating
+an Elastic Email, setting up
+<a href="https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail">DKIM</a> and
+<a href="https://en.wikipedia.org/wiki/Sender_Policy_Framework">SPF</a>, and obtaining
+SMTP credentials was extremely easy with Elastic Email, so I won’t cover it
+here.</p>
+<p>Setting up email delivery with Remark42 is pretty easy once you have the SMTP
+credentials. Set the necessary (non-secret) configuration like this:</p>
+<div class="highlight"><pre><span></span><code>fly<span class="w"> </span>machines<span class="w"> </span>update<span class="w"> </span><span class="si">${</span><span class="nv">machine_id</span><span class="si">}</span><span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_HOST</span><span class="o">=</span>smtp.elasticemail.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_PORT</span><span class="o">=</span><span class="m">2525</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_STARTTLS</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_USERNAME</span><span class="o">=</span>...
+</code></pre></div>
+
+<p>And then set the SMTP password as a Fly.io secret:</p>
+<div class="highlight"><pre><span></span><code>fly<span class="w"> </span>secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span><span class="nv">SMTP_PASSWD</span><span class="o">=</span><span class="s1">&#39;a very secret password&#39;</span>
+</code></pre></div>
+
+<p>Doing both <code>machines update</code> and <code>secrets set</code> will automatically restart the
+machine so that Remark42 can pick up the new configuration. Pretty neat, heh?</p>
+<h1 id="configuring-authentication-providers-for-remark42">Configuring authentication providers for Remark42</h1>
+<p>Remark42 can let your users log in from a variety of providers, including:
+GitHub, Google, Facebook, Telegram, and more. There are specific instructions
+for each provider in the <a href="https://remark42.com/docs/configuration/authorization/">Remark42
+documentation</a>. There’s
+really not much to add on top of what’s already written there. Just remember:
+set non-secret environment variables with <code>fly machines update</code>, and set
+secrets with <code>fly secrets set</code>.</p>
+<h1 id="creating-an-administrator-account">Creating an administrator account</h1>
+<p>If you want to be able to moderate comments, you’ll need an administrator
+account. With Remark42, this is a 3 step process: first you create an account
+(like any other user would do), then you copy the ID of the user you just
+created, and lastly you add that user ID to the <code>ADMIN_SHARED_ID</code> environment
+variable:</p>
+<div class="highlight"><pre><span></span><code>fly<span class="w"> </span>machines<span class="w"> </span>update<span class="w"> </span><span class="si">${</span><span class="nv">machine_id</span><span class="si">}</span><span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">ADMIN_SHARED_ID</span><span class="o">=</span>...
+</code></pre></div>
+
+<p>As step-by-step guide is on the <a href="https://remark42.com/docs/manuals/admin-interface/">Remark42
+documentation</a>.</p>
+<h1 id="importing-comments-from-disqus-or-any-other-platform">Importing comments from Disqus (or any other platform)</h1>
+<p>In order to import comments into Remark42, first you need to temporarily set an
+“admin password” for Remark42 (here the word “admin” has nothing to do with the
+administrator account you just created; it’s a totally separate concept):</p>
+<div class="highlight"><pre><span></span><code>fly<span class="w"> </span>secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span><span class="nv">ADMIN_PASSWD</span><span class="o">=</span><span class="s1">&#39;this is super secret&#39;</span>
+</code></pre></div>
+
+<p>You can now copy your Disqus (or equivalent) backup on the machine and import
+it. I could not find an easy way to do it through <code>flyctl</code> (but I also did not
+spend too much time looking for an option), I did however find a way to open a
+console on the machine, so what I did was simply copying and pasting the
+base64-encoded backup:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># on my laptop</span>
+base64<span class="w"> </span>&lt;<span class="w"> </span>disqus-export.xml.gz<span class="w">  </span><span class="c1"># copy the output</span>
+
+<span class="c1"># attach to the machine</span>
+fly<span class="w"> </span>console<span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span>--machine<span class="o">=</span><span class="si">${</span><span class="nv">machine_id</span><span class="si">}</span>
+
+<span class="c1"># on the machine</span>
+<span class="nb">cd</span><span class="w"> </span>/srv/var
+base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>disqus-export.xml.gz<span class="w">  </span><span class="c1"># paste the output from earlier</span>
+gunzip<span class="w"> </span>disqus-export.xml.gz
+import<span class="w"> </span>--provider<span class="o">=</span>disqus<span class="w"> </span>--file<span class="o">=</span>/srv/var/disqus-export.xml<span class="w"> </span>--url<span class="o">=</span>http://localhost:8080
+rm<span class="w"> </span>disqus-export.xml
+</code></pre></div>
+
+<p><strong>Note: importing comments will clear the Remark42 database.</strong> Any pre-existing
+comment will be deleted. See also the <a href="https://remark42.com/docs/backup/migration/">Remark42
+documentation</a> for more
+information.</p>
+<p>Another note: for some reason, my Disqus export referenced my blog posts using
+<code>http://</code> URLs instead of <code>https://</code>. Because of that, Remark42 did correctly
+import all the Disqus comments in its database, but would not display them
+under my blog posts. Remember: Remark42 is very picky when it comes to URL
+schemes. To fix this, I simply <a href="https://remark42.com/docs/backup/backup/">created a backup from
+Remark42</a>, modified the backup to
+change all <code>http</code> entries to <code>https</code>, and then <a href="https://remark42.com/docs/backup/restore/">restored the
+backup</a>. This was quite trivial
+given that the format used by the backups is extremely intuitive.</p>
+<h1 id="final-remarks">Final remarks</h1>
+<p>That was it!</p>
+<p>Setting up Remark42 on Fly.io wasn’t particularly difficult, but it took me way
+more time than expected due to the poor documentation of both Remark42 and
+Fly.io. I had to resort to trial-and-error multiple times to make things work.</p>
+<p>One big drawback of Remark42 is that it does not allow replication. This means
+that:</p>
+<ul>
+<li>if the machine running my instance of Remark42 goes down, or becomes
+  unreachable for any reason, there will be downtime;</li>
+<li>some people who are “far away” from the Remark42 instance may experience
+  higher latency than others;</li>
+<li>I need to periodically take backups of my Remark42 database and copy it
+  somewhere, otherwise if my single storage volume is lost, I will lose all the
+  comments.</li>
+</ul>
+<p>Nonetheless I think both Remark42 and Fly.io are very interesting products. I
+love Remark42’s features, and Fly.io is easy enough to use once you get
+familiar with it. I think I’m gonna stick with them for a long time.</p></div>
+      </div>
+        <section id="comments" class="comments">
+          <h2>Comments</h2>
+          <div id="remark42"></div>
+          <noscript>Comments are powered by <a href="https://remark42.com/">Remark42</a>. Enable JavaScript to see them.</noscript>
+        </section>
+    </article>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2023 Andrea Corbellini</p>
+<p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
+<p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
+  </body>
+</html>

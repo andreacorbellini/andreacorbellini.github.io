@@ -1,5 +1,399 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Tue, 05 Sep 2023 08:30:00 +0000</lastBuildDate><item><title>My journey from Disqus to Remark42</title><link>https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/</link><description>&lt;p&gt;Readers of this blog might have noticed a few changes recently. For example,
+<rss version="2.0"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description></description><lastBuildDate>Tue, 19 Sep 2023 02:12:00 +0000</lastBuildDate><item><title>How to run Remark42 on Fly.io</title><link>https://andrea.corbellini.name/2023/09/19/running-remark42-on-flyio/</link><description>&lt;p&gt;As I wrote on my &lt;a href="https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/"&gt;previous post&lt;/a&gt;, I
+recently switched from &lt;a href="https://disqus.com/"&gt;Disqus&lt;/a&gt; to
+&lt;a href="https://remark42.com/"&gt;Remark42&lt;/a&gt; for the comments on my blog. Here I will
+explain how I set it up on &lt;a href="https://fly.io/"&gt;Fly.io&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id="overview"&gt;Overview&lt;/h1&gt;
+&lt;p&gt;The setup that I ended up with looks like the following:&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src="https://andrea.corbellini.name/images/remark42-setup.svg" alt="Diagram of the components for the Remark42 setup"&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Something to note about this setup is that the “machine” (more on that later)
+and the storage volume are both a single instance. This is not a distributed
+setup. This is because Remark42 stores comments in a single file and does not
+make use of a distributed database. This is listed as a “feature” on the
+&lt;a href="https://remark42.com/"&gt;Remark42 website&lt;/a&gt;. How one is supposed to implement
+replication? I have no idea. Thankfully Fly.io seems to be fast to provision
+machines, and the Remark42 daemon also seems fast to start, so hopefully if a
+problem occurs (or when updates are required), the downtime will be minimal.&lt;/p&gt;
+&lt;p&gt;It is imperative however to understand that, because of the
+non-distributed/non-replicated nature of this setup, backups should be made
+periodically to avoid the risk of losing your comments forever.&lt;/p&gt;
+&lt;h1 id="preliminaries"&gt;Preliminaries&lt;/h1&gt;
+&lt;p&gt;Before setting up Remark42, I had never used &lt;a href="https://fly.io/"&gt;Fly.io&lt;/a&gt; before.
+As Fly.io newbie, I would describe it as a cloud provider focused on Docker
+containers. Fly.io uses some concepts (like “apps” and “machines”) that make
+sense after you practice a bit with them, but as a beginner they are not the
+easiest to learn.  Most of the complexity I think comes from the fact that the
+Fly.io documentation is poorly written. On top of that, it appears that Fly.io
+is migrating their offering from “V1 apps” to “V2 apps”, and today some
+documentation applies only to “V1 apps”, other pieces apply only to “V2 apps”,
+resulting in a big mess. The error messages you get are also far from clear.&lt;/p&gt;
+&lt;p&gt;But don’t get too scared: once you get to know Fly.io, it can actually be fun
+to use.&lt;/p&gt;
+&lt;p&gt;Creating resources on Fly.io requires installing their command line client:
+&lt;code&gt;flyctl&lt;/code&gt;. Because I do not like to run unknown software unconfined, I &lt;a href="https://snapcraft.io/andrea-flyctl"&gt;packaged
+it as a snap&lt;/a&gt; that you can install using:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;snap&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;andrea-flyctl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Another source of confusion that I had the beginning was that, by reading the
+documentation, it looked like a second command line tool named &lt;code&gt;fly&lt;/code&gt; was needed
+in addition to &lt;code&gt;flyctl&lt;/code&gt;. It turns out that &lt;code&gt;fly&lt;/code&gt; and &lt;code&gt;flyctl&lt;/code&gt; are the same
+thing, it’s just that they’re transitioning from a name to another. If you
+installed the tool through the snap, you can set up these aliases so that you
+can copy and paste commands without trouble:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;fly&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/snap/bin/andrea-flyctl.fly
+&lt;span class="nb"&gt;alias&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;flyctl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/snap/bin/andrea-flyctl.fly
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;According to the documentation (and assuming it’s up-to-date), &lt;code&gt;flyctl&lt;/code&gt; does
+not support everything that Fly.io supports, so sometimes &lt;code&gt;curl&lt;/code&gt; is used to
+interact directly with the Fly.io API. In order to use that, you’ll need to
+download an authentication token from the Fly.io interface and store it in a
+file (that I’ll call &lt;code&gt;~/fly-token&lt;/code&gt; from now on).&lt;/p&gt;
+&lt;p&gt;I’m going to skip over the steps to create and configure a Fly.io account,
+obtaining an authentication token, as those were easy steps in my opinion.&lt;/p&gt;
+&lt;h1 id="creating-a-machine"&gt;Creating a machine&lt;/h1&gt;
+&lt;p&gt;A Fly.io “machine” is a virtual machine running a single Docker container with
+a persistent volume attached to it. In order to create my Fly.io machine to run
+Remark42 in it,  I loosely followed this page from the Fly.io documentation:
+&lt;a href="https://fly.io/docs/machines/guides-examples/functions-with-machines/"&gt;Run User Code on Fly Machines
+&lt;/a&gt;.
+“Loosely” because it turned out that some pieces on that page are not fully
+correct, but anyway…&lt;/p&gt;
+&lt;p&gt;Before creating a machine, you first need to create an “app”. A Fly.io app is
+basically an endpoint, which consists of a DNS name (in the form
+&lt;code&gt;${app_name}.fly.dev&lt;/code&gt;), and a set of IP addresses. Behind these IP addresses
+there are Fly.io load balancers that will forward requests to the machines
+inside the app.&lt;/p&gt;
+&lt;p&gt;You can do that through the API like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;curl&lt;span class="w"&gt; &lt;/span&gt;-X&lt;span class="w"&gt; &lt;/span&gt;POST&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-H&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Authorization: Bearer &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&amp;lt;~/fly-token&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-H&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Content-Type: application/json&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;https://api.machines.dev/v1/apps&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{ &amp;quot;app_name&amp;quot;: &amp;quot;${app_name}&amp;quot;, &amp;quot;org_slug&amp;quot;: &amp;quot;personal&amp;quot; }&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;(Replace &lt;code&gt;${app_name}&lt;/code&gt; with some identifier of your choice; I chose &lt;code&gt;remark42&lt;/code&gt;
+without knowing that this would have removed the possibility for other people
+to register an app with the same name.)&lt;/p&gt;
+&lt;p&gt;IP addresses need to be manually allocated:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;ips&lt;span class="w"&gt; &lt;/span&gt;allocate-v4&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--shared
+fly&lt;span class="w"&gt; &lt;/span&gt;ips&lt;span class="w"&gt; &lt;/span&gt;allocate-v6&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code&gt;--shared&lt;/code&gt; option to &lt;code&gt;allocate-v4&lt;/code&gt; tells Fly.io to allocate an IP address
+that may be shared with other Fly.io apps, even outside of your
+account/organization. Remove &lt;code&gt;--shared&lt;/code&gt; if you want to use a dedicated IP, but
+note that dedicated IPv4 addresses is a paid feature.&lt;/p&gt;
+&lt;p&gt;Allocating IPs is an important step: it can be done later, after creating the
+machine, but it must be done, otherwise your machine will be unreachable and it
+won’t be obvious why.&lt;/p&gt;
+&lt;p&gt;You should now create a persistent volume for your machine:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;volume&lt;span class="w"&gt; &lt;/span&gt;create&lt;span class="w"&gt; &lt;/span&gt;remark42_db_0&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--size&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This will display a warning about replication, but you can ignore it because,
+sadly, Remark42 does not support replication.&lt;/p&gt;
+&lt;p&gt;Remark42 needs to be given a secret key (I guess for the purpose of signing
+&lt;a href="https://en.wikipedia.org/wiki/JSON_Web_Token"&gt;JWT tokens&lt;/a&gt;). Fly.io has a handy
+feature to manage secrets, and make them available to machines, albeit poorly
+documented. You can set the Remark42 secret like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;secrets&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SECRET&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a very secret string&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;(You can generate a random secret string with a command like &lt;code&gt;cat /dev/urandom
+| tr -Cd 'a-zA-Z0-9' | head -c64&lt;/code&gt;, which means: get some random bytes, keep
+only alphanumeric characters, get the first 64 characters.)&lt;/p&gt;
+&lt;p&gt;You may be wondering: how is the container running inside the machine supposed
+to access this secret? The Fly.io documentation doesn’t say a word about it,
+but after experimenting I was able to find that all the app secrets are passed
+as environment variables, which is great, because this is exactly what Remark42
+expects.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note: it’s important to set &lt;code&gt;SECRET&lt;/code&gt; before creating the machine, or Remark42
+will refuse to start.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Now you’re ready to spin up the machine: create a configuration file for it…&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;remark42-0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;config&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;image&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;umputun/remark42:latest&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;env&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;SITE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;andrea.corbellini.name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;REMARK_URL&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;https://${app_name}.fly.dev&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;ALLOWED_HOSTS&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;#39;self&amp;#39;,https://andrea.corbellini.name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;AUTH_SAME_SITE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;none&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;AUTH_ANON&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;AUTH_EMAIL_ENABLE&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;true&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;AUTH_EMAIL_FROM&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Andrea&amp;#39;s Blog &amp;lt;hi@andrea.corbellini.name&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;AUTH_EMAIL_SUBJ&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Andrea&amp;#39;s Blog - Email Confirmation&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;NOTIFY_USERS&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;email&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;NOTIFY_ADMINS&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;email&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;NOTIFY_EMAIL_FROM&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Andrea&amp;#39;s Blog &amp;lt;hi@andrea.corbellini.name&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;ADMIN_SHARED_EMAIL&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;corbellini.andrea@gmail.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;mounts&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;volume&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;${volume_id}&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/srv/var&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;services&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;ports&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;443&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handlers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;              &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tls&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;              &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;handlers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;              &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tcp&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;internal_port&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;8080&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;checks&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;httpget&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;method&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;GET&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;/ping&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;interval&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;15s&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;timeout&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;10s&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;metadata&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;fly_platform_version&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;v2&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;…and give it to Fly.io:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;curl&lt;span class="w"&gt; &lt;/span&gt;-X&lt;span class="w"&gt; &lt;/span&gt;POST&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-H&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Authorization: Bearer &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&amp;lt;~/fly-token&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-H&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Content-Type: application/json&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;https://api.machines.dev/v1/apps/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/machines&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;@config.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;There’s a lot here, so let me break it down for you:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"image": "umputun/remark42:latest"&lt;/code&gt;: this is the Docker image for Remark42.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"env": { ... }&lt;/code&gt;: these are all the environment variables to pass to our
+  container. They are briefly documented on the &lt;a href="https://remark42.com/docs/configuration/parameters/"&gt;Remark42
+  website&lt;/a&gt;, and here’s a
+  bit more detailed explanation of some of them:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"SITE": "andrea.corbellini.name"&lt;/code&gt;: this is the internal identifier for the
+  site, it can be an arbitrary string, it won’t be visible, and you can omit
+  it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"REMARK_URL": "https://${app_name}.fly.dev"&lt;/code&gt;: this is the URL where
+  Remark42 will be serving requests from. I set it to the Fly.io app
+  endpoint. It’s &lt;strong&gt;important that you do not put a trailing slash&lt;/strong&gt;, or
+  Remark42 will error out later on. It’s also important that the protocol
+  (http or https) matches your blog’s protocol, or Remark42 will refuse to
+  display comments (this makes local testing a bit annoying).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"ALLOWED_HOSTS": "'self',https://andrea.corbellini.name"&lt;/code&gt;: this is the
+  list of sources that will be put into the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors"&gt;&lt;code&gt;Content-Security-Policy:
+  frame-ancestors&lt;/code&gt;
+  header&lt;/a&gt;)
+  of HTTP responses. Essentially, this defines where the Remark42 comments
+  can be displayed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"AUTH_SAME_SITE": "none"&lt;/code&gt;: this disable the &lt;a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value"&gt;“same site” policy for
+  cookies&lt;/a&gt;.
+  Disabling it is necessary because, in my setup, comments are served from
+  one domain (&lt;code&gt;remark42.fly.dev&lt;/code&gt;) to another domain
+  (&lt;code&gt;andrea.corbellini.name&lt;/code&gt;).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"AUTH_ANON": "true"&lt;/code&gt;: allows anonymous commenters. You may or may not
+  want it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"AUTH_EMAIL_ENABLE": "true"&lt;/code&gt; and friends: allows email-based
+  authentication of commenters.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"NOTIFY_USERS" "email"&lt;/code&gt;: allows readers and commenters to be notified of
+  new comments via email.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"NOTIFY_ADMINS" "email"&lt;/code&gt; and &lt;code&gt;"ADMIN_SHARED_EMAIL":
+  "corbellini.andrea@gmail.com"&lt;/code&gt;: makes Remark42 send me an email every
+  time there’s a new comment.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"mounts": [ ... ]&lt;/code&gt;: this tells Fly.io to attach the volume that you created
+  earlier to the container at the path &lt;code&gt;/srv/var&lt;/code&gt;, which is what Remark42 uses
+  to store its database as well as daily backups.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"services": [ ... ]&lt;/code&gt;: this tells Fly.io what to expose through the load
+  balancer. With the configuration that I provided, the Fly.io endpoint
+  (&lt;code&gt;${app_name}.fly.dev&lt;/code&gt;) will provide both HTTP and HTTPS to the internet.
+  However, the load balancer will talk to the machine over plain HTTP on port
+  8080 (meaning that TLS is terminated at the load balancer).&lt;/p&gt;
+&lt;p&gt;I think in the future I will setup &lt;a href="https://certbot.eff.org/"&gt;certbot&lt;/a&gt;
+inside the container so that I can do TLS termination on the machine, but
+not today.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"checks": { ... }&lt;/code&gt;: this tells Fly.io to check if the Remark42 daemon is
+  healthy by using its &lt;code&gt;/ping&lt;/code&gt;endpoint.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;"metadata": { "fly_platform_version": "v2" }&lt;/code&gt;: this tells Fly.io to use a
+  “V2 machine”, or something like that. &lt;strong&gt;Setting this metadata is very
+  important, or certain things won’t work later on.&lt;/strong&gt; The Fly.io documentation
+  doesn’t tell you to do it, but this is needed if you need to update the
+  environment variables or the secrets inside the machine.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Note that all of this configuration can be changed at any time, so if you make
+any mistakes or you just want to experiment, you don’t have to overly worry.
+You can even destroy your machine and recreate it from scratch if you want.&lt;/p&gt;
+&lt;p&gt;To view the configuration of an existing machine use the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;curl&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-H&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Authorization: Bearer &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&amp;lt;~/fly-token&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;https://api.machines.dev/v1/apps/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/machines/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;machine_id&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And to update it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;curl&lt;span class="w"&gt; &lt;/span&gt;-X&lt;span class="w"&gt; &lt;/span&gt;POST&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-H&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Authorization: Bearer &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&amp;lt;~/fly-token&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-H&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Content-Type: application/json&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;https://api.machines.dev/v1/apps/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;/machines/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;machine_id&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;@new-config.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I was also successful at changing configuration using &lt;code&gt;fly machines update&lt;/code&gt;,
+although it can’t be used for everything (for example: it can be used to &lt;em&gt;add&lt;/em&gt;
+or &lt;em&gt;change&lt;/em&gt; environment variables, but not to &lt;em&gt;remove&lt;/em&gt; them).&lt;/p&gt;
+&lt;h1 id="testing-the-setup"&gt;Testing the setup&lt;/h1&gt;
+&lt;p&gt;If everything went well, you should be able to interact with Remark42 at
+&lt;code&gt;https://${app_name}.fly.dev/web&lt;/code&gt;. This should let you read and post new
+comments.&lt;/p&gt;
+&lt;h1 id="configuring-remark42-to-send-emails"&gt;Configuring Remark42 to send emails&lt;/h1&gt;
+&lt;p&gt;For sending emails, I chose to use &lt;a href="https://elasticemail.com/"&gt;Elastic Email&lt;/a&gt;,
+which is an email-delivery service that supports SMTP with STARTTLS. Creating
+an Elastic Email, setting up
+&lt;a href="https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail"&gt;DKIM&lt;/a&gt; and
+&lt;a href="https://en.wikipedia.org/wiki/Sender_Policy_Framework"&gt;SPF&lt;/a&gt;, and obtaining
+SMTP credentials was extremely easy with Elastic Email, so I won’t cover it
+here.&lt;/p&gt;
+&lt;p&gt;Setting up email delivery with Remark42 is pretty easy once you have the SMTP
+credentials. Set the necessary (non-secret) configuration like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;machines&lt;span class="w"&gt; &lt;/span&gt;update&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;machine_id&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_HOST&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;smtp.elasticemail.com&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_PORT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2525&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_STARTTLS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_USERNAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And then set the SMTP password as a Fly.io secret:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;secrets&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_PASSWD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a very secret password&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Doing both &lt;code&gt;machines update&lt;/code&gt; and &lt;code&gt;secrets set&lt;/code&gt; will automatically restart the
+machine so that Remark42 can pick up the new configuration. Pretty neat, heh?&lt;/p&gt;
+&lt;h1 id="configuring-authentication-providers-for-remark42"&gt;Configuring authentication providers for Remark42&lt;/h1&gt;
+&lt;p&gt;Remark42 can let your users log in from a variety of providers, including:
+GitHub, Google, Facebook, Telegram, and more. There are specific instructions
+for each provider in the &lt;a href="https://remark42.com/docs/configuration/authorization/"&gt;Remark42
+documentation&lt;/a&gt;. There’s
+really not much to add on top of what’s already written there. Just remember:
+set non-secret environment variables with &lt;code&gt;fly machines update&lt;/code&gt;, and set
+secrets with &lt;code&gt;fly secrets set&lt;/code&gt;.&lt;/p&gt;
+&lt;h1 id="creating-an-administrator-account"&gt;Creating an administrator account&lt;/h1&gt;
+&lt;p&gt;If you want to be able to moderate comments, you’ll need an administrator
+account. With Remark42, this is a 3 step process: first you create an account
+(like any other user would do), then you copy the ID of the user you just
+created, and lastly you add that user ID to the &lt;code&gt;ADMIN_SHARED_ID&lt;/code&gt; environment
+variable:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;machines&lt;span class="w"&gt; &lt;/span&gt;update&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;machine_id&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ADMIN_SHARED_ID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As step-by-step guide is on the &lt;a href="https://remark42.com/docs/manuals/admin-interface/"&gt;Remark42
+documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id="importing-comments-from-disqus-or-any-other-platform"&gt;Importing comments from Disqus (or any other platform)&lt;/h1&gt;
+&lt;p&gt;In order to import comments into Remark42, first you need to temporarily set an
+“admin password” for Remark42 (here the word “admin” has nothing to do with the
+administrator account you just created; it’s a totally separate concept):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;secrets&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ADMIN_PASSWD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;this is super secret&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You can now copy your Disqus (or equivalent) backup on the machine and import
+it. I could not find an easy way to do it through &lt;code&gt;flyctl&lt;/code&gt; (but I also did not
+spend too much time looking for an option), I did however find a way to open a
+console on the machine, so what I did was simply copying and pasting the
+base64-encoded backup:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# on my laptop&lt;/span&gt;
+base64&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;&lt;span class="w"&gt; &lt;/span&gt;disqus-export.xml.gz&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# copy the output&lt;/span&gt;
+
+&lt;span class="c1"&gt;# attach to the machine&lt;/span&gt;
+fly&lt;span class="w"&gt; &lt;/span&gt;console&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--machine&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;machine_id&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;# on the machine&lt;/span&gt;
+&lt;span class="nb"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;/srv/var
+base64&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;disqus-export.xml.gz&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# paste the output from earlier&lt;/span&gt;
+gunzip&lt;span class="w"&gt; &lt;/span&gt;disqus-export.xml.gz
+import&lt;span class="w"&gt; &lt;/span&gt;--provider&lt;span class="o"&gt;=&lt;/span&gt;disqus&lt;span class="w"&gt; &lt;/span&gt;--file&lt;span class="o"&gt;=&lt;/span&gt;/srv/var/disqus-export.xml&lt;span class="w"&gt; &lt;/span&gt;--url&lt;span class="o"&gt;=&lt;/span&gt;http://localhost:8080
+rm&lt;span class="w"&gt; &lt;/span&gt;disqus-export.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note: importing comments will clear the Remark42 database.&lt;/strong&gt; Any pre-existing
+comment will be deleted. See also the &lt;a href="https://remark42.com/docs/backup/migration/"&gt;Remark42
+documentation&lt;/a&gt; for more
+information.&lt;/p&gt;
+&lt;p&gt;Another note: for some reason, my Disqus export referenced my blog posts using
+&lt;code&gt;http://&lt;/code&gt; URLs instead of &lt;code&gt;https://&lt;/code&gt;. Because of that, Remark42 did correctly
+import all the Disqus comments in its database, but would not display them
+under my blog posts. Remember: Remark42 is very picky when it comes to URL
+schemes. To fix this, I simply &lt;a href="https://remark42.com/docs/backup/backup/"&gt;created a backup from
+Remark42&lt;/a&gt;, modified the backup to
+change all &lt;code&gt;http&lt;/code&gt; entries to &lt;code&gt;https&lt;/code&gt;, and then &lt;a href="https://remark42.com/docs/backup/restore/"&gt;restored the
+backup&lt;/a&gt;. This was quite trivial
+given that the format used by the backups is extremely intuitive.&lt;/p&gt;
+&lt;h1 id="final-remarks"&gt;Final remarks&lt;/h1&gt;
+&lt;p&gt;That was it!&lt;/p&gt;
+&lt;p&gt;Setting up Remark42 on Fly.io wasn’t particularly difficult, but it took me way
+more time than expected due to the poor documentation of both Remark42 and
+Fly.io. I had to resort to trial-and-error multiple times to make things work.&lt;/p&gt;
+&lt;p&gt;One big drawback of Remark42 is that it does not allow replication. This means
+that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;if the machine running my instance of Remark42 goes down, or becomes
+  unreachable for any reason, there will be downtime;&lt;/li&gt;
+&lt;li&gt;some people who are “far away” from the Remark42 instance may experience
+  higher latency than others;&lt;/li&gt;
+&lt;li&gt;I need to periodically take backups of my Remark42 database and copy it
+  somewhere, otherwise if my single storage volume is lost, I will lose all the
+  comments.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Nonetheless I think both Remark42 and Fly.io are very interesting products. I
+love Remark42’s features, and Fly.io is easy enough to use once you get
+familiar with it. I think I’m gonna stick with them for a long time.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Tue, 19 Sep 2023 02:12:00 +0000</pubDate><guid isPermaLink="false">tag:andrea.corbellini.name,2023-09-19:/2023/09/19/running-remark42-on-flyio/</guid><category>misc</category></item><item><title>My journey from Disqus to Remark42</title><link>https://andrea.corbellini.name/2023/09/05/disqus-to-remark42/</link><description>&lt;p&gt;Readers of this blog might have noticed a few changes recently. For example,
 I’ve been working on improving the look of the blog (maybe with questionable
 results), as well as improving the experience on mobile. But one of the biggest
 changes that perhaps some have noticed is that all of the comments on all of my
@@ -175,7 +569,8 @@ than I had expected, mostly because the Fly.io documentation was quite
 inconsistent and confusing, and also the Remark42 documentation was not fully
 clear. In the end I managed to make everything work and I’m pretty happy with
 the setup I ended up with. I’m going to publish details about my setup in a
-future blog post, in case you’re interested.&lt;/p&gt;
+future blog post, in case you’re interested (update: said blog post is now
+&lt;a href="https://andrea.corbellini.name/2023/09/19/running-remark42-on-flyio/"&gt;published&lt;/a&gt;).&lt;/p&gt;
 &lt;h1 id="conclusion"&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;That’s all I have to say for now! Remark42 has been running on my blog for a
 few days, so it’s too early for me to say whether I’ll stick with it or I will
