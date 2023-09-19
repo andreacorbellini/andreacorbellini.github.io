@@ -24,7 +24,7 @@ set -x
 pip install -Ur "$blogdir/requirements.txt"
 
 # Build static files.
-make -C "$srcdir/theme/static" all
+make -C "$srcdir/theme/static/css" all
 
 # Build the blog.
 pelican -s "$srcdir/pelicanconf.py"
