@@ -390,11 +390,11 @@ you will get a different randomized image!</p>
 analogous to the first problem we identified with stream ciphers: at the root
 of both problems there is key reuse. We solved this problem for stream ciphers
 by combining a key with a random nonce. We could use the same strategy here,
-would be an expensive approach, as initializing a block cipher with a new key
-is a relatively expensive operation. It’s much cheaper to initialize the block
-cipher once, and reuse it for every block encryption. We need a way to “link”
-blocks to each other, so that if two linked blocks contain the same plaintext,
-their encryption will give different results.</p>
+but it would be an expensive approach, as initializing a block cipher with a
+new key is a relatively expensive operation. It’s much cheaper to initialize
+the block cipher once, and reuse it for every block encryption. We need a way
+to “link” blocks to each other, so that if two linked blocks contain the same
+plaintext, their encryption will give different results.</p>
 <p>There are various strategies do that. These strategies are known as <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation"><em>mode of
 operation</em></a> of
 block ciphers. Let’s take a look at two of them: <strong>Cipher Block Chaining
@@ -631,7 +631,7 @@ given ciphertext was produced only with knowledge of the secret key.</p>
 insecure and avoided? Absolutely not! The correct answer is that those ciphers
 cannot be used alone. You should think of them as basic building blocks, and
 you need some additional building blocks in order to construct a complete and
-secure cryptosystem. One of these additional building block, that we are going
+secure cryptosystem. One of these additional building blocks, that we are going
 to explore in this article, is an algorithm that provides integrity and
 authentication: welcome <strong>Authenticated Encryption (AE)</strong>.</p>
 <p>When using authenticated encryption, an adversary may be able to modify a
@@ -646,8 +646,8 @@ authentication algorithms:</p>
 <ul>
 <li><strong>Poly1305</strong>, which is often used in conjunction with the stream cipher
   ChaCha20 to form <strong>ChaCha20-Poly1305</strong>;</li>
-<li>and <strong>Galois/Counter Mode (GCM)</strong>, which is often used with the block cipher
-  AES to form <strong>AES-GCM</strong>.</li>
+<li><strong>Galois/Counter Mode (GCM)</strong>, which is often used with the block cipher AES
+  to form <strong>AES-GCM</strong>.</li>
 </ul>
 <p>These authentication algorithms work by computing a hash of the ciphertext,
 which is then stored alongside the ciphertext. This hash is not a regular hash,
@@ -662,18 +662,18 @@ a fixed-size bit string:</p>
 <p>During decryption, the same authentication algorithm is run again on the
 ciphertext, and a new tag is produced. If the new tag matches the original tag
 (that was stored alongside the ciphertext), then decryption succeeds. Else, if
-the tags don’t match, it means that the ciphertext was modified (or the tag was
-modified), and decryption fails. This gives us a way to detect tampering and
-gives us the opportunity to reject ciphertexts that were not produced by the
-secret key.</p>
+the tags don’t match, it means that the ciphertext was modified (or the stored
+tag was modified), and decryption fails. This gives us a way to detect
+tampering and gives us the opportunity to reject ciphertexts that were not
+produced by the secret key.</p>
 <p>The secret key passed to the keyed hash function is not necessarily the same
 secret key used for the encryption. In fact, both ChaCha20-Poly1305 and AES-GCM
 operate on a <strong>subkey</strong> derived from the key used for encryption.</p>
 <h2 id="poly1305">Poly1305</h2>
 <p>Poly1305 is a keyed hash function proposed by <a href="https://en.wikipedia.org/wiki/Daniel_J._Bernstein">Daniel J.
-Bernstein</a> in 2004. It works
-by using <strong>polynomials evaluated modulo the prime 2<sup>130</sup> - 5</strong>, hence
-the name.</p>
+Bernstein</a> in 2004, who is
+also the author of ChaCha20. It works by using <strong>polynomials evaluated modulo
+the prime 2<sup>130</sup> - 5</strong>, hence the name.</p>
 <p>The key to Poly1305 is a 256-bit string, and it’s split into two halves:</p>
 <ul>
 <li>the first half (128 bits) is called $r$;</li>
@@ -898,8 +898,8 @@ requiring a fresh state. The reason why RFC 8439 does that is because…
 spoiler alert: ChaCha20 is a block cipher under the hood. Its block size is
 512 bits. If you read the RFC, you’ll see that it asks to call the ChaCha20
 block encryption function once, grab the first 256 bits, and discard the
-rest. Here I’m using ChaCha20 as a stream cipher, so I have to include this
-extra step to discard the bits.</p>
+rest. Here I’m treating ChaCha20 as a stream cipher, so I have to include
+this extra step to discard the bits.</p>
 </li>
 <li>
 <p>The <strong>plaintext</strong> is <strong>encrypted</strong> using the stream cipher.</p>
@@ -1104,7 +1104,7 @@ concept of finite fields as we know them today.</p>
 <p>As we did before with Poly1305, we are going to first see how the keyed hash
 function used by GCM works, and then we will see how to use it to construct an
 authenticated cipher like AES-GCM on top of it. Before we can do that though,
-we need to understand what are finite fields, and what specific type of finite
+we need to understand what finite fields are, and what specific types of finite
 fields are used in GCM.</p>
 <h3 id="finite-fields-galois-fields">Finite Fields (Galois Fields)</h3>
 <p>What is a field? A field is a mathematical structure that contains a bunch of
@@ -1146,12 +1146,12 @@ integers don’t have multiplicative inverses (for example, there’s no integer
 that multiplied by 5 makes the result equal to 1). However, there is a way to
 turn the integers into a field: if we take the integers and a prime number <em>p</em>,
 then we can construct the <strong>field of integers modulo <em>p</em></strong>.</p>
-<p>When we work in the integers modulo a prime <em>p</em>, whenever we see <em>p</em> appear in
-any of our expressions, we can replace it with 0. In other words, in such a
+<p>When we work with the integers modulo a prime <em>p</em>, whenever we see <em>p</em> appear
+in any of our expressions, we can replace it with 0. In other words, in such a
 field, <em>p</em> and 0 are two different ways to write the same element–they are two
 different <em>representations</em> of the same element.</p>
 <p>Here is an example: in the field of integers modulo 7, the expression 5 + 3
-equals 1 because</p>
+equals 1, because:</p>
 <ul>
 <li>5 + 3 evaluates to 8;</li>
 <li>8, by definition, is 7 + 1;</li>
@@ -1160,16 +1160,16 @@ equals 1 because</p>
 </ul>
 <p>What we have just seen is that 8 is just a different representation of 1, just
 like 7 is a different representation of 0. Different symbols, same object.
-Just like, in programming languages, we can have multiple variables point to
+Just like, in programming languages, we can have multiple variables pointing to
 the same memory location: here the numbers are like variables, and what they
 point to is what really matters.</p>
 <p>In the field of integers modulo 7, the additive inverse for 5 is 2, because 5
 + 2 = 7 = 0. If we manipulate the equation, we get that 5 = −2. In other words,
-5 and −2 are two different representations of the same element, and for the
-same reason 2 and −5 are also two different representations of the same
-element. A similar story holds for multiplication: the multiplicative inverse
-for 5 is 3 because: 5 · 3 = 15 = 7 + 7 + 1 = 1, so we can write 5 =
-3<sup>−1</sup> as well as 3 = 5<sup>−1</sup>.</p>
+5 and −2 are two different representations for the same element, and similarly
+2 and −5 are also two different representations of the same element. A similar
+story holds for multiplication: the multiplicative inverse for 5 is 3 because:
+5 · 3 = 15 = 7 + 7 + 1 = 1, so we can write 5 = 3<sup>−1</sup> as well as 3 =
+5<sup>−1</sup>.</p>
 <p>What we have just seen is an example of a <strong>finite field</strong>. It’s different from
 a general field because it contains a finite number of elements (unlike
 fractions, which do not have a limit). In the case of the integers modulo 7,
@@ -1186,12 +1186,13 @@ elements, and inverse elements are well-defined, you can get a field. Using
 programming terms, you can think of a field as an interface or a trait that can
 have arbitrary implementations.</p>
 <p>An important result in algebra is that finite fields with the same number of
-elements are unique up to isomorphism. This means that if two finite fields the
-same number of elements, then there is an equivalence relation between the two.
-The number of elements of a field is therefore enough to define a field. It’s
-not enough to tell us what the elements of the field look like, or how they can
-be represented, but it’s enough to know how it behaves. To denote a field with
-$n$ elements, there are two major notations: $GF(n)$ and $\mathbb{F}_{n}$.</p>
+elements are “unique up to isomorphism”. This means that if two finite fields
+have the same number of elements, then there is an equivalence relation between
+the two. The number of elements of a field is therefore enough to define a
+field. It’s not enough to tell us what the elements of the field look like, or
+how they can be represented, but it’s enough to know how it behaves. To denote
+a field with $n$ elements, there are two major notations: $GF(n)$ and
+$\mathbb{F}_{n}$.</p>
 <p>Another important result in algebra is that $n$ may be either a prime number,
 or a power of a prime. For example, we can have finite fields with 2 elements,
 or with 9 (= 3<sup>2</sup>) elements, but we cannot have a field with 6 (= 2·3)
@@ -1268,13 +1269,13 @@ an irreducible polynomial</strong>.</p>
 </tr>
 </tbody>
 </table>
-<p>Let’s take a look at how arithmetic in polynomial fields work.  Let’s take, for
+<p>Let’s take a look at how arithmetic in polynomial fields works. Let’s take, for
 example, the field of polynomials with integer coefficients modulo $x^3 + x +
 1$, and try to compute the result of $(x^2 + 1)(x^2 + 2)$. If we expand the
 expression, we get:</p>
 <p>$$(x^2 + 1)(x^2 + 2) = x^4 + 3x^2 + 2$$</p>
 <p>This expression can be <em>reduced</em>. Reducing a polynomial expression is the
-equivalent of what we were doing with integers modulo a prime, when we were
+equivalent of what we were doing with the integers modulo a prime, when we were
 saying that 8 = 7 + 1 = 1 (mod 7). That “conversion” from 8 to 1 is the
 equivalent of the reduction that we’re talking about here.</p>
 <p>To reduce $x^4 + 3x^2 + 2$, first note that $x^4 = x \cdot x^3$. Also note that
@@ -1313,7 +1314,7 @@ represented in a very compact and natural way on computers.</p>
 perhaps we can use bitwise operations to perform arithmetic on binary
 polynomials. And this turns out to be true, in fact:</p>
 <ul>
-<li>binary polynomial addition can be computed using the XOR on the two
+<li>binary polynomial addition can be computed using the XOR operator on the two
   corresponding bit strings;</li>
 <li>binary polynomial multiplication can be computed using XOR, AND and
   bit-shifting.</li>
