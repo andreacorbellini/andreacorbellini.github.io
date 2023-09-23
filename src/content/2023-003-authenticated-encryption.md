@@ -368,11 +368,11 @@ The problem we have just seen is known as **lack of diffusion**. This is kinda
 analogous to the first problem we identified with stream ciphers: at the root
 of both problems there is key reuse. We solved this problem for stream ciphers
 by combining a key with a random nonce. We could use the same strategy here,
-would be an expensive approach, as initializing a block cipher with a new key
-is a relatively expensive operation. It's much cheaper to initialize the block
-cipher once, and reuse it for every block encryption. We need a way to "link"
-blocks to each other, so that if two linked blocks contain the same plaintext,
-their encryption will give different results.
+but it would be an expensive approach, as initializing a block cipher with a
+new key is a relatively expensive operation. It's much cheaper to initialize
+the block cipher once, and reuse it for every block encryption. We need a way
+to "link" blocks to each other, so that if two linked blocks contain the same
+plaintext, their encryption will give different results.
 
 There are various strategies do that. These strategies are known as [*mode of
 operation*](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation) of
@@ -636,7 +636,7 @@ Does this mean that modern ciphers, like ChaCha20 and AES, should be considered
 insecure and avoided? Absolutely not! The correct answer is that those ciphers
 cannot be used alone. You should think of them as basic building blocks, and
 you need some additional building blocks in order to construct a complete and
-secure cryptosystem. One of these additional building block, that we are going
+secure cryptosystem. One of these additional building blocks, that we are going
 to explore in this article, is an algorithm that provides integrity and
 authentication: welcome **Authenticated Encryption (AE)**.
 
@@ -653,8 +653,8 @@ authentication algorithms:
 
 - **Poly1305**, which is often used in conjunction with the stream cipher
   ChaCha20 to form **ChaCha20-Poly1305**;
-- and **Galois/Counter Mode (GCM)**, which is often used with the block cipher
-  AES to form **AES-GCM**.
+- **Galois/Counter Mode (GCM)**, which is often used with the block cipher AES
+  to form **AES-GCM**.
 
 These authentication algorithms work by computing a hash of the ciphertext,
 which is then stored alongside the ciphertext. This hash is not a regular hash,
@@ -674,10 +674,10 @@ The output of the keyed hash is more often called *Message Authentication Code
 During decryption, the same authentication algorithm is run again on the
 ciphertext, and a new tag is produced. If the new tag matches the original tag
 (that was stored alongside the ciphertext), then decryption succeeds. Else, if
-the tags don't match, it means that the ciphertext was modified (or the tag was
-modified), and decryption fails. This gives us a way to detect tampering and
-gives us the opportunity to reject ciphertexts that were not produced by the
-secret key.
+the tags don't match, it means that the ciphertext was modified (or the stored
+tag was modified), and decryption fails. This gives us a way to detect
+tampering and gives us the opportunity to reject ciphertexts that were not
+produced by the secret key.
 
 The secret key passed to the keyed hash function is not necessarily the same
 secret key used for the encryption. In fact, both ChaCha20-Poly1305 and AES-GCM
@@ -686,9 +686,9 @@ operate on a **subkey** derived from the key used for encryption.
 ## Poly1305
 
 Poly1305 is a keyed hash function proposed by [Daniel J.
-Bernstein](https://en.wikipedia.org/wiki/Daniel_J._Bernstein) in 2004. It works
-by using **polynomials evaluated modulo the prime 2<sup>130</sup> - 5**, hence
-the name.
+Bernstein](https://en.wikipedia.org/wiki/Daniel_J._Bernstein) in 2004, who is
+also the author of ChaCha20. It works by using **polynomials evaluated modulo
+the prime 2<sup>130</sup> - 5**, hence the name.
 
 The key to Poly1305 is a 256-bit string, and it's split into two halves:
 
@@ -917,8 +917,8 @@ ChaCha20-Poly1305 works in the following way:
     spoiler alert: ChaCha20 is a block cipher under the hood. Its block size is
     512 bits. If you read the RFC, you'll see that it asks to call the ChaCha20
     block encryption function once, grab the first 256 bits, and discard the
-    rest. Here I'm using ChaCha20 as a stream cipher, so I have to include this
-    extra step to discard the bits.
+    rest. Here I'm treating ChaCha20 as a stream cipher, so I have to include
+    this extra step to discard the bits.
 
 1.  The **plaintext** is **encrypted** using the stream cipher.
 
@@ -1134,7 +1134,7 @@ concept of finite fields as we know them today.
 As we did before with Poly1305, we are going to first see how the keyed hash
 function used by GCM works, and then we will see how to use it to construct an
 authenticated cipher like AES-GCM on top of it. Before we can do that though,
-we need to understand what are finite fields, and what specific type of finite
+we need to understand what finite fields are, and what specific types of finite
 fields are used in GCM.
 
 ### Finite Fields (Galois Fields)
@@ -1182,13 +1182,13 @@ that multiplied by 5 makes the result equal to 1). However, there is a way to
 turn the integers into a field: if we take the integers and a prime number *p*,
 then we can construct the **field of integers modulo _p_**.
 
-When we work in the integers modulo a prime *p*, whenever we see *p* appear in
-any of our expressions, we can replace it with 0. In other words, in such a
+When we work with the integers modulo a prime *p*, whenever we see *p* appear
+in any of our expressions, we can replace it with 0. In other words, in such a
 field, *p* and 0 are two different ways to write the same element--they are two
 different *representations* of the same element.
 
 Here is an example: in the field of integers modulo 7, the expression 5 + 3
-equals 1 because
+equals 1, because:
 
 - 5 + 3 evaluates to 8;
 - 8, by definition, is 7 + 1;
@@ -1197,17 +1197,17 @@ equals 1 because
 
 What we have just seen is that 8 is just a different representation of 1, just
 like 7 is a different representation of 0. Different symbols, same object.
-Just like, in programming languages, we can have multiple variables point to
+Just like, in programming languages, we can have multiple variables pointing to
 the same memory location: here the numbers are like variables, and what they
 point to is what really matters.
 
 In the field of integers modulo 7, the additive inverse for 5 is 2, because 5
 + 2 = 7 = 0. If we manipulate the equation, we get that 5 = −2. In other words,
-5 and −2 are two different representations of the same element, and for the
-same reason 2 and −5 are also two different representations of the same
-element. A similar story holds for multiplication: the multiplicative inverse
-for 5 is 3 because: 5 · 3 = 15 = 7 + 7 + 1 = 1, so we can write 5 =
-3<sup>−1</sup> as well as 3 = 5<sup>−1</sup>.
+5 and −2 are two different representations for the same element, and similarly
+2 and −5 are also two different representations of the same element. A similar
+story holds for multiplication: the multiplicative inverse for 5 is 3 because:
+5 · 3 = 15 = 7 + 7 + 1 = 1, so we can write 5 = 3<sup>−1</sup> as well as 3 =
+5<sup>−1</sup>.
 
 What we have just seen is an example of a **finite field**. It's different from
 a general field because it contains a finite number of elements (unlike
@@ -1228,12 +1228,13 @@ programming terms, you can think of a field as an interface or a trait that can
 have arbitrary implementations.
 
 An important result in algebra is that finite fields with the same number of
-elements are unique up to isomorphism. This means that if two finite fields the
-same number of elements, then there is an equivalence relation between the two.
-The number of elements of a field is therefore enough to define a field. It's
-not enough to tell us what the elements of the field look like, or how they can
-be represented, but it's enough to know how it behaves. To denote a field with
-$n$ elements, there are two major notations: $GF(n)$ and $\mathbb{F}_{n}$.
+elements are "unique up to isomorphism". This means that if two finite fields
+have the same number of elements, then there is an equivalence relation between
+the two. The number of elements of a field is therefore enough to define a
+field. It's not enough to tell us what the elements of the field look like, or
+how they can be represented, but it's enough to know how it behaves. To denote
+a field with $n$ elements, there are two major notations: $GF(n)$ and
+$\mathbb{F}_{n}$.
 
 Another important result in algebra is that $n$ may be either a prime number,
 or a power of a prime. For example, we can have finite fields with 2 elements,
@@ -1306,7 +1307,7 @@ an irreducible polynomial**.
 | Prime numbers: 2, 3, 5, 7, 11, …               | Irreducible polynomials: $x + 1$, $x^2 - 2$, $x^2 + x + 1$, … |
 | Integers modulo a prime number                 | Polynomials modulo an irreducible polynomial                  |
 
-Let's take a look at how arithmetic in polynomial fields work.  Let's take, for
+Let's take a look at how arithmetic in polynomial fields works. Let's take, for
 example, the field of polynomials with integer coefficients modulo $x^3 + x +
 1$, and try to compute the result of $(x^2 + 1)(x^2 + 2)$. If we expand the
 expression, we get:
@@ -1314,7 +1315,7 @@ expression, we get:
 $$(x^2 + 1)(x^2 + 2) = x^4 + 3x^2 + 2$$
 
 This expression can be *reduced*. Reducing a polynomial expression is the
-equivalent of what we were doing with integers modulo a prime, when we were
+equivalent of what we were doing with the integers modulo a prime, when we were
 saying that 8 = 7 + 1 = 1 (mod 7). That "conversion" from 8 to 1 is the
 equivalent of the reduction that we're talking about here.
 
@@ -1365,7 +1366,7 @@ The duality between binary polynomials and bit strings also suggests that
 perhaps we can use bitwise operations to perform arithmetic on binary
 polynomials. And this turns out to be true, in fact:
 
-* binary polynomial addition can be computed using the XOR on the two
+* binary polynomial addition can be computed using the XOR operator on the two
   corresponding bit strings;
 * binary polynomial multiplication can be computed using XOR, AND and
   bit-shifting.
