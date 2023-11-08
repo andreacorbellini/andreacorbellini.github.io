@@ -15,9 +15,12 @@ I'm passionate about:
 * Pure mathematics: in these days I'm particularly focused on algebraic
   topology, category theory and complex analysis.
 
-When I'm not coding, I'm usually some meters underwater. The watery picture above
-from the beautiful [Lake Garda](https://en.wikipedia.org/wiki/Lake_Garda), in
-Italy, where I did hundreds of dives.
+When I'm not coding, I'm usually some meters underwater. The watery picture
+above from the beautiful [Lake
+Garda](https://en.wikipedia.org/wiki/Lake_Garda), in Italy, where I did
+hundreds of dives. Nowadays I dive mostly in the [Puget
+Sound](https://en.wikipedia.org/wiki/Puget_Sound) and [Lake
+Washington](https://en.wikipedia.org/wiki/Lake_Washington).
 
 If you have something cool to share, or if you just want to know more about me
 or what I do, you can reach out at:
@@ -25,7 +28,6 @@ or what I do, you can reach out at:
 <ul class="about-link-list">
   <li><a href="mailto:corbellini.andrea@gmail.com" rel="me" class="email">Email</a></li>
   <li><a href="https://ubuntu.social/@andrea" rel="me" class="mastodon">Mastodon</a></li>
-  <li><a href="https://linkedin.com/in/andreacorbellini" rel="me" class="linkedin">LinkedIn</a></li>
 </ul>
 
 Opinions are my own and not the views of my employer.
