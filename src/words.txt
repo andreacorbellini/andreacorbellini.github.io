@@ -1,8 +1,10 @@
 personal_ws-1.1 en 122
 AAD
+ACL
 AE
 AEAD
 AppArmor
+AskUbuntu
 BDS
 BIPM
 BeiDou
@@ -13,6 +15,7 @@ CPUs
 Certicom
 ChaCha
 Comodo
+Ctrl
 DBus
 DNS
 DNSSEC
@@ -22,6 +25,7 @@ ECDLP
 ECIES
 ECPy
 EFAIL
+EFI
 ElGamal
 Friedl
 GCM
@@ -29,6 +33,7 @@ GHASH
 GLONASS
 GNSS
 GPG
+GPT
 Garda
 GiB
 Gmail
@@ -62,10 +67,13 @@ NVMe
 Netpbm
 NetworkManager
 OAEP
+OVMF
 OpenSSH
 OpenSSL
 OverlayFS
 PCIe
+PCR
+PCRs
 POLYVAL
 PTP
 RGB
@@ -82,8 +90,10 @@ StackOverflow
 StarCom
 Stéphane
 TAI
+TPM
 TiB
 UDP
+UEFI
 UTF
 Verisign
 Viega
@@ -98,6 +108,8 @@ balancer
 bitmask
 bitwise
 blowfish
+bootable
+bootloader
 broadcasted
 brtfs
 caesium
@@ -153,6 +165,7 @@ hyperelliptic
 img
 indistinguishability
 init
+initrd
 io
 jitter
 kB
@@ -164,6 +177,7 @@ lvm
 lxc
 lxd
 malleate
+mantic
 misconfigured
 mkdir
 mknod
@@ -202,6 +216,7 @@ sha
 spacetime
 subkey
 swapaccount
+swtpm
 sys
 syscalls
 sysfs
@@ -214,17 +229,20 @@ ubuntu
 uid
 ulimit
 uncorrectable
+unsealable
 unsuspicious
 untrusted
 unxz
 urandom
 utils
+vTPM
 vala
 verifiably
 visualizable
 webdm
 webserver
 wget
+writeable
 xkcd
 xz
 yay
