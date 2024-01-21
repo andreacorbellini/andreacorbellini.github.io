@@ -57,10 +57,12 @@ main#content {
       list-style: none;
 
       li {
-        display: inline-block;
-        padding-left: 2em;
-        &:first-child {
-          padding-left: 0;
+        @media (min-width: @screen-width-medium) {
+          display: inline-block;
+          padding-left: 2em;
+          &:first-child {
+            padding-left: 0;
+          }
         }
       }
 
