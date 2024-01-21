@@ -1,4 +1,5 @@
 <ul class="article-details">
   <li><time datetime="{{ article.date.isoformat() }}">{{ article.date.strftime('%B %d, %Y') }}</time></li>
+  <li><a href="{{ SITEURL }}/{{ article.category.url }}" title="Category" class="category">{{ article.category }}</a></li>
   <li><a href="{{ SITEURL }}/{{ article.url }}#comments" title="Comments" class="comments"><span class="remark42__counter" data-url="{{ SITEURL }}/{{ article.url }}"></span> Comments</a></li>
 </ul>
