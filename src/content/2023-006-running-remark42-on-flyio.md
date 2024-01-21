@@ -1,6 +1,7 @@
 Title: How to run Remark42 on Fly.io
 Date: 2023-09-19 02:12:00
 Author: andreacorbellini
+Category: blog
 Slug: running-remark42-on-flyio
 Image: images/remark42-setup.svg
 Status: published

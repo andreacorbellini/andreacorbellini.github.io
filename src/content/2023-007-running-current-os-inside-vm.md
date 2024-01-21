@@ -1,6 +1,7 @@
 Title: Running the operating system that you're currently using in a virtual machine (with Secure Boot and TPM emulation)
 Date: 2023-11-19 16:33
 Author: andreacorbellini
+Category: information-technology
 Slug: running-current-os-inside-vm
 Status: published
 

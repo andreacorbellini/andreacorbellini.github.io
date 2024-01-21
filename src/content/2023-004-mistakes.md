@@ -1,6 +1,7 @@
 Title: On ignoring mistakes, resilience, and the hidden dangers therein
 Date: 2023-03-18 08:20
 Author: andreacorbellini
+Category: behavior
 Slug: mistakes
 Status: published
 

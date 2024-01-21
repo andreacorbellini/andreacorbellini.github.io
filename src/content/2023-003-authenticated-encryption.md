@@ -1,6 +1,7 @@
 Title: Authenticated encryption: why you need it and how it works
 Date: 2023-03-09 18:35
 Author: andreacorbellini
+Category: cryptography
 Slug: authenticated-encryption
 Image: images/lack-of-diffusion.webp
 Status: published

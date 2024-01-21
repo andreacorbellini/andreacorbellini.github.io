@@ -1,6 +1,7 @@
 Title: My journey from Disqus to Remark42
 Date: 2023-09-05 08:30
 Author: andreacorbellini
+Category: blog
 Slug: disqus-to-remark42
 Status: published
 

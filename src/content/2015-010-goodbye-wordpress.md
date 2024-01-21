@@ -1,7 +1,7 @@
 Title: Hello Pelican!
 Date: 2015-08-02 18:55
 Author: andreacorbellini
-Category: misc
+Category: blog
 Tags: blog, pelican, wordpress
 Slug: hello-pelican
 Status: published

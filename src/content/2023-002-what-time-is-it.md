@@ -1,7 +1,7 @@
 Title: What time is it? A simple question with a complex answer. How computers synchronize time
 Date: 2023-01-23 19:15
 Author: andreacorbellini
-Category: time
+Category: information-technology
 Tags: time, relativity, performance, clocks, ntp, ptp
 Slug: what-time-is-it
 Image: images/ntp-sync-algorithm.svg

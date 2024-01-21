@@ -1,7 +1,7 @@
 Title: Are LXC and Docker secure?
 Date: 2015-02-20 16:36
 Author: andreacorbellini
-Category: cloud
+Category: information-technology
 Tags: docker, lxc, security
 Slug: are-lxc-and-docker-secure
 Status: published

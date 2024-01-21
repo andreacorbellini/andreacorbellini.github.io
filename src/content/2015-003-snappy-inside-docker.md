@@ -1,7 +1,7 @@
 Title: Running Ubuntu Snappy inside Docker
 Date: 2015-03-25 20:46
 Author: andreacorbellini
-Category: cloud
+Category: ubuntu
 Tags: docker, snappy, ubuntu, ubuntu core, xkcd
 Slug: running-ubuntu-snappy-inside-docker
 Status: published

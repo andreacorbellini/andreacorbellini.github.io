@@ -1,7 +1,7 @@
 Title: When bureaucracy hits the web: the cookie law
 Date: 2015-09-22 18:35
 Author: andreacorbellini
-Category: misc
+Category: blog
 Tags: blog, cookie-law
 Slug: cookie-law
 Status: published
