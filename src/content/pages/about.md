@@ -27,7 +27,7 @@ or what I do, you can reach out at:
 
 <ul class="about-link-list">
   <li><a href="mailto:corbellini.andrea@gmail.com" rel="me" class="email">Email</a></li>
-  <li><a href="https://ubuntu.social/@andrea" rel="me" class="mastodon">Mastodon</a></li>
+  <li><a href="https://mstdn.social/@andrea" rel="me" class="mastodon">Mastodon</a></li>
 </ul>
 
 Opinions are my own and not the views of my employer.

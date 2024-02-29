@@ -155,6 +155,7 @@ UBUNTU_FEED_RSS = None
 # rel="me" links
 REL_ME_LINKS = (
     'https://ubuntu.social/@andrea',
+    'https://mstdn.social/@andxor',
 )
 
 
