@@ -610,18 +610,22 @@ or &lt;em&gt;change&lt;/em&gt; environment variables, but not to &lt;em&gt;remov
 &lt;code&gt;https://${app_name}.fly.dev/web&lt;/code&gt;. This should let you read and post new
 comments.&lt;/p&gt;
 &lt;h1 id="configuring-remark42-to-send-emails"&gt;Configuring Remark42 to send emails&lt;/h1&gt;
-&lt;p&gt;For sending emails, I chose to use &lt;a href="https://elasticemail.com/"&gt;Elastic Email&lt;/a&gt;,
-which is an email-delivery service that supports SMTP with STARTTLS. Creating
-an Elastic Email, setting up
+&lt;p&gt;For sending emails, I chose to use &lt;strike&gt;Elastic Email&lt;/strike&gt;
+&lt;a href="https://mailtrap.io/"&gt;Mailtrap&lt;/a&gt;, which is an email-delivery service that
+supports SMTP with STARTTLS. Creating a Mailtrap account, setting up
 &lt;a href="https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail"&gt;DKIM&lt;/a&gt; and
 &lt;a href="https://en.wikipedia.org/wiki/Sender_Policy_Framework"&gt;SPF&lt;/a&gt;, and obtaining
-SMTP credentials was extremely easy with Elastic Email, so I won’t cover it
-here.&lt;/p&gt;
+SMTP credentials was extremely easy, so I won’t cover it here.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; I initially chose to go with Elastic Email, but I found it to be
+garbage. They force the insertion of tracking URLs every one of your emails,
+and they refuse to disable tracking if you ask them to.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Setting up email delivery with Remark42 is pretty easy once you have the SMTP
 credentials. Set the necessary (non-secret) configuration like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;fly&lt;span class="w"&gt; &lt;/span&gt;machines&lt;span class="w"&gt; &lt;/span&gt;update&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;machine_id&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--app&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;app_name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_HOST&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;smtp.elasticemail.com&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_PORT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2525&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_HOST&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;live.smtp.mailtrap.io&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_PORT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;587&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_STARTTLS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;SMTP_USERNAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;

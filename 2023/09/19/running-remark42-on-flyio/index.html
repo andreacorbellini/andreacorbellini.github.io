@@ -374,18 +374,22 @@ or <em>change</em> environment variables, but not to <em>remove</em> them).</p>
 <code>https://${app_name}.fly.dev/web</code>. This should let you read and post new
 comments.</p>
 <h1 id="configuring-remark42-to-send-emails">Configuring Remark42 to send emails</h1>
-<p>For sending emails, I chose to use <a href="https://elasticemail.com/">Elastic Email</a>,
-which is an email-delivery service that supports SMTP with STARTTLS. Creating
-an Elastic Email, setting up
+<p>For sending emails, I chose to use <strike>Elastic Email</strike>
+<a href="https://mailtrap.io/">Mailtrap</a>, which is an email-delivery service that
+supports SMTP with STARTTLS. Creating a Mailtrap account, setting up
 <a href="https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail">DKIM</a> and
 <a href="https://en.wikipedia.org/wiki/Sender_Policy_Framework">SPF</a>, and obtaining
-SMTP credentials was extremely easy with Elastic Email, so I won’t cover it
-here.</p>
+SMTP credentials was extremely easy, so I won’t cover it here.</p>
+<blockquote>
+<p><strong>UPDATE:</strong> I initially chose to go with Elastic Email, but I found it to be
+garbage. They force the insertion of tracking URLs every one of your emails,
+and they refuse to disable tracking if you ask them to.</p>
+</blockquote>
 <p>Setting up email delivery with Remark42 is pretty easy once you have the SMTP
 credentials. Set the necessary (non-secret) configuration like this:</p>
 <div class="highlight"><pre><span></span><code>fly<span class="w"> </span>machines<span class="w"> </span>update<span class="w"> </span><span class="si">${</span><span class="nv">machine_id</span><span class="si">}</span><span class="w"> </span>--app<span class="o">=</span><span class="si">${</span><span class="nv">app_name</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_HOST</span><span class="o">=</span>smtp.elasticemail.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_PORT</span><span class="o">=</span><span class="m">2525</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_HOST</span><span class="o">=</span>live.smtp.mailtrap.io<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_PORT</span><span class="o">=</span><span class="m">587</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_STARTTLS</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">SMTP_USERNAME</span><span class="o">=</span>...
 </code></pre></div>
