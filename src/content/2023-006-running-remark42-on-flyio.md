@@ -331,21 +331,24 @@ comments.
 
 # Configuring Remark42 to send emails
 
-For sending emails, I chose to use [Elastic Email](https://elasticemail.com/),
-which is an email-delivery service that supports SMTP with STARTTLS. Creating
-an Elastic Email, setting up
+For sending emails, I chose to use <strike>Elastic Email</strike>
+[Mailtrap](https://mailtrap.io/), which is an email-delivery service that
+supports SMTP with STARTTLS. Creating a Mailtrap account, setting up
 [DKIM](https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail) and
 [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework), and obtaining
-SMTP credentials was extremely easy with Elastic Email, so I won't cover it
-here.
+SMTP credentials was extremely easy, so I won't cover it here.
+
+> **UPDATE:** I initially chose to go with Elastic Email, but I found it to be
+> garbage. They force the insertion of tracking URLs every one of your emails,
+> and they refuse to disable tracking if you ask them to.
 
 Setting up email delivery with Remark42 is pretty easy once you have the SMTP
 credentials. Set the necessary (non-secret) configuration like this:
 
 ```sh
 fly machines update ${machine_id} --app=${app_name} \
-  -e SMTP_HOST=smtp.elasticemail.com \
-  -e SMTP_PORT=2525 \
+  -e SMTP_HOST=live.smtp.mailtrap.io \
+  -e SMTP_PORT=587 \
   -e SMTP_STARTTLS=true \
   -e SMTP_USERNAME=...
 ```
