@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Andrea Corbellini</title><link href="https://andrea.corbellini.name/" rel="alternate"/><link href="https://andrea.corbellini.name/feed.atom" rel="self"/><id>https://andrea.corbellini.name/</id><updated>2023-11-19T16:33:00+00:00</updated><entry><title>Running the operating system that you're currently using in a virtual machine (with Secure Boot and TPM emulation)</title><link href="https://andrea.corbellini.name/2023/11/19/running-current-os-inside-vm/" rel="alternate"/><published>2023-11-19T16:33:00+00:00</published><updated>2023-11-19T16:33:00+00:00</updated><author><name>andreacorbellini</name></author><id>tag:andrea.corbellini.name,2023-11-19:/2023/11/19/running-current-os-inside-vm/</id><summary type="html">&lt;p&gt;In this article I will show you how to start your current operating system
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Andrea Corbellini</title><link href="https://andrea.corbellini.name/" rel="alternate"/><link href="https://andrea.corbellini.name/feed.atom" rel="self"/><id>https://andrea.corbellini.name/</id><updated>2025-08-20T17:17:00+00:00</updated><entry><title>It will take decades to undo the damage done by "AI"</title><link href="https://andrea.corbellini.name/2025/08/20/it-will-take-decades-to-undo-the-damage-done-by-ai/" rel="alternate"/><published>2025-08-20T17:17:00+00:00</published><updated>2025-08-20T17:17:00+00:00</updated><author><name>andreacorbellini</name></author><id>tag:andrea.corbellini.name,2025-08-20:/2025/08/20/it-will-take-decades-to-undo-the-damage-done-by-ai/</id><summary type="html">&lt;p&gt;Many business owners in the software development industry are investing a lot
+into LLM bots, marketed as “generative AI”. Some of them go as far as &lt;em&gt;forcing&lt;/em&gt;
+software developers to use such tools under the threat of being fired if they
+don’t comply. After all, why shouldn’t they? This technology has a catchy name,
+it produces very convincing output that sometimes is …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Many business owners in the software development industry are investing a lot
+into LLM bots, marketed as “generative AI”. Some of them go as far as &lt;em&gt;forcing&lt;/em&gt;
+software developers to use such tools under the threat of being fired if they
+don’t comply. After all, why shouldn’t they? This technology has a catchy name,
+it produces very convincing output that sometimes is correct (or close to being
+correct), and companies producing these tools are very good at downplaying
+their limitations and at promising that the “next version” will be
+astonishingly better than the one before.&lt;/p&gt;
+&lt;p&gt;My day-to-day experience, and scientific research, however show a quite big
+problem: while senior developers get little or no gain from “generative AI”
+(&lt;a href="https://www.reuters.com/business/ai-slows-down-some-experienced-software-developers-study-finds-2025-07-10/"&gt;1&lt;/a&gt;,
+&lt;a href="https://fortune.com/2025/07/20/ai-hampers-productivity-software-developers-productivity-study/"&gt;2&lt;/a&gt;,
+&lt;a href="https://blueheadline.com/software-dev/ai-helps-new-developers-but-seniors/"&gt;3&lt;/a&gt;,
+&lt;a href="https://blog.stackademic.com/ai-coding-tools-slow-senior-devs-by-19-why-experts-are-still-using-them-98d855b81c4e"&gt;4&lt;/a&gt;),
+junior developers get massive boosts in productivity. Why am I describing a
+boost in productivity as a problem? Well, it’s simple: the new generations of
+software developers (the ones that are just entering the job market, and the
+ones that are still in school) are relying heavily on these LLM tools for
+&lt;em&gt;nearly all&lt;/em&gt; work-related tasks. And, again, why shouldn’t they? The entire
+world is telling them to do so! And as a result of that, they are advancing
+without gaining any actual skill.&lt;/p&gt;
+&lt;p&gt;Me and other (ex-)coworkers have seen it first hand: a junior developer
+completes a task using an LLM bot. More senior developers find major problems
+with the result. Junior developers go back to the LLM tool asking for a fix,
+wasting hours or days without a positive outcome. &lt;strong&gt;Junior developers are
+becoming unable to perform tasks independently.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In addition to that, there’s a problem that I feel like is not talked about
+extensively: these LLM tools can only regurgitate what they’ve been trained
+with. They’re good at finding patterns and re-applying strategies that have
+been used in prior work, but by their nature they cannot &lt;em&gt;create&lt;/em&gt; or
+&lt;em&gt;innovate&lt;/em&gt;. So, if this trend continues, &lt;strong&gt;the new generations of software
+developers are not just going to be &lt;em&gt;skill-less&lt;/em&gt;, they’re also going to be
+incapable of solving new problems that haven’t been seen before&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;My prediction? &lt;strong&gt;Within 10 or 20 years, the older generation of software
+developers will be asked to come out of retirement to fix the unmaintainable
+mess created by the newer generations, and to make advancements in the
+information technology sector.&lt;/strong&gt; A bit like old COBOL developers are asked to
+come out of retirement to maintain banking systems, but on a much larger scale.
+This, unless there will be advancements towards &lt;em&gt;true&lt;/em&gt; Artificial Intelligence,
+or unless the current trend in education is broken.&lt;/p&gt;
+&lt;p&gt;Now don’t get me wrong: I’m not opposed to LLM bots (although I’m against
+calling them “AI”, because they’re very far from fulfilling the AI promise),
+and I think they can be very powerful tools. What I’m worried about is that new
+generations are being told to rely on them almost exclusively, and this can
+only lead to an evident skill gap. In fact, I think that if there’s a country
+that in the future will be able to harness the power of the LLM bots and &lt;em&gt;at
+the same time&lt;/em&gt; maintain a good enough level of education, thus addressing the
+skill gap problem, they will be the dominant economic power of the future,
+because they will be able to automate tasks that are time/energy-consuming for
+humans, while at the same time use the human brain to innovate and advance.&lt;/p&gt;</content><category term="information-technology"/></entry><entry><title>Running the operating system that you're currently using in a virtual machine (with Secure Boot and TPM emulation)</title><link href="https://andrea.corbellini.name/2023/11/19/running-current-os-inside-vm/" rel="alternate"/><published>2023-11-19T16:33:00+00:00</published><updated>2023-11-19T16:33:00+00:00</updated><author><name>andreacorbellini</name></author><id>tag:andrea.corbellini.name,2023-11-19:/2023/11/19/running-current-os-inside-vm/</id><summary type="html">&lt;p&gt;In this article I will show you how to start your current operating system
 inside a virtual machine. That is: launching the operating system (with all
 your settings, files, and everything), inside a virtual machine, while you’re
 using it.&lt;/p&gt;
