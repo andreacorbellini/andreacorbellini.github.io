@@ -1,5 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description/><atom:link href="https://andrea.corbellini.name/feed.rss" rel="self"/><lastBuildDate>Wed, 20 Aug 2025 17:17:00 +0000</lastBuildDate><item><title>It will take decades to undo the damage done by "AI"</title><link>https://andrea.corbellini.name/2025/08/20/it-will-take-decades-to-undo-the-damage-done-by-ai/</link><description>&lt;p&gt;Many business owners in the software development industry are investing a lot
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.name/</link><description/><atom:link href="https://andrea.corbellini.name/feed.rss" rel="self"/><lastBuildDate>Tue, 09 Sep 2025 00:05:00 +0000</lastBuildDate><item><title>Testing crash recovery features in a CI environment</title><link>https://andrea.corbellini.name/2025/09/09/testing-crash-recovery-features-in-ci/</link><description>&lt;p&gt;About two years ago I wrote a Rust crate to fulfill this promise:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If a crash occurs while updating a file, the file either contains the old
+contents, or the new contents, nothing in between.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This crate essentially solves the following problem: when you update a file,
+generally you open it, truncate it, write to it block-by-block, and eventually
+close it. The problem with this process is that if a crash occurs at any point
+during this process (the program segfaults, the kernel panics, the machine
+loses power, …), your file will be left in an intermediate state where the
+old contents are completely lost, and the new contents are only partially
+written (if at all). My crate solves this problem by making file updates &lt;em&gt;atomic&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;This crate is publicly available as &lt;a href="https://crates.io/crates/atomic-write-file"&gt;atomic-write-file&lt;/a&gt; and you can read its
+description for more details (sorry, I’m very bad at naming things).&lt;/p&gt;
+&lt;p&gt;The way the crate works is simple:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Instead of opening the &lt;em&gt;target&lt;/em&gt; file directly, the crate opens a &lt;em&gt;temporary&lt;/em&gt;
+   file.&lt;/li&gt;
+&lt;li&gt;You write to the temporary file.&lt;/li&gt;
+&lt;li&gt;Once all changes are in, the temporary file contents are synced to the
+   storage, and it is atomically renamed so that it replaces the target file.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is not by any chance a new technique that I invented, and it’s a very
+common strategy to solve the problem. This technique guarantees that if a crash
+occurs at or before step 3, then the file will have the old contents,
+unchanged. If a crash occurs after step 3, then the file will have the new
+contents.&lt;/p&gt;
+&lt;p&gt;There’s a small caveat with this technique: if a crash occurs between steps 1
+and 3, then the crate will leave behind a temporary file that occupies some
+space on the storage device with no purpose.&lt;/p&gt;
+&lt;p&gt;This is where Linux anonymous temporary files come into play: this
+Linux-specific feature allows you to create temporary files that are written on
+the filesystem, but are not given a path in the filesystem. If a crash occurs
+between step 1 and 3, the temporary file will simply be forgotten into
+oblivion.&lt;/p&gt;
+&lt;h1 id="meet-the-opponent-btrfs"&gt;Meet the opponent: btrfs&lt;/h1&gt;
+&lt;p&gt;Using Linux anonymous temporary files seemed very appealing for
+atomic-write-file to avoid leaving leftovers behind, although I knew that
+they’re not the perfect solution: there’s limited support (they’re supported
+only on Linux, and only on some filesystems), they require the use of Linux
+features that may not be available all the time (the &lt;code&gt;/proc&lt;/code&gt; filesystem), and
+they also have the problem that, sooner or later, they will need to be given a
+name if we want to be able to replace the target file, and this leaves a small
+time window during which we could leave some cruft behind.&lt;/p&gt;
+&lt;p&gt;But none of these are huge problems, and in fact atomic-write-file is able to
+do a best effort attempt at using anonymous temporary files, and reverting to
+regular files if that doesn’t work.&lt;/p&gt;
+&lt;p&gt;One day I was notified about &lt;a href="https://github.com/andreacorbellini/rust-atomic-write-file/issues/6"&gt;an issue on using my crate on the btrfs file
+system&lt;/a&gt;: after a crash, my crate could break its promise and leave the
+file contents &lt;strong&gt;empty&lt;/strong&gt;. I did some investigation on the issue that &lt;a href="https://github.com/andreacorbellini/rust-atomic-write-file/issues/6#issuecomment-2048836275"&gt;you can
+read about if you’re interested&lt;/a&gt;, and then fixed it.&lt;/p&gt;
+&lt;p&gt;This problem was specific to btrfs, and I argue that it’s actually caused by a
+btrfs bug, rather than a bug in the crate itself, but nonetheless this issue
+had revealed a critical flaw of my crate: &lt;strong&gt;I did not have any tests to check
+if my crate was fulfilling its promise or not!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Therefore I decided to create a small test suite for Linux to simulate crashes
+and inspect the contents of files after those crashes occurred on a variety of
+filesystems, which is what this blog post is about. This test suite now runs on
+my laptop and &lt;a href="https://github.com/andreacorbellini/rust-atomic-write-file/actions/workflows/crash-tests.yml"&gt;on GitHub Actions&lt;/a&gt;, and potentially any
+other CI environment.&lt;/p&gt;
+&lt;h1 id="testing-strategy"&gt;Testing strategy&lt;/h1&gt;
+&lt;p&gt;Here’s the idea I came up with: I can create a virtual machine, with a virtual
+storage device attached to it, and a filesystem initialized with a file. The
+virtual machine updates the file using atomic-write-file, and then triggers a
+kernel panic. After that, the file is inspected for consistency.&lt;/p&gt;
+&lt;p&gt;So here is how it works in practice: there are 3 main pieces:
+1. A test binary that is responsible for updating the test file using
+   atomic-write-file.
+1. An &lt;code&gt;init.sh&lt;/code&gt; script that runs inside the virtual machine.
+1. The &lt;code&gt;run-tests.sh&lt;/code&gt; script that puts everything together and starts up the
+   virtual machine.&lt;/p&gt;
+&lt;h2 id="the-test-binary"&gt;The test binary&lt;/h2&gt;
+&lt;p&gt;The test binary that is a &lt;a href="https://github.com/andreacorbellini/rust-atomic-write-file/blob/master/crash-tests/linux/src/main.rs"&gt;short Rust program&lt;/a&gt; that I can paste here:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;use&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;atomic_write_file&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;AtomicWriteFile&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;use&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;io&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;Write&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;fn&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="kd"&gt;let&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;mut&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;AtomicWriteFile&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/test/file&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;open failed&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write_all&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;b&amp;quot;hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;write failed&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;commit&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;commit failed&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Nothing special to see here: this is the minimal code required to use atomic-write-file.&lt;/p&gt;
+&lt;h2 id="the-initsh-script"&gt;The init.sh script&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/andreacorbellini/rust-atomic-write-file/blob/master/crash-tests/linux/init.sh"&gt;The &lt;code&gt;init.sh&lt;/code&gt; script&lt;/a&gt; is more interesting: this script in fact is meant to run
+&lt;em&gt;twice&lt;/em&gt;. The first time it runs, &lt;code&gt;init.sh&lt;/code&gt; will run the test binary above and
+trigger the kernel panic. The second time, it will read the test file contents
+and report them back &lt;code&gt;run-tests.sh&lt;/code&gt; script for inspection.&lt;/p&gt;
+&lt;p&gt;Let’s take a closer look at what it does: first, it mounts the &lt;code&gt;/proc&lt;/code&gt; and
+&lt;code&gt;/sys&lt;/code&gt; virtual filesystems. These are needed for some basic system functions,
+and also to enable the Linux anonymous temporary file feature.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;mount&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;proc&lt;span class="w"&gt; &lt;/span&gt;none&lt;span class="w"&gt; &lt;/span&gt;/proc
+mount&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;sysfs&lt;span class="w"&gt; &lt;/span&gt;none&lt;span class="w"&gt; &lt;/span&gt;/sys
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then it mounts the filesystem containing the test file. Before it can do that,
+however, it needs to load the correct kernel module for the filesystem. Nothing
+too fancy here: the filesystem type is simply specified on the kernel command
+line (read through &lt;code&gt;/proc/cmdline&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;fstype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;-Eo&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;test.fs=\w+&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;/proc/cmdline&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;cut&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-f2&lt;span class="k"&gt;)&lt;/span&gt;
+modprobe&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$fstype&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;||&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+mount&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$fstype&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;/dev/sdb&lt;span class="w"&gt; &lt;/span&gt;/test
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then, if this script is run for the first time, it will run the test executable and quit:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Running test binary&amp;#39;&lt;/span&gt;
+atomic-write-file-test
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;init.sh&lt;/code&gt; (as the name suggests) is run as the init script of the virtual
+machine. In Linux, if the init script quits without invoking the proper
+shutdown sequence, the kernel will panic. So we don’t actually need to do
+anything special to trigger a panic. I could have inserted a &lt;code&gt;echo c &amp;gt;
+/proc/sysrq-trigger&lt;/code&gt; line to make it more explicit, but then I figured that
+having that line wouldn’t be nice for people who want to test the script on
+their system.&lt;/p&gt;
+&lt;p&gt;You might ask: how does &lt;code&gt;init.sh&lt;/code&gt; know if it’s the first time it gets called or
+the second? Again, nothing fancy here: &lt;code&gt;run-tests.sh&lt;/code&gt; gives that hint using a
+kernel command line argument:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;-q&lt;span class="w"&gt; &lt;/span&gt;test.verify&lt;span class="w"&gt; &lt;/span&gt;/proc/cmdline&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# ...&lt;/span&gt;
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;If &lt;code&gt;test.verify&lt;/code&gt; is specified on &lt;code&gt;/proc/cmdline&lt;/code&gt;, then it means this is the
+second time this script is run. In that case, the file contents are just
+printed on the console:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;-q&lt;span class="w"&gt; &lt;/span&gt;test.verify&lt;span class="w"&gt; &lt;/span&gt;/proc/cmdline&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Verifying test file contents&amp;#39;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-----&amp;#39;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;xxd&lt;span class="w"&gt; &lt;/span&gt;/test/file
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-----&amp;#39;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;poweroff&lt;span class="w"&gt; &lt;/span&gt;-f
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This uses &lt;code&gt;xxd&lt;/code&gt; so in case there are garbled characters on screen, we can
+comfortably analyze the output and figure out what happened. At the end, the
+system is more gracefully shut down using &lt;code&gt;poweroff&lt;/code&gt; to avoid another kernel
+panic (this is not really necessary).&lt;/p&gt;
+&lt;h1 id="the-run-testssh-script"&gt;The run-tests.sh script&lt;/h1&gt;
+&lt;p&gt;And then there’s &lt;a href="https://github.com/andreacorbellini/rust-atomic-write-file/blob/master/crash-tests/linux/run-test.sh"&gt;the &lt;code&gt;run-tests.sh&lt;/code&gt; script that crates the virtual storage,
+launches the virtual machine, and inspects the file contents&lt;/a&gt;.
+This is where most the complexity is, so let’s go step-by-step (the code below
+has been simplified from the original for readability):&lt;/p&gt;
+&lt;p&gt;The first thing it does is compiling the test binary above. The virtual machine
+runs in a very barebone environment, so I used static linking to avoid having
+to copy additional libraries like &lt;code&gt;libc&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;uname&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="k"&gt;)&lt;/span&gt;-unknown-linux-gnu
+&lt;span class="nv"&gt;RUSTFLAGS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-C target-feature=+crt-static&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;cargo&lt;span class="w"&gt; &lt;/span&gt;build&lt;span class="w"&gt; &lt;/span&gt;--release&lt;span class="w"&gt; &lt;/span&gt;--features&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$cargo_features&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--target&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$target&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then &lt;code&gt;run-tests.sh&lt;/code&gt; creates a minimal &lt;a href="https://en.wikipedia.org/wiki/Initial_ramdisk"&gt;initramfs&lt;/a&gt; for the virtual machine. The
+initramfs is a filesystem that gets mounted by Linux early at boot. It’s
+generally used by Linux distributions to load the main operating system, but in
+my case the initramfs contains everything needed for the test. In particular,
+it contains:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The test binary.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;init.sh&lt;/code&gt; script.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://en.wikipedia.org/wiki/BusyBox"&gt;BusyBox&lt;/a&gt;, to get the needed utilities like &lt;code&gt;xxd&lt;/code&gt; and &lt;code&gt;poweroff&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The kernel modules to mount filesystems and their dependencies.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The first 3 items are easy to set up:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;cp&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;init.sh&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-T&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs_build_dir&lt;/span&gt;&lt;span class="s2"&gt;/sbin/init&amp;quot;&lt;/span&gt;
+cp&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;atomic-write-file-test&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs_build_dir&lt;/span&gt;&lt;span class="s2"&gt;/bin&amp;quot;&lt;/span&gt;
+cp&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;which&lt;span class="w"&gt; &lt;/span&gt;busybox&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs_build_dir&lt;/span&gt;&lt;span class="s2"&gt;/bin&amp;quot;&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$busybox&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--install&lt;span class="w"&gt; &lt;/span&gt;-s&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs_build_dir&lt;/span&gt;&lt;span class="s2"&gt;/bin&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The kernel modules are a bit more complicated. First of all: where can we get
+them from? Ideally, I would have liked to download them from some minimal Linux
+distribution, but this turned out to be more complicated than expected. In the
+end, I decided to just steal them from the host operating system:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;modules&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/usr/lib/modules/&lt;span class="k"&gt;$(&lt;/span&gt;uname&lt;span class="w"&gt; &lt;/span&gt;-r&lt;span class="k"&gt;)&lt;/span&gt;
+cp&lt;span class="w"&gt; &lt;/span&gt;-a&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$modules&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs_build_dir&lt;/span&gt;&lt;span class="s2"&gt;/lib/modules&amp;quot;&lt;/span&gt;
+
+&lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;read&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-r&lt;span class="w"&gt; &lt;/span&gt;mod_path&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;do&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[[&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;*.ko.gz&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;gunzip&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;.uncompressed&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;elif&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[[&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;*.ko.xz&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;unxz&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;.uncompressed&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;elif&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[[&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;*.ko.zst&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;unzstd&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;.uncompressed&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;else&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;continue&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;mv&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;.uncompressed&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$mod_path&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;done&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;&lt;span class="o"&gt;(&lt;/span&gt;modprobe&lt;span class="w"&gt; &lt;/span&gt;--dirname&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs_build_dir&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--show-depends&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$filesystem_type&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;^insmod&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;cut&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-f2&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;What this does is copying all the module files from the host, getting all the
+dependencies for the filesystem module using &lt;code&gt;modprobe&lt;/code&gt;, and then uncompressing
+those modules if they’re compressed (I found this much easier than adding
+compression support in the virtual machine). An alternative approach would be
+to simply decompress all the modules, but that’s much slower.&lt;/p&gt;
+&lt;p&gt;Once everything has been copied over and uncompressed, the initramfs is
+created:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;initramfs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;rootfs.img
+mksquashfs&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs_build_dir&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$initramfs&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now it’s time to create the virtual storage device with the filesystem, which
+is a trivial task:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;testfs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;testfs.img
+dd&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/dev/zero&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;of&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$testfs&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;bs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1M&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;count&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;300&lt;/span&gt;
+&lt;span class="s2"&gt;&amp;quot;mkfs.&lt;/span&gt;&lt;span class="nv"&gt;$filesystem_type&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$testfs&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally, we can start our VM using &lt;a href="https://en.wikipedia.org/wiki/QEMU"&gt;QEMU&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;qemu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;qemu-system-&lt;span class="k"&gt;$(&lt;/span&gt;uname&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;kernel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/boot/vmlinuz-&lt;span class="k"&gt;$(&lt;/span&gt;uname&lt;span class="w"&gt; &lt;/span&gt;-r&lt;span class="k"&gt;)&lt;/span&gt;
+
+&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$qemu&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-kernel&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$kernel&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-append&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;root=/dev/sda ro panic=-1 console=ttyS0 quiet test.fs=&lt;/span&gt;&lt;span class="nv"&gt;$filesystem_type&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;index=0,media=disk,format=raw,file=&lt;/span&gt;&lt;span class="nv"&gt;$initramfs&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;index=1,media=disk,format=raw,file=&lt;/span&gt;&lt;span class="nv"&gt;$testfs&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-no-reboot&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-nographic
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Again we’re stealing the kernel from the host operating system, which is also
+where the kernel modules come from. The &lt;code&gt;drive&lt;/code&gt; with &lt;code&gt;index=0&lt;/code&gt; is the initramfs
+and will be visible as &lt;code&gt;/dev/sda&lt;/code&gt; in the guest; the other drive with &lt;code&gt;index=1&lt;/code&gt;
+is our test storage and will be visible as &lt;code&gt;/dev/sdb&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;root=/dev/sda&lt;/code&gt; tells the kernel to boot from our initramfs image. &lt;code&gt;panic=-1&lt;/code&gt;
+tells the kernel not to reboot in case of a panic (&lt;code&gt;panic=N&lt;/code&gt; specifies the
+number of seconds to wait before rebooting in case of kernel panic; specifying
+a negative value blocks that behavior). &lt;code&gt;console=ttyS0&lt;/code&gt; allows us to capture
+the output printed by the init script. &lt;code&gt;test.fs=...&lt;/code&gt; is the option that
+&lt;code&gt;init.sh&lt;/code&gt; is going to look for to understand what filesystem type to use.&lt;/p&gt;
+&lt;p&gt;Once that runs, the virtual machine is expected to do its job and crash with a
+kernel panic. We then need to restart it to verify the file contents. The QEMU
+command is exactly the same except for the additional &lt;code&gt;test.verify&lt;/code&gt; option:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;output.txt
+
+&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$qemu&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-kernel&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$kernel&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-append&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;root=/dev/sda ro panic=-1 console=ttyS0 quiet test.fs=&lt;/span&gt;&lt;span class="nv"&gt;$filesystem_type&lt;/span&gt;&lt;span class="s2"&gt; test.verify&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;index=0,media=disk,format=raw,file=&lt;/span&gt;&lt;span class="nv"&gt;$initramfs&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-drive&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;index=1,media=disk,format=raw,file=&lt;/span&gt;&lt;span class="nv"&gt;$testfs&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-no-reboot&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;-nographic&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;tee&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$output&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The output from this command is captured in a file that can be analyzed. If you
+remember how &lt;code&gt;init.sh&lt;/code&gt; is written, you might have noticed that it writes the
+test file contents between two markers:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-----&amp;#39;&lt;/span&gt;
+xxd&lt;span class="w"&gt; &lt;/span&gt;/test/file
+&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-----&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;So what we have to do to verify the contents of the file is simply look for
+those two &lt;code&gt;-----&lt;/code&gt; markers, get the content in between, and parse it through
+&lt;code&gt;xxd -r&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[[&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;sed&lt;span class="w"&gt; &lt;/span&gt;-n&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/-----/, /-----/p&amp;#39;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$output&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;xxd&lt;span class="w"&gt; &lt;/span&gt;-r&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;hello&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Success&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;else&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Failure&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;exit&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And that’s it!&lt;/p&gt;
+&lt;h1 id="running-in-github-actions"&gt;Running in GitHub Actions&lt;/h1&gt;
+&lt;p&gt;The next step for me was to set up some automation to make sure that my test
+script was run whenever I made any change to the crate. Because my project was
+already hosted on GitHub, I decided to go with GitHub Actions. I was a bit
+worried that I would have had to struggle to make it work because my script
+works by &lt;em&gt;stealing&lt;/em&gt; the kernel from the host, and I thought that the GitHub
+runners could have some protections in place to prevent me from reading the
+kernel. To my surprise, there were no such restrictions. In fact, I did not
+have to modify a single line of code to make my tests work in GitHub Actions:
+check out the &lt;a href="https://github.com/andreacorbellini/rust-atomic-write-file/blob/master/.github/workflows/crash-tests.yml"&gt;workflow file&lt;/a&gt; if you’re curious.&lt;/p&gt;
+&lt;h1 id="result"&gt;Result&lt;/h1&gt;
+&lt;p&gt;In the end, the test suite was able to reproduce the issue with btrfs and
+anonymous temporary files, as well as show that the fix was working as
+intended. This is what it looks like (output in the screenshot was trimmed down
+a bit):&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src="https://andrea.corbellini.name/images/crash-tests-failure.png" alt="Output showing a failure from the test suite"&gt;
+  &lt;figcaption&gt;Output from the &lt;code&gt;run-test.sh&lt;/code&gt; script &lt;em&gt;before&lt;/em&gt; applying the fix, showing a failure.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure&gt;
+  &lt;img src="https://andrea.corbellini.name/images/crash-tests-success.png" alt="Output showing a success from the test suite"&gt;
+  &lt;figcaption&gt;Output from the &lt;code&gt;run-test.sh&lt;/code&gt; script &lt;em&gt;after&lt;/em&gt; applying the fix, showing a success.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h1 id="future"&gt;Future&lt;/h1&gt;
+&lt;p&gt;I’m pretty satisfied with the general approach of running in a virtual machine
+and simulating a crash, but the implementation has a huge limitation: because
+it &lt;em&gt;steals&lt;/em&gt; the kernel from the host, it cannot simulate crashes on other
+kernels, operating systems, or platforms.&lt;/p&gt;
+&lt;p&gt;I think in the future I’m going to take a look at &lt;a href="https://github.com/cross-rs/cross"&gt;cross-rs&lt;/a&gt;, a cross-platform
+tool for Rust crates. Cross-rs works kinda in a similar way as my test suite,
+in that it uses QEMU emulation to run tests. Maybe I can reuse their QEMU
+images and tweak them to run my crash tests. If that is feasible, then I will
+be able to extend my test suite to all major platforms and operating systems.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Tue, 09 Sep 2025 00:05:00 +0000</pubDate><guid>tag:andrea.corbellini.name,2025-09-09:/2025/09/09/testing-crash-recovery-features-in-ci/</guid><category>information-technology</category></item><item><title>It will take decades to undo the damage done by "AI"</title><link>https://andrea.corbellini.name/2025/08/20/it-will-take-decades-to-undo-the-damage-done-by-ai/</link><description>&lt;p&gt;Many business owners in the software development industry are investing a lot
 into LLM bots, marketed as “generative AI”. Some of them go as far as &lt;em&gt;forcing&lt;/em&gt;
 software developers to use such tools under the threat of being fired if they
 don’t comply. After all, why shouldn’t they? This technology has a catchy name,
