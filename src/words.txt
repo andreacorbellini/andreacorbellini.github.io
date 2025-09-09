@@ -8,6 +8,7 @@ AskUbuntu
 BDS
 BIPM
 BeiDou
+BusyBox
 CAcert
 CAcert's
 CFB
@@ -113,6 +114,7 @@ bootable
 bootloader
 broadcasted
 brtfs
+btrfs
 caesium
 certbot
 cgroup
@@ -166,6 +168,7 @@ hyperelliptic
 img
 indistinguishability
 init
+initramfs
 initrd
 io
 jitter
@@ -229,6 +232,8 @@ transactional
 ubuntu
 uid
 ulimit
+uncompress
+uncompressing
 uncorrectable
 unsealable
 unsuspicious
