@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?f5d5b5cd">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?b544adba">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?6c5f3521" defer></script>
   <script>
@@ -754,7 +754,7 @@ important that $s$ is non-zero.</p>
 <p>In Python, this is what a Poly1305 implementation could look like (disclaimer:
 this is for learning purposes, and not necessarily secure or optimized for
 performance):</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">iter_blocks</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">iter_blocks</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits a message in blocks of 16 bytes (128 bits) each, except for the last</span>
 <span class="sd">    block, which may be shorter.</span>
@@ -764,7 +764,7 @@ performance):</p>
         <span class="k">yield</span> <span class="n">message</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span><span class="o">+</span><span class="mi">16</span><span class="p">]</span>
         <span class="n">start</span> <span class="o">+=</span> <span class="mi">16</span>
 
-<span class="k">def</span> <span class="nf">poly1305</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">poly1305</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span>  <span class="c1"># 256 bits</span>
 
     <span class="c1"># Prime for the evaluation of the polynomial</span>
@@ -948,10 +948,10 @@ implementations of ChaCha20 and Poly1305 from
 <a href="https://pypi.org/project/pycryptodome/">pycryptodome</a> (usual disclaimer: this
 code is for educational purposes, and is not necessarily secure or optimized
 for performance):</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">ChaCha20</span>
-<span class="kn">from</span> <span class="nn">Crypto.Hash</span> <span class="kn">import</span> <span class="n">Poly1305</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Crypto.Cipher</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChaCha20</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Crypto.Hash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Poly1305</span>
 
-<span class="k">def</span> <span class="nf">chacha20poly1305_encrypt</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">chacha20poly1305_encrypt</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span>  <span class="c1"># 256 bits</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonce</span><span class="p">)</span> <span class="o">==</span> <span class="mi">12</span>  <span class="c1"># 96 bits</span>
 
@@ -986,7 +986,7 @@ for performance):</p>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">ciphertext</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">chacha20poly1305_decrypt</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">chacha20poly1305_decrypt</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span>  <span class="c1"># 256 bits</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonce</span><span class="p">)</span> <span class="o">==</span> <span class="mi">12</span>  <span class="c1"># 96 bits</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="o">==</span> <span class="mi">16</span>  <span class="c1"># 128 bits</span>
@@ -1046,7 +1046,7 @@ for performance):</p>
 
 <p>This is the same output we would obtain by using the ChaCha20-Poly1305
 implementation from pycryptodome directly:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">ChaCha20_Poly1305</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Crypto.Cipher</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChaCha20_Poly1305</span>
 
 <span class="n">key</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s1">&#39;0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef&#39;</span><span class="p">)</span>
 <span class="n">nonce</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s1">&#39;0123456789abcdef01234567&#39;</span><span class="p">)</span>
@@ -1353,7 +1353,7 @@ to bit-shifts) and sums (equivalent to bitwise XOR). This suggests that
 multiplication can be implemented on top of bitwise XOR and bit-shifting.</p>
 <p>Here is some Python code to implement binary polynomial multiplication, where
 each polynomial is represented compactly as an <code>int</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute a*b, where a and b are two integers representing binary</span>
 <span class="sd">    polynomials.</span>
@@ -1432,7 +1432,7 @@ are not necessary if we eliminate $x^n$ terms as soon as they appear in an
 iterative way.</p>
 <p>Here is some Python code for multiplication in binary fields that uses the “add
 $P$” trick just described:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute a*b modulo p, where a, b and c are three integers representing</span>
 <span class="sd">    binary polynomials.</span>
@@ -1579,9 +1579,9 @@ encryption won’t cause the counter value 2 to be reused.</p>
 implementation from <a href="https://pypi.org/project/pycryptodome/">pycryptodome</a>
 (usual disclaimer: this code is for educational purposes, and it’s not
 necessarily secure or optimized for performance):</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">AES</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Crypto.Cipher</span><span class="w"> </span><span class="kn">import</span> <span class="n">AES</span>
 
-<span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute a*b in the GCM field, where a and b are two integers representing</span>
 <span class="sd">    elements of the GCM field.</span>
@@ -1601,7 +1601,7 @@ necessarily secure or optimized for performance):</p>
         <span class="n">b</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">result</span>
 
-<span class="k">def</span> <span class="nf">pad_block</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pad_block</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Pad data with zero bytes so that the resulting length is a multiple of 16</span>
 <span class="sd">    bytes (128 bits).</span>
@@ -1610,7 +1610,7 @@ necessarily secure or optimized for performance):</p>
         <span class="n">data</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">16</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="mi">16</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span>
 
-<span class="k">def</span> <span class="nf">iter_blocks_padded</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">iter_blocks_padded</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Split the given data into blocks of 16 bytes (128 bits) each, padding the</span>
 <span class="sd">    last block with zeros if necessary.</span>
@@ -1620,7 +1620,7 @@ necessarily secure or optimized for performance):</p>
         <span class="k">yield</span> <span class="n">pad_block</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span><span class="o">+</span><span class="mi">16</span><span class="p">])</span>
         <span class="n">start</span> <span class="o">+=</span> <span class="mi">16</span>
 
-<span class="k">def</span> <span class="nf">ghash</span><span class="p">(</span><span class="n">subkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ghash</span><span class="p">(</span><span class="n">subkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">subkey</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">subkey</span><span class="p">,</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">subkey</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">128</span><span class="p">)</span>
 
@@ -1631,7 +1631,7 @@ necessarily secure or optimized for performance):</p>
 
     <span class="k">return</span> <span class="n">state</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;big&#39;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">aes_gcm_encrypt</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">aes_gcm_encrypt</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonce</span><span class="p">)</span> <span class="o">==</span> <span class="mi">12</span>
 
@@ -1657,7 +1657,7 @@ necessarily secure or optimized for performance):</p>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">ciphertext</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">aes_gcm_decrypt</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">aes_gcm_decrypt</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonce</span><span class="p">)</span> <span class="o">==</span> <span class="mi">12</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="o">==</span> <span class="mi">16</span>
@@ -1707,7 +1707,7 @@ necessarily secure or optimized for performance):</p>
 
 <p>This is the same output we would obtain by using the AES-GCM implementation
 from pycryptodome directly:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">AES</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Crypto.Cipher</span><span class="w"> </span><span class="kn">import</span> <span class="n">AES</span>
 
 <span class="n">cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">AES</span><span class="o">.</span><span class="n">MODE_GCM</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">nonce</span><span class="o">=</span><span class="n">nonce</span><span class="p">)</span>
 <span class="n">ciphertext</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">encrypt_and_digest</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1956,7 +1956,7 @@ spotted some mistakes, let me know in the comments or by contacting me!</p></div
           <noscript>Comments are powered by <a href="https://remark42.com/">Remark42</a>. Enable JavaScript to see them.</noscript>
         </section>
     </article>
-</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2025 Andrea Corbellini</p>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2026 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
 <p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>

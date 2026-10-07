@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
     <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
     <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?f5d5b5cd">
+      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?b544adba">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
       <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?6c5f3521" defer></script>
   <script>
@@ -219,11 +219,11 @@ have all the elements to write some working code. I’m choosing
 <a href="https://www.python.org/">Python</a> and the
 <a href="https://github.com/cslashm/ECPy">ECPy</a> package to work with elliptic curves,
 which you can install with <code>pip install ecpy</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">ecpy.curves</span> <span class="kn">import</span> <span class="n">Curve</span><span class="p">,</span> <span class="n">Point</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ecpy.curves</span><span class="w"> </span><span class="kn">import</span> <span class="n">Curve</span><span class="p">,</span> <span class="n">Point</span>
 
 
-<span class="k">def</span> <span class="nf">message_to_point</span><span class="p">(</span><span class="n">curve</span><span class="p">:</span> <span class="n">Curve</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Point</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">message_to_point</span><span class="p">(</span><span class="n">curve</span><span class="p">:</span> <span class="n">Curve</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Point</span><span class="p">:</span>
     <span class="c1"># Number of bytes to represent a coordinate of a point</span>
     <span class="n">coordinate_size</span> <span class="o">=</span> <span class="n">curve</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">8</span>
     <span class="c1"># Minimum number of bytes for the padding. We need at least 1 byte so that</span>
@@ -259,7 +259,7 @@ which you can install with <code>pip install ecpy</code>.</p>
             <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">curve</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="n">public_key</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">encrypt</span><span class="p">(</span><span class="n">public_key</span><span class="p">:</span> <span class="n">Point</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="n">curve</span> <span class="o">=</span> <span class="n">public_key</span><span class="o">.</span><span class="n">curve</span>
     <span class="c1"># Map the message to an elliptic curve point</span>
     <span class="n">message_point</span> <span class="o">=</span> <span class="n">message_to_point</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
@@ -272,7 +272,7 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">curve</span><span class="o">.</span><span class="n">encode_point</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span> <span class="o">+</span> <span class="n">curve</span><span class="o">.</span><span class="n">encode_point</span><span class="p">(</span><span class="n">c2</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">point_to_message</span><span class="p">(</span><span class="n">point</span><span class="p">:</span> <span class="n">Point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">point_to_message</span><span class="p">(</span><span class="n">point</span><span class="p">:</span> <span class="n">Point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="c1"># Number of bytes to represent a coordinate of a point</span>
     <span class="n">coordinate_size</span> <span class="o">=</span> <span class="n">curve</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">8</span>
     <span class="c1"># Convert the x-coordinate of the point to a byte string</span>
@@ -284,7 +284,7 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="k">return</span> <span class="n">message</span>
 
 
-<span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="n">curve</span><span class="p">:</span> <span class="n">Curve</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decrypt</span><span class="p">(</span><span class="n">curve</span><span class="p">:</span> <span class="n">Curve</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ciphertext</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
     <span class="c1"># Decode c1 and c2 and convert them to elliptic curve points</span>
     <span class="n">c1_bytes</span> <span class="o">=</span> <span class="n">ciphertext</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span>
     <span class="n">c2_bytes</span> <span class="o">=</span> <span class="n">ciphertext</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:]</span>
@@ -381,7 +381,7 @@ myth, and I hope this article will help clarify that confusion.</p></div>
           <noscript>Comments are powered by <a href="https://remark42.com/">Remark42</a>. Enable JavaScript to see them.</noscript>
         </section>
     </article>
-</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2025 Andrea Corbellini</p>
+</main>    <footer id="main-footer"><p>Copyright &copy; 2015-2026 Andrea Corbellini</p>
 <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license" title="CC-BY 4.0 International">Creative Commons Attribution 4.0 International License</a></p>
 <p>Powered by <a href="https://getpelican.com/" title="Pelican">Pelican</a>, <a href="https://pages.github.com/" title="GitHub Pages">GitHub Pages</a>, and <a href="https://www.mathjax.org/" title="MathJax">MathJax</a></p></footer>
   </body>
