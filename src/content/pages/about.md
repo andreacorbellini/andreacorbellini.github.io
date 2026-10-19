@@ -4,16 +4,9 @@ Author: andreacorbellini
 Slug: about
 Status: published
 
-I'm a software developer from Italy, currently living in
-[Seattle](https://en.wikipedia.org/wiki/Seattle).
-
-I'm passionate about:
-
-* Cloud computing: my dream is to build an autonomous, self-healing cloud.
-* Information security: cryptography, authentication, validation. I think that
-  building walls is more important than following conventions.
-* Pure mathematics: in these days I'm particularly focused on algebraic
-  topology, category theory and complex analysis.
+I'm a software developer from Italy, currently living in Seattle, USA. My
+expertise is in cloud computing, information security, cryptography, and pure
+mathematics.
 
 When I'm not coding, I'm usually some meters underwater. The watery picture
 above from the beautiful [Lake
@@ -30,4 +23,4 @@ or what I do, you can reach out at:
   <li><a href="https://mstdn.social/@andxor" rel="me" class="mastodon">Mastodon</a></li>
 </ul>
 
-Opinions are my own and not the views of my employer.
+<small>Opinions are my own and not the views of my employer.</small>
