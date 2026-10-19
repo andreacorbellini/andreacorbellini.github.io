@@ -8,7 +8,7 @@ from pelicanconf import *
 
 
 # General.
-SITEURL = 'https://andrea.corbellini.name'
+SITEURL = 'https://andrea.corbellini.blog'
 OUTPUT_PATH = os.path.dirname(PROJECT_PATH)
 
 
