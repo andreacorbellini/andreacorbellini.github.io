@@ -1,52 +1,46 @@
-# fly.toml app configuration file generated for remark42 on 2026-10-07T15:40:01-07:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
-app = 'remark42'
+app = "remark42"
 
 [build]
-  image = "umputun/remark42:latest"
+image = "umputun/remark42:latest"
+
+[checks.httpget]
+interval = "15s"
+method = "GET"
+path = "/ping"
+port = 8080
+timeout = "10s"
+type = "http"
 
 [env]
-  ADMIN_SHARED_ID = 'email_934f97c0d0faf1caf7345488a70767a2b68ef728'
-  ALLOWED_HOSTS = "'self',https://andrea.corbellini.name,https://comments.andrea.corbellini.name"
-  ANON_VOTE = 'true'
-  AUTH_ANON = 'true'
-  AUTH_EMAIL_ENABLE = 'true'
-  AUTH_EMAIL_FROM = 'hi@andrea.corbellini.name'
-  AUTH_SEND_JWT_HEADER = 'true'
-  NOTIFY_ADMINS = 'email'
-  NOTIFY_EMAIL_FROM = 'hi@andrea.corbellini.name'
-  NOTIFY_USERS = 'email'
-  REMARK_URL = 'https://comments.andrea.corbellini.name/'
-  SITE = 'andrea.corbellini.name'
-  SMTP_HOST = 'live.smtp.mailtrap.io'
-  SMTP_PORT = '587'
-  SMTP_STARTTLS = 'true'
-  SMTP_USERNAME = 'api'
+ADMIN_SHARED_ID = "email_934f97c0d0faf1caf7345488a70767a2b68ef728"
+ALLOWED_HOSTS = "'self',https://andrea.corbellini.blog,https://comments.andrea.corbellini.blog,https://andrea.corbellini.name,https://comments.andrea.corbellini.name"
+ANON_VOTE = "true"
+AUTH_ANON = "true"
+AUTH_EMAIL_ENABLE = "true"
+AUTH_EMAIL_FROM = "hi@andrea.corbellini.name"
+AUTH_SEND_JWT_HEADER = "true"
+NOTIFY_ADMINS = "email"
+NOTIFY_EMAIL_FROM = "hi@andrea.corbellini.name"
+NOTIFY_USERS = "email"
+REMARK_URL = "https://comments.andrea.corbellini.name/"
+SITE = "andrea.corbellini.blog"
+SMTP_HOST = "live.smtp.mailtrap.io"
+SMTP_PORT = "587"
+SMTP_STARTTLS = "true"
+SMTP_USERNAME = "api"
 
 [[mounts]]
-  source = 'remark42_db_0'
-  destination = '/srv/var'
+destination = "/srv/var"
+source = "remark42_db_0"
 
 [[services]]
-  protocol = 'tcp'
-  internal_port = 8080
+internal_port = 8_080
+protocol = "tcp"
 
-  [[services.ports]]
-    port = 443
-    handlers = ['tls', 'http']
+[[services.ports]]
+handlers = [ "tls", "http" ]
+port = 443
 
-  [[services.ports]]
-    port = 80
-    handlers = ['http']
-
-[checks]
-  [checks.httpget]
-    port = 8080
-    type = 'http'
-    interval = '15s'
-    timeout = '10s'
-    method = 'GET'
-    path = '/ping'
+[[services.ports]]
+handlers = [ "http" ]
+port = 80
