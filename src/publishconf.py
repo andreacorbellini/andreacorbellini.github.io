@@ -19,7 +19,7 @@ MINIFY_JS = True
 
 # Comments.
 REMARK42_URL = 'https://remark42.fly.dev'
-REMARK42_SITE_ID = 'andrea.corbellini.name'
+REMARK42_SITE_ID = 'andrea.corbellini.blog'
 
 
 # Stats.
