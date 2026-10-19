@@ -3,13 +3,13 @@
   <head>
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
-    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
-    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?b544adba">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.blog/theme/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.blog/theme/favicon-32x32.png">
+    <link href="https://andrea.corbellini.blog/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.blog/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.blog/theme/css/style.min.css?b544adba">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
-      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?6c5f3521" defer></script>
+      <script src="https://andrea.corbellini.blog/theme/js/scripts.min.js?6c5f3521" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -39,13 +39,13 @@
       <meta name="tags" content="clocks">
       <meta name="tags" content="ntp">
       <meta name="tags" content="ptp">
-    <link rel="canonical" href="https://andrea.corbellini.name/2023/01/23/what-time-is-it/">
+    <link rel="canonical" href="https://andrea.corbellini.blog/2023/01/23/what-time-is-it/">
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://andrea.corbellini.name/2023/01/23/what-time-is-it/">
+    <meta property="og:url" content="https://andrea.corbellini.blog/2023/01/23/what-time-is-it/">
     <meta property="og:locale" content="en">
     <meta property="og:title" content="What time is it? A simple question with a complex answer. How computers synchronize time">
     <meta property="og:author" content="Andrea Corbellini">
-      <meta property="og:image" content="https://andrea.corbellini.name/images/ntp-sync-algorithm.svg">
+      <meta property="og:image" content="https://andrea.corbellini.blog/images/ntp-sync-algorithm.svg">
       <script>
         window.remark_config = {
           host: "https://remark42.fly.dev",
@@ -61,12 +61,12 @@
     <nav class="main-navbar">
       <button type="button" class="main-navbar-expand"></button>
       <div class="main-navbar-sitename">
-        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
+        <a href="https://andrea.corbellini.blog/" rel="home">Andrea Corbellini</a>
       </div>
       <div class="main-navbar-links">
         <ul>
-          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
-            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
+          <li><a href="https://andrea.corbellini.blog/" rel="home">Home</a></li>
+            <li><a href="https://andrea.corbellini.blog/about/">About</a></li>
         </ul>
       </div>
     </nav>
@@ -74,11 +74,11 @@
 </header>
 <main id="content">    <article class="article">
       <header>
-        <h1><a href="https://andrea.corbellini.name/2023/01/23/what-time-is-it/" rel="bookmark" title="What time is it? A simple question with a complex answer. How computers synchronize time">What time is it? A simple question with a complex answer. How computers synchronize time</a></h1>
+        <h1><a href="https://andrea.corbellini.blog/2023/01/23/what-time-is-it/" rel="bookmark" title="What time is it? A simple question with a complex answer. How computers synchronize time">What time is it? A simple question with a complex answer. How computers synchronize time</a></h1>
 <ul class="article-details">
   <li><time datetime="2023-01-23T19:15:00+00:00">January 23, 2023</time></li>
-  <li><a href="https://andrea.corbellini.name/category/information-technology/" title="Category" class="category">information-technology</a></li>
-  <li><a href="https://andrea.corbellini.name/2023/01/23/what-time-is-it/#comments" title="Comments" class="comments"><span class="remark42__counter" data-url="https://andrea.corbellini.name/2023/01/23/what-time-is-it/"></span> Comments</a></li>
+  <li><a href="https://andrea.corbellini.blog/category/information-technology/" title="Category" class="category">information-technology</a></li>
+  <li><a href="https://andrea.corbellini.blog/2023/01/23/what-time-is-it/#comments" title="Comments" class="comments"><span class="remark42__counter" data-url="https://andrea.corbellini.blog/2023/01/23/what-time-is-it/"></span> Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -146,7 +146,7 @@ energy levels are fixed, the resulting emission frequency is fixed as well.</p>
 <p>By the way, this process of absorption and emission of photons is the same
 process that causes fluorescence.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/atomic-clock-emission.svg" alt="Visualization of the absorption and emission process for an atom transitioning between two energy states">
+  <img src="https://andrea.corbellini.blog/images/atomic-clock-emission.svg" alt="Visualization of the absorption and emission process for an atom transitioning between two energy states">
   <figcaption>Visualization of the absorption and emission process for an atom transitioning between a ground state $E_1$ to an excited state $E_2$.</figcaption>
 </figure>
 
@@ -198,7 +198,7 @@ perpendicular to the mirror and turns it on.</p>
 <p>What the passenger will observe is the beam of light from the laser to hit the
 mirror and come back in a straight line:</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/special-relativity-train-reference-frame.webp" alt="Beam of light in the train reference frame">
+  <img src="https://andrea.corbellini.blog/images/special-relativity-train-reference-frame.webp" alt="Beam of light in the train reference frame">
   <figcaption>Portion of the beam of light in the train reference frame, emitted from the laser (bottom) and bouncing from the mirror (top). Note how it follows a vertical path.</figcaption>
 </figure>
 
@@ -206,7 +206,7 @@ mirror and come back in a straight line:</p>
 train is moving relative to the observer, the beam looks like it’s taking a
 different, slightly longer path:</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/special-relativity-observer-reference-frame.webp" alt="Beam of light in the observer reference frame">
+  <img src="https://andrea.corbellini.blog/images/special-relativity-observer-reference-frame.webp" alt="Beam of light in the observer reference frame">
   <figcaption>The same portion of light beam as before, but this time in the observer reference frame. Note how it follows a diagonal path, longer than the vertical path in the train reference frame.</figcaption>
 </figure>
 
@@ -219,7 +219,7 @@ perspective, the beam has traveled a distance of $2 L$, taking a time $2 L /
 c$. From the observer’s perspective, the beam has traveled a longer distance $2
 M$, with $M &gt; L$, taking a longer time $2 M / c$.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/special-relativity-reference-frame-comparison.webp" alt="Beam of light in the observer reference frame">
+  <img src="https://andrea.corbellini.blog/images/special-relativity-reference-frame-comparison.webp" alt="Beam of light in the observer reference frame">
   <figcaption>Comparison of the light beams as seen from the two reference frames. In the train reference frame, the light beam is a vertical line of length $L$ (therefore traveling a path of length $2 L$ after bouncing from the mirror). In the observer reference frame, the light beam is distorted due to the velocity of the train. If the train moves at speed $v$, then the light beam travels a total length of $2 M = 2 L c / \sqrt{c^2 - v^2}$.</figcaption>
 </figure>
 
@@ -245,11 +245,11 @@ force “pushing” it down, but rather because that’s the shortest <a href="h
 spacetime</a> (a straight line in bent
 spacetime).</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/apple-falling-classical-physics.webp" alt="Apple falling according to classical physics, following a parabolic motion">
+  <img src="https://andrea.corbellini.blog/images/apple-falling-classical-physics.webp" alt="Apple falling according to classical physics, following a parabolic motion">
   <figcaption>Apple falling according to classical physics, following a parabolic motion.</figcaption>
 </figure>
 <figure>
-  <img src="https://andrea.corbellini.name/images/apple-falling-general-relativity.webp" alt="Apple falling according to general relativity, following a straight path in distorted spacetime">
+  <img src="https://andrea.corbellini.blog/images/apple-falling-general-relativity.webp" alt="Apple falling according to general relativity, following a straight path in distorted spacetime">
   <figcaption>Apple falling according to general relativity, following a straight path in distorted spacetime.</figcaption>
 </figure>
 
@@ -324,7 +324,7 @@ surface of the Earth.</p>
 <p>Note that the calculations for TAI does not include the Earth’s position with
 respect to the Sun.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/tai-equipment-distribution.webp" alt="Distribution of the laboratories that contribute to TAI all over the world">
+  <img src="https://andrea.corbellini.blog/images/tai-equipment-distribution.webp" alt="Distribution of the laboratories that contribute to TAI all over the world">
   <figcaption>Distribution of the laboratories that contribute to International Atomic Time (TAI) all over the world as of 2020. Map taken from the <a href="https://webtai.bipm.org/ftp/pub/tai/annual-reports/bipm-annual-report/annual_report_2020.pdf">BIPM Annual Report on Time Activities</a>.</figcaption>
 </figure>
 
@@ -343,7 +343,7 @@ that are added to the UTC time to “slow down” the UTC time flow and keep it 
 sync with Earth’s rotation. On days when a leap second is inserted, UTC clocks
 go from 23:59:<strong>59</strong> to 23:59:<strong>60</strong>.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/leap-seconds-timeline.svg" alt="Visualization of leap seconds inserted into UTC, and a comparison with TAI">
+  <img src="https://andrea.corbellini.blog/images/leap-seconds-timeline.svg" alt="Visualization of leap seconds inserted into UTC, and a comparison with TAI">
   <figcaption>A visualization of leap seconds inserted into UTC until the end of 2022. Each orange dot represents a leap second (not in scale). When UTC was started in 1972, it started with 10 seconds of offset from TAI. As you can see, the insertion of leap seconds is very irregular: some decades have seen many leap seconds, others have seen much more.</figcaption>
 </figure>
 
@@ -413,7 +413,7 @@ not a real stratum, but a special value used by clients to indicate that time
 synchronization is not happening (most likely because the NTP servers are
 unreachable).</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/ntp-strata.svg" alt="Visualization of NTP strata in a distributed network">
+  <img src="https://andrea.corbellini.blog/images/ntp-strata.svg" alt="Visualization of NTP strata in a distributed network">
   <figcaption>Examples of different NTP strata in a distributed network. A stratum <em>n</em> server obtains its time from stratum <em>n</em> - 1 servers.</figcaption>
 </figure>
 
@@ -437,7 +437,7 @@ this problem:</p>
    indicates the local time of the client when the response was received.</li>
 </ol>
 <figure>
-  <img src="https://andrea.corbellini.name/images/ntp-sync-algorithm.svg" alt="Visualization of the NTP time synchronization algorithm">
+  <img src="https://andrea.corbellini.blog/images/ntp-sync-algorithm.svg" alt="Visualization of the NTP time synchronization algorithm">
   <figcaption>The NTP synchronization algorithm.</figcaption>
 </figure>
 
@@ -523,7 +523,7 @@ are:</p>
   software.</li>
 </ul>
 <figure>
-  <img src="https://andrea.corbellini.name/images/timecard.jpg" alt="Picture of a Time Card device">
+  <img src="https://andrea.corbellini.blog/images/timecard.jpg" alt="Picture of a Time Card device">
   <figcaption><a href="http://www.timingcard.com/">Time Card</a>: an open-source hardware card with a PCIe interface that can be plugged into a computer that can serve as a PTP master. It can be optionally connected to a GNSS receiver and contains a rubidium (Rb) clock.</figcaption>
 </figure>
 
@@ -563,7 +563,7 @@ T_0) + (T_2 - T_3)) / 2$.</p>
 </li>
 </ul>
 <figure>
-  <img src="https://andrea.corbellini.name/images/ptp-sync-algorithm.svg" alt="Visualization of the PTP time synchronization algorithm">
+  <img src="https://andrea.corbellini.blog/images/ptp-sync-algorithm.svg" alt="Visualization of the PTP time synchronization algorithm">
   <figcaption>The PTP time synchronization algorithm.</figcaption>
 </figure>
 

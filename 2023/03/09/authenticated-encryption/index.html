@@ -3,13 +3,13 @@
   <head>
       <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.name/theme/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.name/theme/favicon-32x32.png">
-    <link href="https://andrea.corbellini.name/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
-    <link href="https://andrea.corbellini.name/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
-      <link rel="stylesheet" href="https://andrea.corbellini.name/theme/css/style.min.css?b544adba">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://andrea.corbellini.blog/theme/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://andrea.corbellini.blog/theme/favicon-32x32.png">
+    <link href="https://andrea.corbellini.blog/feed.atom" type="application/atom+xml" rel="alternate" title="Andrea Corbellini Atom Feed">
+    <link href="https://andrea.corbellini.blog/feed.rss" type="application/rss+xml" rel="alternate" title="Andrea Corbellini RSS Feed">
+      <link rel="stylesheet" href="https://andrea.corbellini.blog/theme/css/style.min.css?b544adba">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
-      <script src="https://andrea.corbellini.name/theme/js/scripts.min.js?6c5f3521" defer></script>
+      <script src="https://andrea.corbellini.blog/theme/js/scripts.min.js?6c5f3521" defer></script>
   <script>
     window.MathJax = {
       tex: {
@@ -33,13 +33,13 @@
         });
       });
     </script>
-    <link rel="canonical" href="https://andrea.corbellini.name/2023/03/09/authenticated-encryption/">
+    <link rel="canonical" href="https://andrea.corbellini.blog/2023/03/09/authenticated-encryption/">
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://andrea.corbellini.name/2023/03/09/authenticated-encryption/">
+    <meta property="og:url" content="https://andrea.corbellini.blog/2023/03/09/authenticated-encryption/">
     <meta property="og:locale" content="en">
     <meta property="og:title" content="Authenticated encryption: why you need it and how it works">
     <meta property="og:author" content="Andrea Corbellini">
-      <meta property="og:image" content="https://andrea.corbellini.name/images/lack-of-diffusion.webp">
+      <meta property="og:image" content="https://andrea.corbellini.blog/images/lack-of-diffusion.webp">
       <script>
         window.remark_config = {
           host: "https://remark42.fly.dev",
@@ -55,12 +55,12 @@
     <nav class="main-navbar">
       <button type="button" class="main-navbar-expand"></button>
       <div class="main-navbar-sitename">
-        <a href="https://andrea.corbellini.name/" rel="home">Andrea Corbellini</a>
+        <a href="https://andrea.corbellini.blog/" rel="home">Andrea Corbellini</a>
       </div>
       <div class="main-navbar-links">
         <ul>
-          <li><a href="https://andrea.corbellini.name/" rel="home">Home</a></li>
-            <li><a href="https://andrea.corbellini.name/about/">About</a></li>
+          <li><a href="https://andrea.corbellini.blog/" rel="home">Home</a></li>
+            <li><a href="https://andrea.corbellini.blog/about/">About</a></li>
         </ul>
       </div>
     </nav>
@@ -68,11 +68,11 @@
 </header>
 <main id="content">    <article class="article">
       <header>
-        <h1><a href="https://andrea.corbellini.name/2023/03/09/authenticated-encryption/" rel="bookmark" title="Authenticated encryption: why you need it and how it works">Authenticated encryption: why you need it and how it works</a></h1>
+        <h1><a href="https://andrea.corbellini.blog/2023/03/09/authenticated-encryption/" rel="bookmark" title="Authenticated encryption: why you need it and how it works">Authenticated encryption: why you need it and how it works</a></h1>
 <ul class="article-details">
   <li><time datetime="2023-03-09T18:35:00+00:00">March 09, 2023</time></li>
-  <li><a href="https://andrea.corbellini.name/category/cryptography/" title="Category" class="category">cryptography</a></li>
-  <li><a href="https://andrea.corbellini.name/2023/03/09/authenticated-encryption/#comments" title="Comments" class="comments"><span class="remark42__counter" data-url="https://andrea.corbellini.name/2023/03/09/authenticated-encryption/"></span> Comments</a></li>
+  <li><a href="https://andrea.corbellini.blog/category/cryptography/" title="Category" class="category">cryptography</a></li>
+  <li><a href="https://andrea.corbellini.blog/2023/03/09/authenticated-encryption/#comments" title="Comments" class="comments"><span class="remark42__counter" data-url="https://andrea.corbellini.blog/2023/03/09/authenticated-encryption/"></span> Comments</a></li>
 </ul>      </header>
       <div class="article-wrapper">
         <aside class="article-toc">
@@ -329,7 +329,7 @@ the same output. This gives the ability to analyze a ciphertext and find
 patterns in it without knowledge of the secret key. This problem is famously
 evident when encrypting pictures:</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/lack-of-diffusion.webp" alt="Ubuntu logo before and after encryption with a block cipher">
+  <img src="https://andrea.corbellini.blog/images/lack-of-diffusion.webp" alt="Ubuntu logo before and after encryption with a block cipher">
   <figcaption>Example of applying a block cipher to an uncompressed image. The original colors are lost, but the overall layout of the image is still understandable. That's because multiple blocks of the image (containing the RGB values of each pixel), for example from the white background, are repeated multiple times, yielding the same exact encrypted blocks. The inspiration for making this image came from <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation">Wikipedia</a>.</figcaption>
 </figure>
 
@@ -432,7 +432,7 @@ however important that the nonce is unique.</p>
 </li>
 </ul>
 <figure>
-  <img src="https://andrea.corbellini.name/images/cipher-block-chaining.svg" alt="Visualization of the Cipher Block Chaining (CBC) mode of operation">
+  <img src="https://andrea.corbellini.blog/images/cipher-block-chaining.svg" alt="Visualization of the Cipher Block Chaining (CBC) mode of operation">
 </figure>
 
 <p>The XOR operator is back! With stream ciphers, the XOR operator was allowing us
@@ -576,7 +576,7 @@ more than 128·2<sup>32</sup> bits = 64 GiB of data at once. This is a very
 important detail: exceeding these limits may allow the decryption of portions
 of ciphertext without knowledge of the secret key.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/counter-mode.svg" alt="Visualization of the Counter Mode (CTR) mode of operation">
+  <img src="https://andrea.corbellini.blog/images/counter-mode.svg" alt="Visualization of the Counter Mode (CTR) mode of operation">
 </figure>
 
 <p>What Counter Mode is doing is effectively <strong>turning a block cipher into a
@@ -863,7 +863,7 @@ nonce, ciphertext, and authentication tag as the input, and produce either the
 plaintext or an error as the output. The error is returned in case the
 authentication fails.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/chacha20-poly1305-encryption.svg" alt="Diagram of data flow during encryption with ChaCha20-Poly1305">
+  <img src="https://andrea.corbellini.blog/images/chacha20-poly1305-encryption.svg" alt="Diagram of data flow during encryption with ChaCha20-Poly1305">
   <figcaption>Data flow during a ChaCha20-Poly1305 encryption. This shows the inputs in <span style="color:#3465a4;font-weight:bold">blue</span>, the outputs in <span style="color:#73d216;font-weight:bold">green</span>, and the intermediate objects in <span style="color:#cc0000;font-weight:bold">red</span>.</figcaption>
 </figure>
 
@@ -1534,7 +1534,7 @@ ciphertext, and authentication tag as the input, and produce either the
 plaintext or an error as the output. The error is returned in case the
 authentication fails.</p>
 <figure>
-  <img src="https://andrea.corbellini.name/images/aes-gcm-encryption.svg" alt="Diagram of data flow during encryption with AES-GCM">
+  <img src="https://andrea.corbellini.blog/images/aes-gcm-encryption.svg" alt="Diagram of data flow during encryption with AES-GCM">
   <figcaption>Data flow during an AES-GCM encryption. This shows the inputs in <span style="color:#3465a4;font-weight:bold">blue</span>, the outputs in <span style="color:#73d216;font-weight:bold">green</span>, and the intermediate objects in <span style="color:#cc0000;font-weight:bold">red</span>.</figcaption>
 </figure>
 
@@ -1799,12 +1799,12 @@ AES-GCM-SIV) are AEAD ciphers. Here’s how they implement AEAD:</p>
   authenticator.</li>
 </ul>
 <figure>
-  <img src="https://andrea.corbellini.name/images/chacha20-poly1305-aead-encryption.svg" alt="Diagram of data flow during encryption with ChaCha20-Poly1305, including the Associated Data (AE)">
+  <img src="https://andrea.corbellini.blog/images/chacha20-poly1305-aead-encryption.svg" alt="Diagram of data flow during encryption with ChaCha20-Poly1305, including the Associated Data (AE)">
   <figcaption>Updated data flow during a ChaCha20-Poly1305 encryption which shows where the Associated Data (AE) is placed.</figcaption>
 </figure>
 
 <figure>
-  <img src="https://andrea.corbellini.name/images/aes-gcm-aead-encryption.svg" alt="Diagram of data flow during encryption with AES-GCM, including the Associated Data (AE)">
+  <img src="https://andrea.corbellini.blog/images/aes-gcm-aead-encryption.svg" alt="Diagram of data flow during encryption with AES-GCM, including the Associated Data (AE)">
   <figcaption>Updated data flow during an AES-GCM encryption which shows where the Associated Data (AE) is placed.</figcaption>
 </figure>
 
