@@ -26,8 +26,8 @@ class SpellChecker:
         strip = [
             r'\$\$[^\$]*\$\$',          # block math
             r'\$[^\$]*\$',              # inline math
-            r'<pre>.*?</pre>',           # code blocks
-            r'<code>.*?</code>',         # inline code
+            r'<pre>.*?</pre>',          # code blocks
+            r'<code>.*?</code>',        # inline code
             r'\b(0x)?[0-9a-f]{6,}\b',   # hex numbers (lowercase)
             r'\b(0x)?[0-9A-F]{6,}\b',   # hex numbers (uppercase)
         ]
