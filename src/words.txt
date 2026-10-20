@@ -15,6 +15,7 @@ CFB
 CPUs
 Certicom
 ChaCha
+Cloudflare
 Comodo
 Ctrl
 DBus
@@ -45,6 +46,8 @@ HTTP
 HTTPS
 Hafele
 Heartbleed
+ICANN
+ICANN's
 IPs
 IPv
 IdenTrust
@@ -54,8 +57,10 @@ KMS
 Keating
 KiB
 Koblitz
+LLC
 LLM
 LXC's
+LibreWolf
 LinkedIn
 Mailinator
 MathJax
@@ -99,6 +104,7 @@ UEFI
 UTF
 Verisign
 Viega
+WhoIS
 XChaCha
 abelian
 aes
@@ -155,6 +161,7 @@ ecdsa
 elgamal
 encryptions
 endian
+enshittification
 etcd
 fdisk
 filesystem
