@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.blog/</link><description/><atom:link href="https://andrea.corbellini.blog/feed.rss" rel="self"/><lastBuildDate>Tue, 09 Sep 2025 00:05:00 +0000</lastBuildDate><item><title>Testing crash recovery features in a CI environment</title><link>https://andrea.corbellini.blog/2025/09/09/testing-crash-recovery-features-in-ci/</link><description>&lt;p&gt;About two years ago I wrote a Rust crate to fulfill this promise:&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Andrea Corbellini</title><link>https://andrea.corbellini.blog/</link><description/><atom:link href="https://andrea.corbellini.blog/feed.rss" rel="self"/><lastBuildDate>Tue, 20 Oct 2026 08:10:00 +0000</lastBuildDate><item><title>This blog has moved to a new domain</title><link>https://andrea.corbellini.blog/2026/10/20/new-domain/</link><description>&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; This blog has moved from
+&lt;a href="https://andrea.corbellini.name"&gt;https://andrea.corbellini&lt;strong&gt;.name&lt;/strong&gt;&lt;/a&gt; to
+&lt;a href="https://andrea.corbellini.blog"&gt;https://andrea.corbellini&lt;strong&gt;.blog&lt;/strong&gt;&lt;/a&gt;. Please
+update all URLs pointing to this blog, and sorry for the inconvenience.&lt;/p&gt;
+&lt;h1 id="me-and-name"&gt;Me and .name&lt;/h1&gt;
+&lt;p&gt;Back in 2014 (12 years ago), I wanted to claim my small slice of the internet,
+and so I purchased my first personal domain name, where I would have hosted my
+blog: &lt;code&gt;andrea.corbellini.name&lt;/code&gt;. To be honest with you, I would have liked a
+more creative domain name, but I’m notoriously not good at giving names to
+things, and so I couldn’t come up with anything better than &lt;code&gt;first.last.name&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For those who are not familiar with the matter, &lt;code&gt;.name&lt;/code&gt; domains have always
+been special and different from other domains: when they launched (back in
+2002, according to Wikipedia), they only allowed third-level domain
+registrations, meaning that you &lt;em&gt;could&lt;/em&gt; register the third-level domain
+&lt;code&gt;first.last.name&lt;/code&gt;, but &lt;em&gt;could not&lt;/em&gt; register the second-level domain
+&lt;code&gt;last.name&lt;/code&gt;. Second-level domains would be somewhat shared between the folks
+sharing the same last name. A few years later (in 2009, still according to
+Wikipedia), this restriction was lifted, and the ability to register
+second-level domains was offered.&lt;/p&gt;
+&lt;p&gt;So when I went to register my domain name I had two options: register
+&lt;code&gt;corbellini.name&lt;/code&gt; or &lt;code&gt;andrea.corbellini.name&lt;/code&gt;. I wanted to be kind to other
+people and so I decided to register the third-level domain, leaving
+&lt;code&gt;corbellini.name&lt;/code&gt; subdomains available to other people as well. I don’t think
+my last name is very common, and in fact I would bet that my domain is the only
+one under &lt;code&gt;corbellini.name&lt;/code&gt; even today, so perhaps we could say that my
+kindness was totally unnecessary. What’s sure is that my kindness did not get
+rewarded.&lt;/p&gt;
+&lt;p&gt;Recently, Verisign, the operator of &lt;code&gt;.name&lt;/code&gt; domains, decided to discontinue
+third-level domains like mine. This means that sometime in the future,
+&lt;code&gt;andrea.corbellini.name&lt;/code&gt; will disappear from the internet. It will cease to
+exist. Any attempt to resolve that domain name and to reach my blog will fail.
+Visitors will get a generic error from their browser, without any hints about
+what happened, why, and where my blog can be found. No redirect, no “click here
+to visit the new site”, nothing. The void.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img src="https://andrea.corbellini.blog/images/librewolf-server-not-found.png" alt="Server Not Found error from LibreWolf"&gt;
+&lt;/figure&gt;
+
+&lt;h1 id="a-new-home-blog"&gt;A new home: .blog&lt;/h1&gt;
+&lt;p&gt;I recently registered a new domain at &lt;code&gt;andrea.corbellini.blog&lt;/code&gt; and moved my
+blog there. Needless to say, this time I own the whole &lt;code&gt;corbellini.blog&lt;/code&gt;
+domain (also because there’s no other choice with &lt;code&gt;.blog&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Right now, my &lt;code&gt;.name&lt;/code&gt; domain redirects to my new &lt;code&gt;.blog&lt;/code&gt;, but this won’t last
+forever.&lt;/p&gt;
+&lt;p&gt;I haven’t published a ton of stuff on this blog (not nearly as much as I
+wished), but some of the articles I published have become quite popular in
+their niche ecosystem, in particular my articles about Elliptic Curve
+Cryptography and Authenticated Encryption. I see a ton of visits from people
+who found links to my articles from other sites. All those links will be broken
+once my &lt;code&gt;.name&lt;/code&gt; domain will be terminated, which is a shame. It’s still not
+very clear to me when this will happen, but it will happen at some point, so I
+need to ask everyone who has links pointing to my blog: please change all the
+URLs to my articles from &lt;code&gt;.name&lt;/code&gt; to &lt;code&gt;.blog&lt;/code&gt;.&lt;/p&gt;
+&lt;h1 id="the-perks-of-blog"&gt;The perks of .blog&lt;/h1&gt;
+&lt;p&gt;I must say, while it’s certainly disappointing to have a domain name (that has
+served me and others for so many years) disappear in a blip without any control
+from me, or any concrete possibility to appeal, owning a second-level domain
+comes with its own perks.&lt;/p&gt;
+&lt;p&gt;One of them is that now I can enable DNSSEC, which is something I could never
+do with my third-level &lt;code&gt;.name&lt;/code&gt; domain, as I had no control over the second-level
+domain (who knows, maybe there was a way, but I never figured it out). And in
+fact I’m happy to say that I did enable DNSSEC on &lt;code&gt;andrea.corbellini.blog&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Another perk is that I can now use services that were not previously available
+to me, like Cloudflare. Services like Cloudflare in fact do not understand
+third-level domains and did not allow me to register with them because they
+wanted proof of ownership of the second-level domain. Now this is no longer an
+obstacle.&lt;/p&gt;
+&lt;p&gt;Reaching my blog also becomes a bit easier: https://corbellini.blog in fact
+redirects to https://andrea.corbellini.blog.&lt;/p&gt;
+&lt;p&gt;Perhaps an amusing fact about &lt;code&gt;.blog&lt;/code&gt; specifically is that it’s owned and
+operated by a company called “Knock Knock WhoIS There, LLC”, and I find that
+name quite funny. Having said that, I don’t know anything about this company or
+their reputation.&lt;/p&gt;
+&lt;h1 id="final-remarks"&gt;Final remarks&lt;/h1&gt;
+&lt;p&gt;I know there are a few active attempts at keeping third-level &lt;code&gt;.name&lt;/code&gt; domains
+alive. A very prominent reconsideration request was recently sent by &lt;a href="https://neil.fraser.name/news/2026/10/04/"&gt;Neil
+Fraser&lt;/a&gt;. I will very likely join
+these attempts, although honestly I’ve witnessed so much enshittification in
+the past few years that I’ve lost hope in most (if not all) corporations, and I
+seriously doubt that things will change in this time frame. What is happening
+to &lt;code&gt;.name&lt;/code&gt; domains in my opinion is a small symptom of something much bigger:
+the fast decay of modern corporate culture, focused on profits above anything
+else, to the point that screwing customers over and over has become standard
+practice. I doubt Verisign is going to sacrifice revenue, keep on the costs of
+maintaining third-level &lt;code&gt;.name&lt;/code&gt; domains, and reverse their course of action.&lt;/p&gt;
+&lt;p&gt;And to those who are going to point out that it’s ICANN who has the power of
+reversing this decision, and ICANN is a non-profit organization, not one of the
+corporations I’m complaining about: sure, you may have a point. I don’t want to
+either defend nor attack ICANN’s role in this matter. The thing is that I don’t
+see a world where ICANN forces Verisign to do something they don’t want to do
+anymore, regardless of what ICANN’s intentions are.&lt;/p&gt;
+&lt;p&gt;I’m happy to be proven wrong. I &lt;em&gt;truly&lt;/em&gt; hope this decision gets reversed and I
+get to keep my &lt;code&gt;.name&lt;/code&gt; domain. But at this point I lost all hope.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">andreacorbellini</dc:creator><pubDate>Tue, 20 Oct 2026 08:10:00 +0000</pubDate><guid>tag:andrea.corbellini.blog,2026-10-20:/2026/10/20/new-domain/</guid><category>blog</category></item><item><title>Testing crash recovery features in a CI environment</title><link>https://andrea.corbellini.blog/2025/09/09/testing-crash-recovery-features-in-ci/</link><description>&lt;p&gt;About two years ago I wrote a Rust crate to fulfill this promise:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;If a crash occurs while updating a file, the file either contains the old
 contents, or the new contents, nothing in between.&lt;/p&gt;
