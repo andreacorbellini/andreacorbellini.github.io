@@ -19,7 +19,7 @@ If you have something cool to share, or if you just want to know more about me
 or what I do, you can reach out at:
 
 <ul class="about-link-list">
-  <li><a href="mailto:corbellini.andrea@gmail.com" rel="me" class="email">Email</a></li>
+  <li><a href="mailto:andrea@corbellini.blog" rel="me" class="email">Email</a></li>
   <li><a href="https://mstdn.social/@andxor" rel="me" class="mastodon">Mastodon</a></li>
 </ul>
 
