@@ -87,8 +87,9 @@ third-level domains and did not allow me to register with them because they
 wanted proof of ownership of the second-level domain. Now this is no longer an
 obstacle.
 
-Reaching my blog also becomes a bit easier: https://corbellini.blog in fact
-redirects to https://andrea.corbellini.blog.
+Reaching my blog also becomes a bit easier:
+[https://corbellini.blog](https://corbellini.blog) in fact redirects to
+[https://andrea.corbellini.blog](https://andrea.corbellini.blog).
 
 Perhaps an amusing fact about `.blog` specifically is that it's owned and
 operated by a company called "Knock Knock WhoIS There, LLC", and I find that
