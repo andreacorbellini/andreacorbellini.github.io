@@ -263,7 +263,7 @@ which you can install with <code>pip install ecpy</code>.</p>
     <span class="n">curve</span> <span class="o">=</span> <span class="n">public_key</span><span class="o">.</span><span class="n">curve</span>
     <span class="c1"># Map the message to an elliptic curve point</span>
     <span class="n">message_point</span> <span class="o">=</span> <span class="n">message_to_point</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
-    <span class="c1"># Generate a randon number</span>
+    <span class="c1"># Generate a random number</span>
     <span class="n">seed</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">curve</span><span class="o">.</span><span class="n">field</span><span class="p">)</span>
     <span class="c1"># Calculate c1 and c2 according to the ElGamal algorithm</span>
     <span class="n">c1</span> <span class="o">=</span> <span class="n">seed</span> <span class="o">*</span> <span class="n">curve</span><span class="o">.</span><span class="n">generator</span>

@@ -73,8 +73,9 @@ to me, like Cloudflare. Services like Cloudflare in fact do not understand
 third-level domains and did not allow me to register with them because they
 wanted proof of ownership of the second-level domain. Now this is no longer an
 obstacle.&lt;/p&gt;
-&lt;p&gt;Reaching my blog also becomes a bit easier: https://corbellini.blog in fact
-redirects to https://andrea.corbellini.blog.&lt;/p&gt;
+&lt;p&gt;Reaching my blog also becomes a bit easier:
+&lt;a href="https://corbellini.blog"&gt;https://corbellini.blog&lt;/a&gt; in fact redirects to
+&lt;a href="https://andrea.corbellini.blog"&gt;https://andrea.corbellini.blog&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Perhaps an amusing fact about &lt;code&gt;.blog&lt;/code&gt; specifically is that it’s owned and
 operated by a company called “Knock Knock WhoIS There, LLC”, and I find that
 name quite funny. Having said that, I don’t know anything about this company or
@@ -4064,7 +4065,7 @@ which you can install with &lt;code&gt;pip install ecpy&lt;/code&gt;.&lt;/p&gt;
     &lt;span class="n"&gt;curve&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;public_key&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;
     &lt;span class="c1"&gt;# Map the message to an elliptic curve point&lt;/span&gt;
     &lt;span class="n"&gt;message_point&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;message_to_point&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="c1"&gt;# Generate a randon number&lt;/span&gt;
+    &lt;span class="c1"&gt;# Generate a random number&lt;/span&gt;
     &lt;span class="n"&gt;seed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="c1"&gt;# Calculate c1 and c2 according to the ElGamal algorithm&lt;/span&gt;
     &lt;span class="n"&gt;c1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;seed&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;curve&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;generator&lt;/span&gt;
