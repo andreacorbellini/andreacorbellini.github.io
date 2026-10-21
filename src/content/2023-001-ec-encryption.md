@@ -211,7 +211,7 @@ def encrypt(public_key: Point, message: bytes) -> bytes:
     curve = public_key.curve
     # Map the message to an elliptic curve point
     message_point = message_to_point(curve, message)
-    # Generate a randon number
+    # Generate a random number
     seed = random.randrange(0, curve.field)
     # Calculate c1 and c2 according to the ElGamal algorithm
     c1 = seed * curve.generator
